@@ -1,3 +1,32 @@
-<h1>
-  {{title}}
-</h1>
+<!--
+<nav>
+  <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+  <a routerLink="/new-path" routerLinkActive="active">New Page</a>
+  <a routerLink="/aaaaaa" routerLinkActive="active">Broken Path</a>
+</nav>
+
+<router-outlet></router-outlet>
+-->
+
+<div class="wrapper">
+
+  <!--Header-->
+  <app-header></app-header>
+
+  <!--Content-->
+  <router-outlet></router-outlet>
+
+  <!--link report problem -->
+  <app-report-problem> ... loading (report problem)</app-report-problem>
+
+  <!--More-->
+  <div class="more">
+
+    <app-see-also> ... loading (see also)</app-see-also>
+    <app-related-items> ... loading (related items)</app-related-items>
+
+  </div>
+
+</div>
+
+<app-footer> ... loading (footer)</app-footer>

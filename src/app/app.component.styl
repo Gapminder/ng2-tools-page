@@ -1,0 +1,85 @@
+@import './_resources/fonts.styl'
+@import './_resources/variables.styl'
+@import './_resources/mixins.styl'
+
+html, body
+  height 100%
+
+body
+  background-color white
+  font-family 'Bariol Regular', Arial, sans-serif
+  min-width $body-min-width
+  padding 0
+  margin 0
+
+
+.wrapper
+  display block
+  position relative
+  height 100%
+  overflow auto
+  -webkit-overflow-scrolling touch
+
+  +for_breakpoint(small)
+    position static
+    height auto
+
+.hidden
+  display none !important
+
+.invisible
+  visibility hidden
+
+
+
+/* COMPONENT :: COMMON */
+
+.heading-2
+  margin 0
+  margin-bottom 10px
+  font-family "Bariol Light","Helvetica Neue",Helvetica,Arial,sans-serif
+  font-size 16px
+  line-height 1.4
+  text-transform uppercase
+
+
+
+/* COMPONENT :: LOADER */
+
+.loader-wrapper
+  box-sizing(border-box)
+  position(fixed, $header-height 0 0 0)
+  background-color white
+  padding 10px
+  text-align center
+  z-index 111111
+
+.loader
+  animation-duration(0.75s)
+  animation-iteration-count(infinite)
+  animation-name(rotate-continuous)
+  animation-timing-function(linear)
+  size(25px)
+  border 5px solid #ccc
+  border-right-color transparent
+  border-radius (50%)
+  display none
+  float right
+  margin auto
+  position absolute
+  top 50%
+  left 50%
+
+.loading
+  .loader
+    display block
+
+
+
+/* COMPONENT :: VIZABI */
+
+.vzb-tool
+  font-family 'Bariol Regular', "Lucida Sans Unicode","Lucida Grande",sans-serif !important
+
+  .vzb-tool-buttonlist
+    background-color white !important

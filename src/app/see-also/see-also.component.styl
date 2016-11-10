@@ -1,0 +1,41 @@
+@import './../_resources/variables.styl'
+@import './../_resources/mixins.styl'
+
+.more
+  padding 20px
+  box-sizing(border-box)
+  display block
+
+  +for_breakpoint(small)
+    padding 20px 0
+
+  +for_breakpoint(not-small)
+    padding-top 0px
+
+.related
+  +for_breakpoint(small)
+    padding 20px
+
+  +for_breakpoint(not-small)
+    float left
+    width 63%
+
+
+.about
+  float right
+  box-sizing(border-box)
+  +for_breakpoint(not-small)
+    padding-left 20px
+    float right
+    width 37%
+    &:after
+      clear both
+
+
+  +for_breakpoint(small)
+    background #f2fafc
+    float none
+    padding 20px
+    width 100%
+    .heading-2
+      display none

@@ -1,0 +1,144 @@
+@import './../_resources/variables.styl'
+@import './../_resources/mixins.styl'
+
+.related-items
+  list-style none
+  margin 0
+  padding 0
+  box-sizing(border-box)
+  +for_breakpoint(large)
+    columns(2 20px)
+
+.related-item
+  box-sizing(border-box)
+  display inline-block
+  width 100%
+  padding 10px
+  margin-bottom 20px
+
+  +for_breakpoint(small)
+    padding 0px
+    margin-bottom 10px
+
+  a
+    //display(flex)
+    flex-direction(row)
+    display: -webkit-flex;
+    display: -moz-flex;
+    display: -ms-flexbox;
+    display: flex;
+    text-decoration none
+    color $color-black
+
+    &:hover .title
+      color $color-blue-dark
+
+.related-item-thumbnail
+  -webkit-flex-shrink 0
+  -moz-flex-shrink 0
+  -ms-flex-negative 0
+  flex-shrink 0
+  width 130px
+  height auto
+
+  +for_breakpoint(small)
+    width 100px
+
+  img
+    width 100%
+    height auto
+
+.related-item-info
+  display inline-block
+  flex 1
+  line-height 1.2
+  padding-right 15px
+  position relative
+  margin-left 20px
+
+  .title, .subtitle
+    display block
+
+  .title
+    font-size 16px
+
+  .subtitle
+    font-size 14px
+    font-style italic
+    color #808080
+
+.menu
+  display block
+  margin 0 auto
+  font-size 1em
+  text-align left
+  text-transform uppercase
+  margin-left 200px
+
+  +for_breakpoint(not-large)
+    display none
+
+.menu-primary
+  list-style none
+  position relative
+  z-index 100
+  background white
+  padding 0
+  margin 0
+
+  & > .menu-item
+    display block
+    color #808285
+    position relative
+
+    +for_breakpoint(large)
+      float left
+      width 50%
+
+    & > a
+      transition(all 0.1s)
+      border-radius (3px)
+      display block
+      box-shadow 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.15)
+      position relative
+      cursor pointer
+      margin 1px 0 0 0
+      text-decoration none
+      max-width 400px
+      margin-bottom 40px
+      width 90%
+
+      +for_breakpoint(large)
+        width 90%
+
+      .title
+        font-family 'Bariol Bold'
+        color #808285
+        font-size 18px
+        font-weight 300
+        display block
+        padding 15px
+
+      .image
+        width 100%
+        height auto
+
+      &:hover
+        box-shadow 0 1px 11px rgba(0, 0, 0, 0.05), 0 1px 6px rgba(0, 0, 0, 0.18)
+
+        & > .title
+          color $color-blue-dark
+
+  +for_breakpoint(small)
+    background none
+    text-align center
+    display inline-block
+    & > .menu-item
+      width 48%
+      float left
+      > a
+        background #fff
+        margin 0
+        display inline-block
+        .title
+          display none

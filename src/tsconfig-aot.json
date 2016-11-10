@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es2015",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": [
+      "../../node_modules/@types/"
+    ]
+  },
+
+  "files": [
+
+//    "./app/home/home.component.ts",
+//    "./app/not-found/not-found.component.ts",
+//    "./app/my-new-component/my-new-component.component.ts",
+//    "./app/app.module.ts",
+
+    "main.ts"
+  ],
+
+  "angularCompilerOptions": {
+    "genDir": "../dist/aot",
+    "skipMetadataEmit" : true
+  }
+}
