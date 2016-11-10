@@ -1,0 +1,748 @@
+[
+  {
+    "_id": "55f70fd5dbbfabe3d6a2753f",
+    "tool": "MountainChart",
+    "slug": "mountain",
+    "category": "Tools",
+    "image": "/assets/images/chart/mountainchart.png",
+    "title": "Mountain Chart",
+    "description": "This graph shows the amount of people in the world across each income level.",
+    "__v": 5,
+    "opts": {
+      "data": {
+        "reader": "waffle",
+        "path": "/api/ddf/",
+        "splash": true
+      },
+      "language": {
+        "id": "en",
+        "strings": {}
+      },
+      "ui": {
+        "buttons": [
+          "colors",
+          "find",
+          "stack",
+          "show",
+          "moreoptions",
+          "fullscreen",
+          "presentation"
+        ],
+        "buttons_expand": [],
+        "dialogs": {
+          "popup": [
+            "colors",
+            "find",
+            "stack",
+            "show",
+            "moreoptions"
+          ],
+          "sidebar": [
+            "colors",
+            "find",
+            "stack"
+          ],
+          "moreoptions": [
+            "opacity",
+            "speed",
+            "stack",
+            "axesmc",
+            "colors",
+            "presentation",
+            "about"
+          ]
+        },
+        "datawarning": {
+          "doubtDomain": [
+            1800,
+            1950,
+            2015
+          ],
+          "doubtRange": [
+            1,
+            0.8,
+            0.6
+          ]
+        }
+      },
+      "locale": {
+        "filePath": "assets/translation/"
+      },
+      "data": {
+        "reader": "waffle",
+        "splash": true,
+        "path": "/api/ddf/"
+      },
+      "state": {
+        "time": {
+          "startOrigin": "1800",
+          "endOrigin": "2015",
+          "value": "2015"
+        },
+        "entities": {
+          "dim": "geo",
+          "show": {
+            "is--country": true
+          }
+        },
+        "entities_allpossible": {
+          "dim": "geo",
+          "show": {
+            "is--country": true
+          }
+        },
+        "entities_colorlegend": {
+          "dim": "geo",
+          "show": {
+            "is--world_4region": true
+          }
+        },
+        "entities_tags": {
+          "dim": "tag"
+        },
+        "marker_allpossible": {
+          "space": [
+            "entities_allpossible"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          }
+        },
+        "marker": {
+          "space": [
+            "entities",
+            "time"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "axis_y": {
+            "use": "indicator",
+            "which": "sg_population",
+            "scaleType": "linear"
+          },
+          "axis_x": {
+            "use": "indicator",
+            "which": "sg_gdp_p_cap_const_ppp2011_dollar",
+            "scaleType": "log",
+            "domainMin": 0.11,
+            "domainMax": 500,
+            "tailFatX": 1.85,
+            "tailCutX": 0.2,
+            "tailFade": 0.7,
+            "xScaleFactor": 1.039781626,
+            "xScaleShift": -1.127066411
+          },
+          "axis_s": {
+            "use": "indicator",
+            "which": "sg_gini",
+            "scaleType": "linear"
+          },
+          "color": {
+            "use": "property",
+            "which": "world_4region",
+            "scaleType": "ordinal",
+            "syncModels": [
+              "marker_colorlegend",
+              "stack",
+              "group"
+            ]
+          },
+          "stack": {
+            "use": "constant",
+            "which": "all"
+          },
+          "group": {
+            "use": "property",
+            "which": "world_4region",
+            "merge": false
+          }
+        },
+        "marker_colorlegend": {
+          "space": [
+            "entities_colorlegend"
+          ],
+          "type": "geometry",
+          "shape": "svg",
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_rank": {
+            "use": "property",
+            "which": "rank"
+          },
+          "hook_geoshape": {
+            "use": "property",
+            "which": "shape_lores_svg"
+          }
+        },
+        "marker_tags": {
+          "space": [
+            "entities_tags"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_parent": {
+            "use": "property",
+            "which": "parent"
+          }
+        }
+      }
+    },
+    "relateditems": [
+      {
+        "_id": "5600af4a188967b26265a73f",
+        "_relatedTo": [
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-many-are-rich-and-how-many-are-poor/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=399&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — Most are in between",
+        "title": "How many are rich and how many are poor?",
+        "__v": 0
+      },
+      {
+        "_id": "560061d4fc0d7c00002110a4",
+        "title": "How Reliable is the World Population Forecast?",
+        "subtitle": "Short answer — Very reliable",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=136&preset=160x96&title=media&extension=.jpg",
+        "link": "http://www.gapminder.org/answers/how-reliable-is-the-world-population-forecast/",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ]
+      },
+      {
+        "_id": "5600ad4c188967b26265a73b",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/will-saving-poor-children-lead-to-overpopulation/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=409&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — No. The opposite.",
+        "title": "Will saving poor children lead to overpopulation?",
+        "__v": 0
+      },
+      {
+        "_id": "5600ae2b188967b26265a73c",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-does-income-relate-to-life-expectancy/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=318&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — Rich people live longer",
+        "title": " How Does Income Relate to Life Expectancy?",
+        "__v": 0
+      },
+      {
+        "_id": "5600ae64188967b26265a73d",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-did-babies-per-woman-change-in-the-world/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=125&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — It dropped",
+        "title": "How Did Babies per Woman Change in the World?",
+        "__v": 0
+      },
+      {
+        "_id": "5600aedc188967b26265a73e",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/posters/gapminder-world-2013/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=209&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
+        "title": "Gapminder World Poster 2013",
+        "__v": 0
+      }
+    ]
+  },
+  {
+    "_id": "55f71e8ccdedc1ff074e9f6d",
+    "tool": "BubbleChart",
+    "slug": "bubbles",
+    "image": "/assets/images/chart/bubblechart.png",
+    "category": "Tools",
+    "title": "Bubble Chart",
+    "description": "This graph shows how long people live and how much money they earn. Click the play button to see how countries have developed since 1800.",
+    "__v": 4,
+    "opts": {
+      "data": {
+        "reader": "waffle",
+        "splash": false,
+        "path": "/api/ddf/ql/"
+      },
+      "language": {
+        "id": "en",
+        "strings": {}
+      },
+      "locale": {
+        "filePath": "assets/translation/"
+      },
+      "state": {
+        "entities": {
+          "dim": "geo",
+          "show": {
+            "is--country": true
+          }
+        },
+        "entities_colorlegend": {
+          "dim": "geo",
+          "show": {
+            "is--world_4region": true
+          }
+        },
+        "entities_tags": {
+          "dim": "tag"
+        },
+        "time": {
+          "startOrigin": "1800",
+          "endOrigin": "2015",
+          "value": "2015"
+        },
+        "marker": {
+          "space": [
+            "entities",
+            "time"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "axis_y": {
+            "use": "indicator",
+            "which": "life_expectancy_years",
+            "zoomedMin": 19,
+            "zoomedMax": 86,
+            "domainMin": 0,
+            "domainMax": 100
+          },
+          "axis_x": {
+            "use": "indicator",
+            "scaleType": "log",
+            "domainMax": 150000,
+            "domainMin": 300,
+            "zoomedMax": 150000,
+            "zoomedMin": 300,
+            "which": "income_per_person_gdppercapita_ppp_inflation_adjusted"
+          },
+          "size": {
+            "use": "indicator",
+            "which": "population_total",
+            "domainMin": 15,
+            "domainMax": 1400000000,
+            "scaleType": "linear",
+            "allow": {
+              "scales": [
+                "linear"
+              ]
+            }
+          },
+          "color": {
+            "use": "property",
+            "which": "world_4region",
+            "syncModels": [
+              "marker_colorlegend"
+            ]
+          }
+        },
+        "marker_colorlegend": {
+          "space": [
+            "entities_colorlegend"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_rank": {
+            "use": "property",
+            "which": "rank"
+          },
+          "hook_geoshape": {
+            "use": "property",
+            "which": "shape_lores_svg"
+          }
+        },
+        "marker_tags": {
+          "space": [
+            "entities_tags"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_parent": {
+            "use": "property",
+            "which": "parent"
+          }
+        }
+      },
+      "ui": {
+        "datawarning": {
+          "doubtDomain": [
+            1800,
+            1950,
+            2015
+          ],
+          "doubtRange": [
+            1,
+            0.3,
+            0.2
+          ]
+        },
+        "buttons": [
+          "colors",
+          "find",
+          "size",
+          "trails",
+          "lock",
+          "moreoptions",
+          "fullscreen",
+          "presentation"
+        ],
+        "buttons_expand": [],
+        "dialogs": {
+          "popup": [
+            "colors",
+            "find",
+            "size",
+            "zoom",
+            "moreoptions"
+          ],
+          "sidebar": [
+            "colors",
+            "find",
+            "size",
+            "zoom"
+          ],
+          "moreoptions": [
+            "opacity",
+            "speed",
+            "axes",
+            "size",
+            "colors",
+            "label",
+            "zoom",
+            "presentation",
+            "about"
+          ]
+        }
+      }
+    },
+    "relateditems": [
+      {
+        "_id": "5600aedc188967b26265a73e",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/posters/gapminder-world-2013/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=209&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
+        "title": "Gapminder World Poster 2013",
+        "__v": 0
+      },
+      {
+        "_id": "5600ad4c188967b26265a73b",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/will-saving-poor-children-lead-to-overpopulation/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=409&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — No. The opposite.",
+        "title": "Will saving poor children lead to overpopulation?",
+        "__v": 0
+      },
+      {
+        "_id": "560061d4fc0d7c00002110a4",
+        "title": "How Reliable is the World Population Forecast?",
+        "subtitle": "Short answer — Very reliable",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=136&preset=160x96&title=media&extension=.jpg",
+        "link": "http://www.gapminder.org/answers/how-reliable-is-the-world-population-forecast/",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ]
+      },
+      {
+        "_id": "5600782dabde580e33c79e24",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d"
+        ],
+        "link": "http://www.gapminder.org/answers/how-did-the-world-population-change/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=247&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "First slowly. Then fast.",
+        "title": "How Did The World Population Change?",
+        "__v": 0
+      },
+      {
+        "_id": "5600ae2b188967b26265a73c",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-does-income-relate-to-life-expectancy/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=318&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — Rich people live longer",
+        "title": " How Does Income Relate to Life Expectancy?",
+        "__v": 0
+      },
+      {
+        "_id": "5600ae64188967b26265a73d",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-did-babies-per-woman-change-in-the-world/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=125&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — It dropped",
+        "title": "How Did Babies per Woman Change in the World?",
+        "__v": 0
+      }
+    ]
+  },
+  {
+    "_id": "56559714e4b03cd696fc6d62",
+    "tool": "BubbleMap",
+    "slug": "map",
+    "category": "Tools",
+    "image": "/assets/images/chart/bubblemap.png",
+    "title": "Bubble Map",
+    "description": "This graph shows the population on a map",
+    "opts": {
+      "data": {
+        "reader": "waffle",
+        "splash": false,
+        "path": "/api/ddf/ql/"
+      },
+      "language": {
+        "id": "en",
+        "strings": {}
+      },
+      "locale": {
+        "filePath": "assets/translation/"
+      },
+      "ui": {
+        "buttons": [
+          "colors",
+          "find",
+          "size",
+          "moreoptions",
+          "fullscreen",
+          "presentation"
+        ],
+        "buttons_expand": [],
+        "dialogs": {
+          "popup": [
+            "colors",
+            "find",
+            "size",
+            "moreoptions"
+          ],
+          "sidebar": [
+            "colors",
+            "find",
+            "size"
+          ],
+          "moreoptions": [
+            "opacity",
+            "speed",
+            "size",
+            "colors",
+            "presentation",
+            "about"
+          ]
+        },
+        "datawarning": {
+          "doubtDomain": [
+            1800,
+            1950,
+            2015
+          ],
+          "doubtRange": [
+            1,
+            0.3,
+            0.2
+          ]
+        }
+      },
+      "state": {
+        "time": {
+          "startOrigin": "1800",
+          "endOrigin": "2015",
+          "value": "2015"
+        },
+        "entities": {
+          "dim": "geo",
+          "show": {
+            "is--country": true
+          }
+        },
+        "entities_colorlegend": {
+          "dim": "geo",
+          "show": {
+            "is--world_4region": true
+          }
+        },
+        "entities_tags": {
+          "dim": "tag"
+        },
+        "marker": {
+          "space": [
+            "entities",
+            "time"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "size": {
+            "use": "indicator",
+            "which": "population_total",
+            "scaleType": "linear",
+            "domainMin": 15,
+            "domainMax": 1400000000,
+            "allow": {
+              "scales": [
+                "linear"
+              ]
+            }
+          },
+          "hook_lat": {
+            "use": "property",
+            "which": "latitude",
+            "_important": true
+          },
+          "hook_lng": {
+            "use": "property",
+            "which": "longitude",
+            "_important": true
+          },
+          "color": {
+            "use": "property",
+            "which": "world_4region",
+            "scaleType": "ordinal",
+            "syncModels": [
+              "marker_colorlegend"
+            ]
+          }
+        },
+        "marker_colorlegend": {
+          "space": [
+            "entities_colorlegend"
+          ],
+          "type": "geometry",
+          "shape": "svg",
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_rank": {
+            "use": "property",
+            "which": "rank"
+          },
+          "hook_geoshape": {
+            "use": "property",
+            "which": "shape_lores_svg"
+          }
+        },
+        "marker_tags": {
+          "space": [
+            "entities_tags"
+          ],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_parent": {
+            "use": "property",
+            "which": "parent"
+          }
+        }
+      }
+    },
+    "relateditems": [
+      {
+        "_id": "5600af4a188967b26265a73f",
+        "_relatedTo": [
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-many-are-rich-and-how-many-are-poor/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=399&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — Most are in between",
+        "title": "How many are rich and how many are poor?",
+        "__v": 0
+      },
+      {
+        "_id": "560061d4fc0d7c00002110a4",
+        "title": "How Reliable is the World Population Forecast?",
+        "subtitle": "Short answer — Very reliable",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=136&preset=160x96&title=media&extension=.jpg",
+        "link": "http://www.gapminder.org/answers/how-reliable-is-the-world-population-forecast/",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ]
+      },
+      {
+        "_id": "5600ad4c188967b26265a73b",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/will-saving-poor-children-lead-to-overpopulation/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=409&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — No. The opposite.",
+        "title": "Will saving poor children lead to overpopulation?",
+        "__v": 0
+      },
+      {
+        "_id": "5600ae2b188967b26265a73c",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-does-income-relate-to-life-expectancy/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=318&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — Rich people live longer",
+        "title": " How Does Income Relate to Life Expectancy?",
+        "__v": 0
+      },
+      {
+        "_id": "5600ae64188967b26265a73d",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/answers/how-did-babies-per-woman-change-in-the-world/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=125&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "Short answer — It dropped",
+        "title": "How Did Babies per Woman Change in the World?",
+        "__v": 0
+      },
+      {
+        "_id": "5600aedc188967b26265a73e",
+        "_relatedTo": [
+          "55f71e8ccdedc1ff074e9f6d",
+          "55f70fd5dbbfabe3d6a2753f"
+        ],
+        "link": "http://www.gapminder.org/posters/gapminder-world-2013/",
+        "image": "//cms.gapminder.org/files-api/p3media/file/image?id=209&preset=160x96&title=media&extension=.jpg",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
+        "title": "Gapminder World Poster 2013",
+        "__v": 0
+      }
+    ]
+  }
+]
