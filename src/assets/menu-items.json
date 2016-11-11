@@ -1,0 +1,129 @@
+{
+  "_id": "56002c460faa9de708f37c33",
+  "node_id": null,
+  "menu_label": "Home",
+  "caption": null,
+  "url": null,
+  "children": [
+    {
+      "node_id": null,
+      "menu_label": "Facts",
+      "caption": null,
+      "url": null,
+      "children": [
+        {
+          "node_id": null,
+          "menu_label": "Bubble Chart",
+          "caption": "Explore a world in motion with animated statistics",
+          "url": "http://www.gapminder.org/world",
+          "icon_url": "/images/icons/menu/bubchart.png",
+          "$$hashKey": "object:8"
+        },
+        {
+          "node_id": null,
+          "menu_label": "Answers",
+          "caption": "Watch Hans Rosling answer huge fact-questions in less than 90 seconds",
+          "url": "http://www.gapminder.org/answers/",
+          "icon_url": "/images/icons/menu/answers.png",
+          "$$hashKey": "object:9"
+        },
+        {
+          "node_id": null,
+          "menu_label": "Massive Ignorance",
+          "caption": "Beware the shocking results from our Global Knowledge Surveys",
+          "url": "http://www.gapminder.org/ignorance",
+          "icon_url": "/images/icons/menu/igmo.png",
+          "$$hashKey": "object:10"
+        },
+        {
+          "node_id": null,
+          "menu_label": "Data",
+          "caption": "Download tables with stats gathered from hundreds of sources",
+          "url": "http://www.gapminder.org/data",
+          "icon_url": "/images/icons/menu/data.png",
+          "$$hashKey": "object:11"
+        }
+      ]
+    },
+    {
+      "node_id": null,
+      "menu_label": "Teach",
+      "caption": null,
+      "url": null,
+      "children": [
+        {
+          "node_id": null,
+          "menu_label": "Teachers",
+          "caption": "See how teachers use Gapminder in classrooms",
+          "url": "http://www.gapminder.org/for-teachers",
+          "icon_url": "/images/icons/menu/teach.png",
+          "$$hashKey": "object:21"
+        },
+        {
+          "node_id": null,
+          "menu_label": "Slideshows",
+          "caption": "Download and edit our modular slides to fit your presentations",
+          "url": "http://www.gapminder.org/presentations",
+          "icon_url": "/images/icons/menu/slides.png",
+          "$$hashKey": "object:22"
+        },
+        {
+          "node_id": null,
+          "menu_label": "Workshops",
+          "caption": "Let your students practice analytical skills without computers",
+          "url": "http://www.gapminder.org/workshops",
+          "icon_url": "/images/icons/menu/workshops.png",
+          "$$hashKey": "object:23"
+        },
+        {
+          "node_id": null,
+          "menu_label": "Test Questions",
+          "caption": "Boost your students confidence by putting their results next to the public’s",
+          "url": "http://www.gapminder.org/test-questions",
+          "icon_url": "/images/icons/menu/testquestion.png",
+          "$$hashKey": "object:24"
+        }
+      ]
+    },
+    {
+      "node_id": null,
+      "menu_label": "About",
+      "caption": null,
+      "url": null,
+      "children": [
+        {
+          "node_id": null,
+          "menu_label": "Our Organization",
+          "caption": "Read about the Gapminder Foundation",
+          "url": "http://www.gapminder.org/about-gapminder",
+          "icon_url": "/images/icons/menu/gapminder.png",
+          "$$hashKey": "object:34"
+        },
+        {
+          "node_id": null,
+          "menu_label": "News",
+          "caption": "Stay tuned with our Blog,  Factpod, Facebook & Twitter feeds",
+          "url": "http://www.gapminder.org/news",
+          "icon_url": "/images/icons/menu/news.png",
+          "$$hashKey": "object:35"
+        },
+        {
+          "node_id": null,
+          "menu_label": "FAQ",
+          "caption": "Find answers to the most frequent questions",
+          "url": "http://www.gapminder.org/faq_frequently_asked_questions",
+          "icon_url": "/images/icons/menu/faq.png",
+          "$$hashKey": "object:36"
+        },
+        {
+          "node_id": null,
+          "menu_label": "Open License",
+          "caption": "Copy, change, spread and even sell our free material",
+          "url": "http://www.gapminder.org/free-material",
+          "icon_url": "/images/icons/menu/license.png",
+          "$$hashKey": "object:37"
+        }
+      ]
+    }
+  ]
+}

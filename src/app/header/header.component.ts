@@ -12,4 +12,5 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
+  mobileMenuHidden = true;
 }

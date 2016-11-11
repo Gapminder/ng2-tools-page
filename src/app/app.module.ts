@@ -11,6 +11,8 @@ import { SeeAlsoComponent } from './see-also/see-also.component';
 import { ReportProblemComponent } from './report-problem/report-problem.component';
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
+import { MenuComponent } from './header/menu/menu.component';
+import { SocialButtonsComponent } from './social-buttons/social-buttons.component';
 
 @NgModule({
   imports: [
@@ -18,7 +20,8 @@ import { FooterComponent } from './footer/footer.component';
     FormsModule,
     HttpModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent }
+      { path: '', component: HomeComponent },
+      { path: '**', component: HomeComponent }
     ])
   ],
   declarations: [
@@ -28,7 +31,9 @@ import { FooterComponent } from './footer/footer.component';
     SeeAlsoComponent,
     ReportProblemComponent,
     HeaderComponent,
-    FooterComponent
+    FooterComponent,
+    MenuComponent,
+    SocialButtonsComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
