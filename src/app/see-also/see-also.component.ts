@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToolService } from './../tool.service';
 
 @Component({
   selector: 'app-see-also',
@@ -7,9 +8,39 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SeeAlsoComponent implements OnInit {
 
-  constructor() { }
+  toolActive: String;
+
+  tools = {};
+  toolKeys = [];
+
+  toolsServiceLoaderEmitter: any;
+  toolsServiceChangeEmitter: any;
+
+  constructor( private toolService:ToolService ) {
+
+    this.toolsServiceLoaderEmitter = this.toolService.getToolLoaderEmitter()
+      .subscribe(data => {
+        this.tools = data.items;
+        this.toolKeys = data.keys;
+        this.toolActive = data.active;
+      });
+
+    this.toolsServiceChangeEmitter = this.toolService.getToolChangeEmitter()
+      .subscribe(data => {
+        this.toolActive = data.active;
+      });
+  }
+
+  changeHandler(toolKey) {
+    this.toolService.changeActiveTool(toolKey);
+  }
 
   ngOnInit() {
+  }
+
+  ngOnDestroy() {
+    this.toolsServiceLoaderEmitter.unsubscribe();
+    this.toolsServiceChangeEmitter.unsubscribe();
   }
 
 }

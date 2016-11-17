@@ -1,14 +1,13 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-
-//import { RelatedItemsComponent } from './related-items/related-items.component.ts';
-//import { SeeAlsoComponent } from './see-also/see-also.component.ts';
+import { LanguageSwitcherService } from './header/language-switcher/language-switcher.service';
+import { ToolService } from './tool.service';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.styl']
-
+  styleUrls: ['./app.component.styl'],
+  providers: [LanguageSwitcherService, ToolService]
 })
 export class AppComponent {
   // relatedItems = RelatedItemsComponent;

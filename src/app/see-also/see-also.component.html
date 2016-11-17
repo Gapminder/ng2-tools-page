@@ -1,3 +1,17 @@
 <div class="about">
-  <h2 class="heading-2">... See also</h2>
+
+  <h2 class="heading-2">See also</h2>
+
+  <div class="menu"></div>
+  <ul class="menu-primary">
+
+    <li class="menu-item" *ngFor="let toolKey of toolKeys">
+      <a [href]="'/tools/#_chart-type=' + toolKey" [hidden]="toolActive == toolKey" (click)="changeHandler(toolKey)">
+        <span class="title">{{tools[toolKey].title}}</span>
+        <img class="image" [src]="tools[toolKey].image">
+      </a>
+    </li>
+
+  </ul>
+
 </div>

@@ -12,7 +12,8 @@ import { ReportProblemComponent } from './report-problem/report-problem.componen
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './header/menu/menu.component';
-import { SocialButtonsComponent } from './social-buttons/social-buttons.component';
+import { SocialButtonsComponent } from './header/social-buttons/social-buttons.component';
+import { LanguageSwitcherComponent } from './header/language-switcher/language-switcher.component';
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { SocialButtonsComponent } from './social-buttons/social-buttons.componen
     HeaderComponent,
     FooterComponent,
     MenuComponent,
-    SocialButtonsComponent
+    SocialButtonsComponent,
+    LanguageSwitcherComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

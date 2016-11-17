@@ -25,7 +25,9 @@ export class SocialButtonsComponent implements OnInit {
 
   public getEmbeddedUrl() {
 
-    const pathBase = this.location['_platformStrategy']['_platformLocation']['_location']['origin'];
+    //const pathBase = this.location['_platformStrategy']['_platformLocation']['_location']['origin'];
+    const pathBase = window.location.href;
+
     const pathSearch = this.router.url;
     const urlTree = this.router.parseUrl(pathSearch);
 
