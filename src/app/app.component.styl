@@ -108,3 +108,43 @@ body
 
   .vzb-tool-buttonlist
     background-color white !important
+
+/* COMPONENT :: SEE ALSO */
+
+.more
+  padding 20px
+  box-sizing(border-box)
+  display block
+
+  +for_breakpoint(small)
+    padding 20px 0
+
+  +for_breakpoint(not-small)
+    padding-top 0px
+
+.about
+  float right
+  box-sizing(border-box)
+
+  +for_breakpoint(not-small)
+    padding-left 20px
+    float right
+    width 37%
+    &:after
+      clear both
+
+  +for_breakpoint(small)
+    background #f2fafc
+    float none
+    padding 20px
+    width 100%
+    .heading-2
+      display none
+
+.related
+  +for_breakpoint(small)
+    padding 20px
+
+  +for_breakpoint(not-small)
+    float left
+    width 63%

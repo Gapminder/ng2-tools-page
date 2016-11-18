@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { RouterModule }   from '@angular/router';
 
+import { VizabiModule } from 'ng2-vizabi';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RelatedItemsComponent } from './related-items/related-items.component';
@@ -20,6 +21,7 @@ import { LanguageSwitcherComponent } from './header/language-switcher/language-s
     BrowserModule,
     FormsModule,
     HttpModule,
+    VizabiModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent },
       { path: '**', component: HomeComponent }

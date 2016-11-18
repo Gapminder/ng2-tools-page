@@ -31,6 +31,11 @@ export class SeeAlsoComponent implements OnInit {
       });
   }
 
+  getLink(toolKey) {
+    return window.location.pathname + '#_chart-type=' + toolKey;
+  }
+
+
   changeHandler(toolKey) {
     this.toolService.changeActiveTool(toolKey);
   }
