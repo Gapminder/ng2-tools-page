@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportProblemComponent implements OnInit {
 
+  isVisible = false;
+
   constructor() { }
 
   ngOnInit() {

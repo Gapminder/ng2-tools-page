@@ -26,6 +26,7 @@ export class SocialButtonsComponent implements OnInit {
   public getEmbeddedUrl() {
 
     //const pathBase = this.location['_platformStrategy']['_platformLocation']['_location']['origin'];
+    //noinspection TypeScriptUnresolvedVariable
     const pathBase = window.location.href;
 
     const pathSearch = this.router.url;

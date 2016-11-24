@@ -19,7 +19,7 @@ export class ToolService {
   }
 
   private setupItems(items) {
-    const WS_SERVER = 'http://google.com/';
+    const WS_SERVER = 'https://waffle-server-dev.gapminderdev.org';
     const that = this;
 
     items.forEach(function(tool, index, tools) {

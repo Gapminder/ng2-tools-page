@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter } from '@angular/core';
 import { ToolService } from './../tool.service';
 
 @Component({
@@ -11,8 +11,8 @@ export class RelatedItemsComponent implements OnInit {
   toolItems = {};
   relatedItems = [];
 
-  toolsServiceLoaderEmitter: any;
-  toolsServiceChangeEmitter: any;
+  private toolsServiceLoaderEmitter: EventEmitter<any>;
+  private toolsServiceChangeEmitter: EventEmitter<any>;
 
   constructor(private toolService:ToolService) {
 

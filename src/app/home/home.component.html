@@ -1,16 +1,25 @@
-<div class="column main">
+<!--<div class="column main">-->
 
+  <div *ngFor="let toolKey of toolKeys" [hidden]="currentChartType != toolKey" class="column main">
     <vizabi class="vzb-placeholder"
+            *ngIf="currentChartType == toolKey"
             [readerModuleObject]="readerModuleObject"
             [readerGetMethod]="readerGetMethod"
             [readerParams]="readerParams"
             [readerName]="readerName"
-            [model]="model"
-            [modelHash]="modelHash"
             [translations]="translations"
             [extResources]="extResources"
-            [chartType]="chartType"></vizabi>
+            [stopUrlRedirect]="stopUrlRedirect"
+            (onCreated)="onCreated($event)"
+            (onChanged)="onChanged($event)"
+            [chartType]="vizabiInstances[toolKey].chartType"
+            [model]="vizabiInstances[toolKey].model"
+            [modelHash]="vizabiInstances[toolKey].modelHash"
+    ></vizabi>
+  </div>
 
-</div>
+  <div *ngIf="currentChartType == ''">
+    ... chart type is not detected
+  </div>
 
-
+<!--</div>-->
