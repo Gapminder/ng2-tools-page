@@ -72,7 +72,6 @@ export class HomeComponent implements OnInit {
 
     if(!hashModel['chart-type'] || this.toolKeys.indexOf(hashModel['chart-type']) === -1) {
       const redirect = window.location.pathname + "#_chart-type=" + this.toolDefault;
-      console.log("first load + redirect");
 
       window.location.href = redirect;
       this.toolService.changeActiveTool(this.toolDefault);
@@ -135,7 +134,6 @@ export class HomeComponent implements OnInit {
     const element = document.querySelector('.wrapper');
     const positionFrom = element.scrollTop;
     const positionTo = 0 - positionFrom;
-    console.log("scrollToChart", durationLeft, element.scrollTop);
 
     if(positionTo < 0) {
       const duration = durationLeft;
