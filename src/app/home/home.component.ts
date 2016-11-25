@@ -26,6 +26,7 @@ export class HomeComponent implements OnInit {
 
   private currentChartType = '';
   private currentHashModel: any;
+  private switchingReady: boolean = true;
 
   private toolDefault = 'bubbles';
   private toolKeys: Array<any>;
@@ -123,8 +124,12 @@ export class HomeComponent implements OnInit {
 
   private updateChartType(slug) {
     if(slug != this.currentChartType && this.validateUrl()) {
+      this.switchingReady = false;
       this.scrollToChart(200, () => {
         this.setupChartType(slug);
+        setTimeout(() => {
+          this.switchingReady = true;
+        }, 10);
       });
     }
   }

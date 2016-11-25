@@ -2,7 +2,7 @@
 
   <div *ngFor="let toolKey of toolKeys" [hidden]="currentChartType != toolKey" class="column main">
     <vizabi class="vzb-placeholder"
-            *ngIf="currentChartType == toolKey"
+            *ngIf="currentChartType == toolKey && switchingReady"
             [readerModuleObject]="readerModuleObject"
             [readerGetMethod]="readerGetMethod"
             [readerParams]="readerParams"
