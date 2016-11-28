@@ -4,6 +4,7 @@ import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router
 import { defaultTranslations } from './default-translations';
 import { VizabiService } from "ng2-vizabi";
 import { ToolService } from './../tool.service';
+import * as _ from "lodash";
 
 const WSReader = require('vizabi-ws-reader').WSReader;
 
@@ -30,6 +31,7 @@ export class HomeComponent implements OnInit {
 
   private toolDefault = 'bubbles';
   private toolKeys: Array<any>;
+  private toolTypeMatch = {};
   private toolItems: any;
   private vizabiInstances = {};
 
@@ -54,6 +56,13 @@ export class HomeComponent implements OnInit {
       .subscribe(data => {
         this.updateChartType(data.active);
       });
+
+    router.events.subscribe((event: NavigationEvent) => {
+      if(event instanceof NavigationEnd) {
+        this.urlChanged(event);
+      }
+    });
+
   }
 
   ngOnInit() {}
@@ -67,22 +76,28 @@ export class HomeComponent implements OnInit {
       this.setupChartType();
     }
   }
+
   private validateUrl() {
-    const hash = window.location.hash.substring(1);
+
+    const hash = this.getUrlHash();
     const hashModel = this.vService.stringToModel(hash);
 
     if(!hashModel['chart-type'] || this.toolKeys.indexOf(hashModel['chart-type']) === -1) {
       const redirect = window.location.pathname + "#_chart-type=" + this.toolDefault;
-
       window.location.href = redirect;
-      this.toolService.changeActiveTool(this.toolDefault);
 
+      this.toolService.changeActiveTool(this.toolDefault);
       return false;
     }
 
-    // store hash model
-    this.currentHashModel = hashModel;
+    this.currentHashModel = this.vService.stringToModel(hash);
     return true;
+  }
+
+  private getUrlHash(hash = '') {
+    hash = hash || window.location.hash;
+    const hashPosition = hash.indexOf("#") + 1;
+    return hash.substring(hashPosition);
   }
 
   private setupVizabiDataBase() {
@@ -100,20 +115,37 @@ export class HomeComponent implements OnInit {
       preloadPath: 'api/vizabi/'
     };
   }
+
   private setupVizabiDataCharts() {
+
+    const hash = this.getUrlHash();
+    const hashModel = this.vService.stringToModel(hash);
+    const slugFromHash = hashModel['chart-type'] || false;
+
     this.toolKeys.forEach(slug => {
+      const chartType = this.toolItems[slug].tool;
+      this.toolTypeMatch[chartType] = slug;
+
       this.vizabiInstances[slug] = {
         modelHash: '',
-        model: this.toolItems[slug].opts,
-        chartType: this.toolItems[slug].tool
+        chartType: chartType,
+        model: _.cloneDeep(this.toolItems[slug].opts),
+        modelInitial: _.cloneDeep(this.toolItems[slug].opts),
+        instance: {}
       };
     });
+
+    // update hashModel from Url
+    if(slugFromHash && this.toolKeys.indexOf(slugFromHash) !== -1) {
+      this.vizabiInstances[slugFromHash].modelHash = this.getUrlHash();
+    }
   }
 
   private setupChartType(slug = '') {
 
     const slugUpdate = slug || this.currentHashModel['chart-type'];
 
+    // first load
     if(!slug && slugUpdate != this.toolDefault) {
       return this.toolService.changeActiveTool(slugUpdate);
     }
@@ -134,6 +166,35 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  private urlChanged(event) {
+
+    const hashModelString = this.getUrlHash(event.url);
+    const vizabiModelString = this.vService.modelToString(this.currentHashModel);
+
+    // update:: not from model, but from url directly (back button)
+    if(hashModelString != vizabiModelString && this.currentHashModel) {
+      // store new state to stop urlChange event
+      this.currentHashModel = this.vService.stringToModel(hashModelString);
+      // update vizabi model
+      const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, this.currentHashModel);
+      this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
+    }
+  }
+
+  private updateUrlHash(model) {
+    const modelForUpdate = this.vService.modelToString(model);
+    const modelCurrent = this.vService.modelToString(this.currentHashModel);
+
+    if(modelForUpdate != modelCurrent) {
+      this.currentHashModel = model;
+      window.location.hash = "#" + modelForUpdate;
+    }
+  }
+
+  private getChartType(chartType) {
+    return this.toolTypeMatch[chartType];
+  }
+
   private scrollToChart(durationLeft, complete) {
     //const element = document.querySelector('.wrapper');
     const element = document.querySelector('.wrapper');
@@ -141,7 +202,6 @@ export class HomeComponent implements OnInit {
     const positionTo = 0 - positionFrom;
 
     if(positionTo < 0) {
-      const duration = durationLeft;
       const positionDiff = positionTo / durationLeft * 10;
       element.scrollTop += positionDiff;
       // next tick
@@ -154,10 +214,31 @@ export class HomeComponent implements OnInit {
   }
 
   onCreated(changes) {
-    console.log("onCreate", changes);
+
+    // console.log("onCreate", changes);
+
+    const slug = this.getChartType(changes.type);
+    this.vizabiInstances[slug].instance = changes.component;
+
+    // reset instance for switching
+    setTimeout(() => {
+      // clear hash model after init :: required after chart switching
+
+
+      this.vizabiInstances[slug].modelHash = '';
+      this.vizabiInstances[slug].model = _.cloneDeep(this.toolItems[slug].opts);
+      this.vizabiInstances[slug].model['chart-type'] = slug;
+    }, 10);
+
   }
   onChanged(changes) {
-    console.log("onChange", changes);
+
+    // console.log("onChange", changes);
+
+    const modelDiff = changes.modelDiff;
+    modelDiff['chart-type'] = this.getChartType(changes.type);
+
+    this.updateUrlHash(changes.modelDiff);
   }
 
   ngOnDestroy() {
