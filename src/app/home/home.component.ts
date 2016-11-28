@@ -109,8 +109,7 @@ export class HomeComponent implements OnInit {
     this.translations = defaultTranslations;
     this.stopUrlRedirect = true;
     this.extResources = {
-      reader: 'waffle',
-      host: 'https://waffle-server.gapminderdev.org/',
+      host: 'https://waffle-server-dev.gapminderdev.org/',
       dataPath: '/api/ddf/',
       preloadPath: 'api/vizabi/'
     };
@@ -130,8 +129,8 @@ export class HomeComponent implements OnInit {
         modelHash: '',
         chartType: chartType,
         model: _.cloneDeep(this.toolItems[slug].opts),
-        modelInitial: _.cloneDeep(this.toolItems[slug].opts),
-        instance: {}
+        instance: {},
+        modelInitial: {}
       };
     });
 
@@ -217,17 +216,19 @@ export class HomeComponent implements OnInit {
 
     // console.log("onCreate", changes);
 
-    const slug = this.getChartType(changes.type);
-    this.vizabiInstances[slug].instance = changes.component;
-
     // reset instance for switching
     setTimeout(() => {
+
+      const slug = this.getChartType(changes.type);
+
       // clear hash model after init :: required after chart switching
-
-
       this.vizabiInstances[slug].modelHash = '';
       this.vizabiInstances[slug].model = _.cloneDeep(this.toolItems[slug].opts);
       this.vizabiInstances[slug].model['chart-type'] = slug;
+
+      // store vizabi instance and Initial Model
+      this.vizabiInstances[slug].instance = changes.component;
+      this.vizabiInstances[slug].modelInitial = changes.component.getModel();
     }, 10);
 
   }
