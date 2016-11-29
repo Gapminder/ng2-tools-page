@@ -27,7 +27,7 @@ export class SocialButtonsComponent implements OnInit {
 
     //const pathBase = this.location['_platformStrategy']['_platformLocation']['_location']['origin'];
     //noinspection TypeScriptUnresolvedVariable
-    const pathBase = window.location.href;
+    const pathBase = window.location.origin;
 
     const pathSearch = this.router.url;
     const urlTree = this.router.parseUrl(pathSearch);
