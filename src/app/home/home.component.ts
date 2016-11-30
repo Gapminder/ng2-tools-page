@@ -1,5 +1,6 @@
 import { ElementRef, EventEmitter, Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
+import { LanguageSwitcherService } from './../header/language-switcher/language-switcher.service';
 
 import { defaultTranslations } from './default-translations';
 import { VizabiService } from "ng2-vizabi";
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit {
   private toolItems: any;
   private vizabiInstances = {};
 
+  private langServiceEmitter: EventEmitter<any>;
   private toolsServiceLoaderEmitter: EventEmitter<any>;
   private toolsServiceChangeEmitter: EventEmitter<any>;
 
@@ -42,7 +44,8 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private vService: VizabiService,
     private toolService: ToolService,
-    private domElement: ElementRef
+    private domElement: ElementRef,
+    private langService:LanguageSwitcherService
   ) {
 
     this.toolsServiceLoaderEmitter = this.toolService.getToolLoaderEmitter()
@@ -57,12 +60,14 @@ export class HomeComponent implements OnInit {
         this.updateChartType(data.active);
       });
 
-    router.events.subscribe((event: NavigationEvent) => {
+    this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
         this.urlChanged(event);
       }
     });
 
+    this.langServiceEmitter = this.langService.getLanguageChangeEmitter()
+      .subscribe(langItem => this.updateLanguage(langItem));
   }
 
   ngOnInit() {}
@@ -171,7 +176,7 @@ export class HomeComponent implements OnInit {
     const vizabiModelString = this.vService.modelToString(this.currentHashModel);
 
     // update:: not from model, but from url directly (back button)
-    if(hashModelString != vizabiModelString && this.currentHashModel) {
+    if(hashModelString != vizabiModelString && this.currentHashModel && this.currentChartType) {
       // store new state to stop urlChange event
       this.currentHashModel = this.vService.stringToModel(hashModelString);
       // update vizabi model
@@ -212,6 +217,21 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  private updateLanguage(langItem) {
+    if(!this.currentHashModel) {
+      return;
+    }
+
+    const langModel = {locale: {id: langItem.key}};
+    const updateModel = _.extend({}, this.currentHashModel, langModel);
+
+    this.updateUrlHash(updateModel);
+
+    this.currentHashModel = updateModel;
+    const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, updateModel);
+    this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
+  }
+
   onCreated(changes) {
 
     // console.log("onCreate", changes);
@@ -243,6 +263,8 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    this.langServiceEmitter.unsubscribe();
     this.toolsServiceLoaderEmitter.unsubscribe();
+    this.toolsServiceChangeEmitter.unsubscribe();
   }
 }

@@ -28,6 +28,7 @@ export class SocialButtonsComponent implements OnInit {
     //const pathBase = this.location['_platformStrategy']['_platformLocation']['_location']['origin'];
     //noinspection TypeScriptUnresolvedVariable
     const pathBase = window.location.origin;
+    const pathBaseHref = this.location['_baseHref'];
 
     const pathSearch = this.router.url;
     const urlTree = this.router.parseUrl(pathSearch);
@@ -35,7 +36,7 @@ export class SocialButtonsComponent implements OnInit {
     urlTree.queryParams = urlTree.queryParams || {};
     urlTree.queryParams['embedded'] = 'true';
 
-    const externalLink = pathBase + this.router.serializeUrl(urlTree);
+    const externalLink = pathBase + pathBaseHref + this.router.serializeUrl(urlTree);
     prompt('Copy link:', externalLink);
   }
 
