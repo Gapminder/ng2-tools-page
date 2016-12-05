@@ -4,6 +4,8 @@
 .wrap-report-problem
   width 100%
   text-align center
+  display inline-block
+
   .report-problem
     padding 0 20px
     float right
@@ -14,3 +16,7 @@
     +for_breakpoint(small)
       float none
       display inline-block
+    &[hidden]
+      display none
+    &.indent
+      margin-right 0

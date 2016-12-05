@@ -179,6 +179,16 @@ export class HomeComponent implements OnInit {
     if(hashModelString != vizabiModelString && this.currentHashModel && this.currentChartType) {
       // store new state to stop urlChange event
       this.currentHashModel = this.vService.stringToModel(hashModelString);
+      const hashChartType = this.currentHashModel['chart-type'];
+
+      // check if chart changed :: back button
+      if(this.currentChartType !== hashChartType) {
+        // store state for init
+        this.vizabiInstances[hashChartType].modelHash = this.getUrlHash();
+        // change tool
+        return this.setupChartType(hashChartType);
+      }
+
       // update vizabi model
       const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, this.currentHashModel);
       this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);

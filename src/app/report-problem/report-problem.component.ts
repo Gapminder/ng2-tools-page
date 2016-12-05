@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FlashDetectService } from './flash-detect.service';
 
 @Component({
   selector: 'app-report-problem',
@@ -7,11 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportProblemComponent implements OnInit {
 
-  isVisible = false;
+  flashDetectService;
 
-  constructor() { }
+  constructor() {
+    this.flashDetectService = new FlashDetectService();
+  }
 
   ngOnInit() {
+  }
+
+  public isFlashAvailable () {
+    return this.flashDetectService.installed;
   }
 
 }
