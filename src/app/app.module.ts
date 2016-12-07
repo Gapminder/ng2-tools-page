@@ -15,16 +15,18 @@ import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './header/menu/menu.component';
 import { SocialButtonsComponent } from './header/social-buttons/social-buttons.component';
 import { LanguageSwitcherComponent } from './header/language-switcher/language-switcher.component';
+import { PageComponent } from './page/page.component';
+
+import { DeprecatedUrlService } from './deprecated-url.service';
 
 @NgModule({
   imports: [
     BrowserModule,
-    FormsModule,
     HttpModule,
     VizabiModule,
     RouterModule.forRoot([
-      { path: '', component: HomeComponent },
-      { path: '**', component: HomeComponent }
+      { path: '', component: PageComponent, canActivate: [DeprecatedUrlService] },
+      { path: '**', component: PageComponent, canActivate: [DeprecatedUrlService] }
     ])
   ],
   declarations: [
@@ -37,9 +39,10 @@ import { LanguageSwitcherComponent } from './header/language-switcher/language-s
     FooterComponent,
     MenuComponent,
     SocialButtonsComponent,
-    LanguageSwitcherComponent
+    LanguageSwitcherComponent,
+    PageComponent
   ],
-  providers: [],
+  providers: [DeprecatedUrlService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

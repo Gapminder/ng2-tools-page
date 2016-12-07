@@ -8,6 +8,7 @@ import { ToolService } from './../tool.service';
 })
 export class RelatedItemsComponent implements OnInit {
 
+  loaded = false;
   toolItems = {};
   relatedItems = [];
 
@@ -18,13 +19,16 @@ export class RelatedItemsComponent implements OnInit {
 
     this.toolsServiceLoaderEmitter = this.toolService.getToolLoaderEmitter()
       .subscribe(data => {
+        this.loaded = true;
         this.toolItems = data.items;
         this.relatedItems = this.toolItems[<string>data.active].relateditems;
       });
 
     this.toolsServiceChangeEmitter = this.toolService.getToolChangeEmitter()
       .subscribe(data => {
-        this.relatedItems = this.toolItems[<string>data.active].relateditems;
+        if(this.loaded) {
+          this.relatedItems = this.toolItems[<string>data.active].relateditems;
+        }
       });
   }
 

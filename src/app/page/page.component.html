@@ -1,0 +1,36 @@
+<div [class]="embeddedView ? 'wrapper embedded-view' : 'wrapper'">
+  <!--Header-->
+  <app-header></app-header>
+
+  <!--Content-->
+  <app-home></app-home>
+
+  <div class="wrap-social">
+
+    <div>
+      <!-- mobile :: social buttons-->
+      <ul class="social-list mobile">
+        <app-social-buttons></app-social-buttons>
+      </ul>
+    </div>
+
+    <!-- mobile :: language switcher-->
+    <div class="lang-wrapper mobile">
+      <app-language-switcher></app-language-switcher>
+    </div>
+
+  </div>
+
+  <!--link report problem -->
+  <app-report-problem> ... loading (report problem)</app-report-problem>
+
+  <!--More-->
+  <div class="more">
+
+    <app-see-also class="about"> ... loading (see also)</app-see-also>
+    <app-related-items class="related"> ... loading (related items)</app-related-items>
+
+  </div>
+
+  <app-footer> ... loading (footer)</app-footer>
+</div>

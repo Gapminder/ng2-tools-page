@@ -1,10 +1,11 @@
-import { ElementRef, EventEmitter, Component, OnInit } from '@angular/core';
+import { EventEmitter, Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
 import { LanguageSwitcherService } from './../header/language-switcher/language-switcher.service';
+import { ToolService } from './../tool.service';
 
 import { defaultTranslations } from './default-translations';
 import { VizabiService } from "ng2-vizabi";
-import { ToolService } from './../tool.service';
+
 import * as _ from "lodash";
 
 const WSReader = require('vizabi-ws-reader').WSReader;
@@ -44,7 +45,6 @@ export class HomeComponent implements OnInit {
     private router: Router,
     private vService: VizabiService,
     private toolService: ToolService,
-    private domElement: ElementRef,
     private langService:LanguageSwitcherService
   ) {
 
@@ -88,6 +88,7 @@ export class HomeComponent implements OnInit {
     const hashModel = this.vService.stringToModel(hash);
 
     if(!hashModel['chart-type'] || this.toolKeys.indexOf(hashModel['chart-type']) === -1) {
+      // home url by default
       const redirect = window.location.pathname + "#_chart-type=" + this.toolDefault;
       window.location.href = redirect;
 

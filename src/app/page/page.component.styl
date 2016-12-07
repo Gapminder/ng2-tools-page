@@ -1,0 +1,159 @@
+@import './../_resources/fonts.styl'
+@import './../_resources/variables.styl'
+@import './../_resources/mixins.styl'
+
+html, body
+  height 100%
+
+body
+  background-color white
+  font-family 'Bariol Regular', Arial, sans-serif
+  min-width $body-min-width
+  padding 0
+  margin 0
+
+
+.wrapper
+  display block
+  position relative
+  height 100%
+  overflow auto
+  -webkit-overflow-scrolling touch
+
+  +for_breakpoint(small)
+    position static
+    height auto
+
+.hidden
+  display none !important
+
+.invisible
+  visibility hidden
+
+/* COMPONENT :: SOCIAL */
+
+.wrap-social
+  display inline-block
+  width 100%
+  text-align center
+
+.social-list
+  list-style none
+  margin 9px 200px 0 0
+  padding 0
+  float right
+  +for_breakpoint(medium)
+    margin-right 100px
+
+  &.mobile
+    display none
+    margin 5px
+
+  +for_breakpoint(small)
+    &.desktop
+      display none
+
+    &.mobile
+      float none
+      display inline-block
+
+/* COMPONENT :: COMMON */
+
+.heading-2
+  margin 0
+  margin-bottom 10px
+  font-family "Bariol Light","Helvetica Neue",Helvetica,Arial,sans-serif
+  font-size 16px
+  line-height 1.4
+  text-transform uppercase
+
+
+
+/* COMPONENT :: LOADER */
+
+.loader-wrapper
+  box-sizing(border-box)
+  position(fixed, $header-height 0 0 0)
+  background-color white
+  padding 10px
+  text-align center
+  z-index 111111
+
+.loader
+  animation-duration(0.75s)
+  animation-iteration-count(infinite)
+  animation-name(rotate-continuous)
+  animation-timing-function(linear)
+  size(25px)
+  border 5px solid #ccc
+  border-right-color transparent
+  border-radius (50%)
+  display none
+  float right
+  margin auto
+  position absolute
+  top 50%
+  left 50%
+
+.loading
+  .loader
+    display block
+
+
+
+/* COMPONENT :: VIZABI */
+
+.vzb-tool
+  font-family 'Bariol Regular', "Lucida Sans Unicode","Lucida Grande",sans-serif !important
+
+  .vzb-tool-buttonlist
+    background-color white !important
+
+/* COMPONENT :: SEE ALSO */
+
+.more
+  padding 20px
+  box-sizing(border-box)
+  display block
+
+  +for_breakpoint(small)
+    padding 20px 0
+
+  +for_breakpoint(not-small)
+    padding-top 0px
+
+.about
+  float right
+  box-sizing(border-box)
+
+  +for_breakpoint(not-small)
+    padding-left 20px
+    float right
+    width 37%
+    &:after
+      clear both
+
+  +for_breakpoint(small)
+    background #f2fafc
+    float none
+    padding 20px
+    width 100%
+    .heading-2
+      display none
+
+.related
+  +for_breakpoint(small)
+    padding 20px
+
+  +for_breakpoint(not-small)
+    float left
+    width 63%
+
+/* embeddedView :: disable view for page except Vizabi Block */
+
+.embedded-view app-header,
+.embedded-view .wrap-social,
+.embedded-view app-report-problem,
+.embedded-view .more
+.embedded-view app-footer
+  display none
