@@ -2,6 +2,7 @@ import { EventEmitter, Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
 import { LanguageSwitcherService } from './../header/language-switcher/language-switcher.service';
 import { ToolService } from './../tool.service';
+import { environment } from './../../environments/environment';
 
 import { defaultTranslations } from './default-translations';
 import { VizabiService } from "ng2-vizabi";
@@ -115,7 +116,7 @@ export class HomeComponent implements OnInit {
     this.translations = defaultTranslations;
     this.stopUrlRedirect = true;
     this.extResources = {
-      host: 'https://waffle-server-dev.gapminderdev.org/',
+      host: environment.wsUrl + '/',
       dataPath: '/api/ddf/',
       preloadPath: 'api/vizabi/'
     };
@@ -260,6 +261,7 @@ export class HomeComponent implements OnInit {
       // store vizabi instance and Initial Model
       this.vizabiInstances[slug].instance = changes.component;
       this.vizabiInstances[slug].modelInitial = changes.component.getModel();
+      //this.vizabiInstances[slug].modelInitial = _.cloneDeep(changes.model);
     }, 10);
 
   }
@@ -270,6 +272,7 @@ export class HomeComponent implements OnInit {
     const modelDiff = changes.modelDiff;
     modelDiff['chart-type'] = this.getChartType(changes.type);
 
+    // vizabi issue :: don't remove/reset some values from model, using `setModel`
     this.updateUrlHash(changes.modelDiff);
   }
 

@@ -1,5 +1,6 @@
 import { Http } from '@angular/http';
 import { Injectable, EventEmitter } from '@angular/core';
+import { environment } from './../environments/environment';
 
 @Injectable()
 export class ToolService {
@@ -19,7 +20,7 @@ export class ToolService {
   }
 
   private setupItems(items) {
-    const WS_SERVER = 'https://waffle-server-dev.gapminderdev.org';
+    const WS_SERVER = environment.wsUrl;
     const that = this;
 
     items.forEach(function(tool, index, tools) {
