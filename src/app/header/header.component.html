@@ -13,6 +13,14 @@
   </ul>
 
   <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!mobileMenuHidden">
+
+    <!-- mobile :: language switcher-->
+    <li class="nav-expandable" [ngClass]="mobileMenuHidden ? 'hidden' : ''">
+      <div class="lang-wrapper mobile">
+        <app-language-switcher></app-language-switcher>
+      </div>
+    </li>
+
     <app-menu></app-menu>
   </ul>
 

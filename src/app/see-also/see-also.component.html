@@ -4,8 +4,8 @@
   <div class="menu"></div>
   <ul class="menu-primary">
 
-    <li class="menu-item" *ngFor="let toolKey of toolKeys">
-      <a [href]="getLink(toolKey)" [hidden]="toolActive == toolKey" (click)="changeHandler(toolKey)">
+    <li class="menu-item" *ngFor="let toolKey of toolKeys" [hidden]="(toolActive == toolKey)">
+      <a [href]="getLink(toolKey)" (click)="changeHandler(toolKey)">
         <span class="title">{{tools[toolKey].title}}</span>
         <img class="image" [src]="'.' + tools[toolKey].image">
       </a>

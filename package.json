@@ -29,7 +29,7 @@
     "@types/lodash": "4.14.39",
     "core-js": "^2.4.1",
     "lodash": "4.17.2",
-    "ng2-vizabi": "^0.17.4-28",
+    "ng2-vizabi": "^0.17.6-23",
     "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
     "vizabi-ws-reader": "0.1.1",
