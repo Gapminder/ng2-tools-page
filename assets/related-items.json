@@ -9,7 +9,7 @@
     "__v": 5,
     "opts": {
       "locale": {
-        "filePath": "/assets/translation/"
+        "filePath": "./assets/translation/"
       },
       "ui": {
         "buttons": [
@@ -267,7 +267,7 @@
     "__v": 4,
     "opts": {
       "locale": {
-        "filePath": "/assets/translation/"
+        "filePath": "./assets/translation/"
       },
       "data": {
         "reader": "waffle",
@@ -506,7 +506,7 @@
     "description": "This graph shows the population on a map",
     "opts": {
       "locale": {
-        "filePath": "/assets/translation/"
+        "filePath": "./assets/translation/"
       },
       "data": {
         "reader": "waffle",
@@ -734,7 +734,7 @@
     "description": "This graph shows the population on a map",
     "opts": {
       "locale": {
-        "filePath": "/assets/translation/"
+        "filePath": "./assets/translation/"
       },
       "data": {
         "reader": "waffle",
@@ -916,7 +916,7 @@
     "description": "This graph shows how a trend changes across the years",
     "opts": {
       "locale": {
-        "filePath": "/assets/translation/"
+        "filePath": "./assets/translation/"
       },
       "data": {
         "reader": "waffle",
