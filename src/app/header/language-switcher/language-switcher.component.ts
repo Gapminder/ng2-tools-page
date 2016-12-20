@@ -18,6 +18,8 @@ export class LanguageSwitcherComponent implements OnInit {
   constructor (private lgService: LanguageSwitcherService) {
     this.lgServiceEmitter = this.lgService.getLanguageChangeEmitter()
       .subscribe(langItem => this.Language = langItem);
+    this.lgService.getSwitcherStateEmitter()
+      .subscribe(state => this.isSwitcherOpened = state);
   }
 
   ngOnInit() {

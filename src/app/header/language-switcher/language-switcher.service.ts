@@ -16,6 +16,7 @@ export class LanguageSwitcherService {
   Language = null;
 
   languageChangeEmitter: EventEmitter<any> = new EventEmitter();
+  switcherStateEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(private router: Router, private vService: VizabiService) {
     this.LanguageList = this.LanguageAvailableList.concat();
@@ -39,6 +40,10 @@ export class LanguageSwitcherService {
     return this.languageChangeEmitter;
   }
 
+  getSwitcherStateEmitter() {
+    return this.switcherStateEmitter;
+  }
+
   getList() {
     return this.LanguageList;
   }
@@ -46,6 +51,10 @@ export class LanguageSwitcherService {
   setLanguage(langItem, emmit = true) {
     this.Language = langItem;
     this.languageChangeEmitter.emit(this.Language);
+  }
+
+  setSwitcherState(state) {
+    this.switcherStateEmitter.emit(state);
   }
 
   getLanguage() {
