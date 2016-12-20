@@ -4,7 +4,6 @@ import { LanguageSwitcherService } from './../header/language-switcher/language-
 import { ToolService } from './../tool.service';
 import { environment } from './../../environments/environment';
 
-import { defaultTranslations } from './default-translations';
 import { VizabiService } from "ng2-vizabi";
 
 import * as _ from "lodash";
@@ -24,7 +23,6 @@ export class HomeComponent implements OnInit {
   private readerParams: Array<any>;
   private readerName: string;
   private metadata: any;
-  private translations: any;
   private extResources: any;
   private stopUrlRedirect: boolean;
 
@@ -113,7 +111,6 @@ export class HomeComponent implements OnInit {
     this.readerParams = [];
     this.readerName = 'waffle';
     this.metadata = {};
-    this.translations = defaultTranslations;
     this.stopUrlRedirect = true;
     this.extResources = {
       host: environment.wsUrl + '/',

@@ -4,15 +4,16 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
-    "local": "ng serve --environment=local",
-    "dev": "ng serve --environment=dev",
-    "stage": "ng serve --environment=stage",
-    "prod": "ng serve --environment=prod",
-    "start": "npm run dev",
-    "build:stage": "ng build --base-href /tools/ --target=production --environment=stage",
-    "build:dev": "ng build --base-href /tools/ --target=production --environment=dev",
-    "build:prod": "ng build --base-href /tools/ --target=production --environment=prod",
-    "build:demo": "ng build --base-href /ng2-tools-page/ --target=development --environment=dev"
+    "local": "npm run prebuild && ng serve --environment=local",
+    "dev": "npm run prebuild && ng serve --environment=dev",
+    "stage": "npm run prebuild && ng serve --environment=stage",
+    "prod": "npm run prebuild && ng serve --environment=prod",
+    "prebuild": "mkdir -p ./src/assets/translation/ && cp -r ./node_modules/vizabi/build/dist/assets/translation/* ./src/assets/translation/ && cp ./node_modules/vizabi/build/dist/vizabi.css ./src/assets/vizabi.css",
+    "build:stage": "npm run prebuild && ng build --base-href /tools/ --target=production --environment=stage",
+    "build:dev": "npm run prebuild && ng build --base-href /tools/ --target=production --environment=dev",
+    "build:prod": "npm run prebuild && ng build --base-href /tools/ --target=production --environment=prod",
+    "build:demo": "npm run prebuild && ng build --base-href /ng2-tools-page/ --target=development --environment=dev",
+    "start": "npm run dev"
   },
   "private": true,
   "dependencies": {

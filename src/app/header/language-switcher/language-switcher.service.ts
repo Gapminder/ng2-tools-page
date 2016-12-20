@@ -9,7 +9,7 @@ export class LanguageSwitcherService {
 
   LanguageAvailableList = [
     {key: 'en', text: 'English'},
-    {key: 'es-ES', text: 'Español'}
+    {key: 'ar-SA', text: 'العربية'}
   ];
 
   LanguageList = [];
