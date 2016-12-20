@@ -1,4 +1,4 @@
-import { EventEmitter, Component, OnInit } from '@angular/core';
+import { EventEmitter, Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
 import { LanguageSwitcherService } from './../header/language-switcher/language-switcher.service';
 import { ToolService } from './../tool.service';
@@ -11,6 +11,7 @@ import * as _ from "lodash";
 const WSReader = require('vizabi-ws-reader').WSReader;
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.styl']

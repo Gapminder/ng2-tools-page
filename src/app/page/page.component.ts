@@ -7,24 +7,36 @@ import { LanguageSwitcherService } from './../header/language-switcher/language-
   encapsulation: ViewEncapsulation.None,
   selector: 'app-page',
   templateUrl: './page.component.html',
-  styleUrls: ['./page.component.styl'],
+  styleUrls: ['./page.component.styl', './page.component.rtl.styl'],
   providers: [LanguageSwitcherService, ToolService]
 })
 export class PageComponent implements OnInit {
 
   router: Router;
   embeddedView = false;
+  languageKey = '';
 
-  constructor(router: Router) {
+  constructor(router: Router, languageSwitcherService: LanguageSwitcherService) {
     this.router = router;
+
     this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
         this.detectEmbeddedView();
       }
     });
+
+    languageSwitcherService.getLanguageChangeEmitter()
+      .subscribe(langItem => this.languageKey = langItem.key);
   }
 
   ngOnInit() {
+  }
+
+  public getPageClass() {
+    let pageClass = ['wrapper'];
+    this.embeddedView && pageClass.push('embedded-view');
+    this.languageKey && pageClass.push(`page-lang-${this.languageKey}`);
+    return pageClass.join(' ');
   }
 
   private detectEmbeddedView() {

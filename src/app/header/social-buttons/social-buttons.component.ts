@@ -1,9 +1,10 @@
 import { Http } from '@angular/http';
 import { Location } from '@angular/common';
 import { Router }  from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-social-buttons',
   templateUrl: './social-buttons.component.html',
   styleUrls: ['./social-buttons.component.styl']

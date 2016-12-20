@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FlashDetectService } from './flash-detect.service';
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-report-problem',
   templateUrl: './report-problem.component.html',
   styleUrls: ['./report-problem.component.styl']

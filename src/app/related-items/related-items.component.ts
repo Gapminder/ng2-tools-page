@@ -1,7 +1,8 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ToolService } from './../tool.service';
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-related-items',
   templateUrl: './related-items.component.html',
   styleUrls: ['./related-items.component.styl']

@@ -1,0 +1,86 @@
+@import './../_resources/variables.styl'
+@import './../_resources/mixins.styl'
+
+.page-lang-ar-SA
+  direction rtl
+
+  .header-title
+    float right
+
+  .navbar-nav
+    left auto
+    right 200px
+
+    .nav-expandable
+      .nav-expanded
+        right 0
+        left auto
+
+        .nav-expanded-columns
+          .nav-expanded-columns-inner
+            .column-item-info
+              .column-item-heading,
+              .column-item-description
+                margin-left 0
+                margin-right 80px
+
+              &.no-icon
+                .column-item-heading,
+                .column-item-description
+                  margin-right 0
+
+  .lang-wrapper
+    float left
+    margin 14px -180px 0 140px
+
+    +for_breakpoint(small)
+
+      &.desktop
+        display none
+
+      &.mobile
+        float none
+        display none
+        margin 10px 0px 10px 10px
+
+      &.opened
+        display inline-block
+
+  .social-list
+    float left
+    margin 9px 0 0 200px
+
+    li
+      float right
+
+    +for_breakpoint(small)
+      float none
+      margin 0
+
+  .menu-mobile
+    right auto
+    left 0
+
+  .header:after
+    left 20px
+    right auto
+
+    +for_breakpoint(small)
+      left 43px
+
+  .wrap-report-problem
+    .report-problem
+      float left
+
+      +for_breakpoint(small)
+        float none !important
+        display inline-block
+
+  .more
+    direction rtl
+
+  .about
+    float left
+
+  .related
+    float right
