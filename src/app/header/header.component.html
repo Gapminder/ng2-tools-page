@@ -4,7 +4,7 @@
     GAPMINDER TOOLS
   </a>
 
-  <div class="menu-mobile" (click)="mobileMenuHidden = !mobileMenuHidden" [ngClass]="{'open' : !mobileMenuHidden }">
+  <div (click)="mobileMenuHidden = !mobileMenuHidden" [ngClass]="{'open' : !mobileMenuHidden, 'menu-mobile' : true }">
     <div class="icon"></div>
   </div>
 

@@ -1,50 +1,51 @@
 @import './../../_resources/variables.styl'
 @import './../../_resources/mixins.styl'
 
-li
-  float left
-  margin-left 8px
-  a
-    /*
-    FIX :: FontAwesome
-    color $color-primary
-    font-size 25px
-    line-height 1.2
-    */
-    display inline-block
+.social-list
+  li
+    float left
+    margin-left 8px
+    a
+      /*
+      FIX :: FontAwesome
+      color $color-primary
+      font-size 25px
+      line-height 1.2
+      */
+      display inline-block
 
-.ico-plane,
-.yellow-box
-  background $color-primary
-  border none
-  color #fff
-  font-size 15px
-  margin 5px 0
-  border-radius (4px)
-  cursor pointer
-  outline none
-  width 22px
-  height 22px
-  padding 0
+  .ico-plane,
+  .yellow-box
+    background $color-primary
+    border none
+    color #fff
+    font-size 15px
+    margin 5px 0
+    border-radius (4px)
+    cursor pointer
+    outline none
+    width 22px
+    height 22px
+    padding 0
 
-  path
-    fill white
+    path
+      fill white
 
-.yellow-box
-  text-align center
-  line-height 22px
+  .yellow-box
+    text-align center
+    line-height 22px
 
-  &.diff
-    font-size 12px
-    line-height 17px
-    i
+    &.diff
+      font-size 12px
+      line-height 17px
+      i
+        position relative
+        top -1px
+
+  .ico-plane
+    svg
       position relative
-      top -1px
-
-.ico-plane
-  svg
-    position relative
-    left: -1px
-    top: 1px
+      left: -1px
+      top: 1px
 
 
