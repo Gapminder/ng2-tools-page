@@ -1,5 +1,5 @@
 import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ToolService } from './../tool.service';
 import { LanguageSwitcherService } from './../header/language-switcher/language-switcher.service';
 
@@ -10,20 +10,16 @@ import { LanguageSwitcherService } from './../header/language-switcher/language-
   styleUrls: ['./page.component.styl', './page.component.rtl.styl'],
   providers: [LanguageSwitcherService, ToolService]
 })
-export class PageComponent implements OnInit {
+export class PageComponent {
 
-  router: Router;
-  languageSwitcherService: LanguageSwitcherService;
+  private embeddedView: boolean = false;
+  private languageKey: string = '';
 
-  embeddedView = false;
-  languageKey = '';
+  constructor(private router: Router, private languageSwitcherService: LanguageSwitcherService) {
 
-  constructor(router: Router, languageSwitcherService: LanguageSwitcherService) {
-    this.languageSwitcherService = languageSwitcherService;
     this.languageSwitcherService.getSwitcherStateEmitter()
       .subscribe(langItem => this.languageKey = langItem.key);
 
-    this.router = router;
     this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
         this.detectEmbeddedView();
@@ -31,17 +27,14 @@ export class PageComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
-
-  public getPageClass() {
+  public getPageClass(): string {
     let pageClass = ['wrapper'];
     this.embeddedView && pageClass.push('embedded-view');
     this.languageKey && pageClass.push(`page-lang-${this.languageKey}`);
     return pageClass.join(' ');
   }
 
-  public baseElementClickHandler($event) {
+  public baseElementClickHandler($event): void {
     const element = $event.target;
 
     const elemLangMobile = document.getElementsByClassName('lang-wrapper mobile')[0];
@@ -55,14 +48,13 @@ export class PageComponent implements OnInit {
     if (!elemLangActive.contains(element)) {
       this.languageSwitcherService.setSwitcherState(false);
     }
-    console.log("handler");
   };
 
-  private detectEmbeddedView() {
+  private detectEmbeddedView(): void {
     const pathSearch = this.router.url;
     const urlTree = this.router.parseUrl(pathSearch);
     const queryParams = urlTree.queryParams || {};
 
-    this.embeddedView = !!queryParams['embedded'] ? true : false;
+    this.embeddedView = !!queryParams['embedded'];
   }
 }

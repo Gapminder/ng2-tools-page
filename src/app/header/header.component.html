@@ -4,7 +4,7 @@
     GAPMINDER TOOLS
   </a>
 
-  <div (click)="mobileMenuHidden = !mobileMenuHidden" [ngClass]="{'open' : !mobileMenuHidden, 'menu-mobile' : true }">
+  <div (click)="switchMobileMenuState()" [ngClass]="{'open' : !getMobileMenuState(), 'menu-mobile' : true }">
     <div class="icon"></div>
   </div>
 
@@ -12,10 +12,10 @@
     <app-menu></app-menu>
   </ul>
 
-  <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!mobileMenuHidden">
+  <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!getMobileMenuState()">
 
     <!-- mobile :: language switcher-->
-    <li class="nav-expandable" [ngClass]="mobileMenuHidden ? 'hidden' : ''">
+    <li class="nav-expandable" [ngClass]="getMobileMenuState() ? 'hidden' : ''">
       <div class="lang-wrapper mobile">
         <app-language-switcher></app-language-switcher>
       </div>

@@ -24,8 +24,8 @@ import { DeprecatedUrlService } from './deprecated-url.service';
     HttpModule,
     VizabiModule,
     RouterModule.forRoot([
-      { path: '', component: PageComponent, canActivate: [DeprecatedUrlService] },
-      { path: '**', component: PageComponent, canActivate: [DeprecatedUrlService] }
+      { path: '', component: PageComponent, canActivate: [DeprecatedUrlService]},
+      { path: '**', redirectTo: ''}
     ])
   ],
   declarations: [

@@ -7,61 +7,65 @@ import * as _ from "lodash";
 @Injectable()
 export class LanguageSwitcherService {
 
-  LanguageAvailableList = [
+  private languageAvailableList: Array<any> = [
     {key: 'en', text: 'English'},
     {key: 'ar-SA', text: 'العربية'}
   ];
 
-  LanguageList = [];
-  Language = null;
+  private languageList: Array<any> = [];
+  private language: any;
 
-  languageChangeEmitter: EventEmitter<any> = new EventEmitter();
-  switcherStateEmitter: EventEmitter<any> = new EventEmitter();
+  private languageChangeEmitter: EventEmitter<any> = new EventEmitter();
+  private switcherStateEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor(private router: Router, private vService: VizabiService) {
-    this.LanguageList = this.LanguageAvailableList.concat();
+    this.languageList = this.languageAvailableList.concat();
 
     this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
-        const langFromUrl = this.detectLanguage();
-        if(
-          // language is not defined yet
-          !this.Language ||
-          // language changed
-          (this.Language && langFromUrl.key != this.Language.key)
-        ) {
+        if(this.languageIsNotSet() || this.languageChanged()) {
+          const langFromUrl = this.detectLanguage();
           this.setLanguage(langFromUrl);
         }
       }
     });
   }
 
-  getLanguageChangeEmitter() {
+  private languageIsNotSet(): boolean {
+    return !this.language;
+  }
+
+  private languageChanged(): boolean {
+    const langFromUrl = this.detectLanguage();
+    return this.language && langFromUrl.key != this.language.key;
+  }
+
+  public getLanguageChangeEmitter(): EventEmitter<any> {
     return this.languageChangeEmitter;
   }
 
-  getSwitcherStateEmitter() {
+  public getSwitcherStateEmitter(): EventEmitter<any> {
     return this.switcherStateEmitter;
   }
 
-  getList() {
-    return this.LanguageList;
+  public getList(): Array<any> {
+    return this.languageList;
   }
 
-  setLanguage(langItem, emmit = true) {
-    this.Language = langItem;
-    this.languageChangeEmitter.emit(this.Language);
+  public setLanguage(langItem): void {
+    this.language = langItem;
+    this.languageChangeEmitter.emit(this.language);
   }
 
-  setSwitcherState(state) {
+  public setSwitcherState(state: boolean): void {
     this.switcherStateEmitter.emit(state);
   }
 
-  getLanguage() {
-    return this.Language;
+  public getLanguage(): any {
+    return this.language;
   }
 
-  private detectLanguage() {
+  private detectLanguage(): any {
     let langFound = false;
 
     // top priority language from url
@@ -70,27 +74,21 @@ export class LanguageSwitcherService {
     const hashModelString = hash.substring(hashPosition);
     const hashModel = this.vService.stringToModel(hashModelString);
 
-    if (hashModel.locale) {
-      langFound = _.find(this.LanguageList, function (localeItem) {
-        return localeItem.key === hashModel.locale.id;
-      });
+    if(_.get(hashModel, 'locale.id', false)) {
+      langFound = _.find(this.languageList, localeItem => localeItem.key === hashModel.locale.id);
     }
 
     // second location browser locale
     const browserLanguage = this.detectBrowserLanguage();
     if (!langFound && browserLanguage) {
-      langFound = _.find(this.LanguageList, function (localeItem) {
-        return localeItem.key === browserLanguage;
-      });
+      langFound = _.find(this.languageList, localeItem => localeItem.key === browserLanguage);
     }
 
-    // last one is default EN
-    const defaultLanguage = _.first(this.LanguageList);
-
-    return langFound || defaultLanguage;
+    // found language OR EN as default
+    return langFound || _.first(this.languageList);
   }
 
-  private detectBrowserLanguage() {
+  private detectBrowserLanguage(): any {
     if (typeof window === 'undefined' || typeof window.navigator === 'undefined') {
       return false;
     }

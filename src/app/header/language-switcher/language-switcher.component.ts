@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { LanguageSwitcherService } from './language-switcher.service';
 
 @Component({
@@ -7,45 +7,27 @@ import { LanguageSwitcherService } from './language-switcher.service';
   templateUrl: 'language-switcher.component.html',
   styleUrls: ['language-switcher.component.styl']
 })
-export class LanguageSwitcherComponent implements OnInit {
+export class LanguageSwitcherComponent {
 
-  Language = null;
-  LanguageList = [];
+  private language: any;
+  private languageList: Array<any> = [];
 
-  isSwitcherOpened = false;
-  lgServiceEmitter: any;
+  public isSwitcherOpened: boolean = false;
 
-  constructor (private lgService: LanguageSwitcherService) {
-    this.lgServiceEmitter = this.lgService.getLanguageChangeEmitter()
-      .subscribe(langItem => this.Language = langItem);
-    this.lgService.getSwitcherStateEmitter()
+  constructor (private languageService: LanguageSwitcherService) {
+    this.languageService.getLanguageChangeEmitter()
+      .subscribe(langItem => this.language = langItem);
+    this.languageService.getSwitcherStateEmitter()
       .subscribe(state => this.isSwitcherOpened = state);
+
+    this.languageList = this.languageService.getList();
+    this.language = this.languageService.getLanguage();
   }
 
-  ngOnInit() {
-    this.LanguageList = this.lgService.getList();
-    this.Language = this.lgService.getLanguage();
-  }
-
-  ngOnDestroy() {
-    this.lgServiceEmitter.unsubscribe();
-  }
-
-  public changeLanguage(languageItem) {
-
-    this.lgService.setLanguage(languageItem);
-    this.Language = this.lgService.getLanguage();
+  public changeLanguage(languageItem: any): void {
+    this.languageService.setLanguage(languageItem);
+    this.language = this.languageService.getLanguage();
 
     this.isSwitcherOpened = false;
-
-    /*
-    var chartType = getChartType();
-    var urlVizabiModel = getModelFromUrl($location.hash());
-    var langModel = {language: {id: $scope.language.key}};
-    var updatedModel = {};
-
-    Vizabi.utils.deepExtend(updatedModel, $scope.vizabiModel[chartType], urlVizabiModel, langModel);
-    $scope.vizabiInstances[chartType].instance.setModel(updatedModel);
-    */
   }
 }

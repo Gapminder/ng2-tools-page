@@ -1,5 +1,6 @@
 import { Http } from '@angular/http';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+import * as _ from "lodash";
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -7,32 +8,27 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.styl']
 })
-export class MenuComponent implements OnInit {
+export class MenuComponent {
 
-  MenuItems = [];
-  IndexedMenuItems = [];
+  private menuItems: Array<any> = [];
+  private indexedMenuItems: Array<boolean> = [];
 
   constructor(private http:Http) {
     this.http
       .get('assets/menu-items.json')
-      .subscribe(res => this.MenuItems = res.json().children);
+      .subscribe(res => this.menuItems = res.json().children);
   }
 
-  ngOnInit() {}
-
-  public createIconUrl(item) {
-    return 'assets' + item.icon_url;
+  public createIconUrl(item: any): string {
+    return `assets${item.icon_url}`;
   }
 
-  public hasIcon(item) {
-    return item && item.icon_url ? true : false;
+  public hasIcon(item: any): boolean {
+    return item && item.icon_url;
   }
 
-  public switchSubMenu(index) {
-    for(let i = 0; i < this.IndexedMenuItems.length; i += 1) {
-      this.IndexedMenuItems[i] = i === index ? true : false;
-    }
-    this.IndexedMenuItems[index] = true;
+  public switchSubMenu(index: number): void {
+    _.fill(this.indexedMenuItems, false);
+    this.indexedMenuItems[index] = true;
   }
-
 }

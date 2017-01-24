@@ -8,12 +8,13 @@
     "dev": "npm run prebuild && ng serve --environment=dev",
     "stage": "npm run prebuild && ng serve --environment=stage",
     "prod": "npm run prebuild && ng serve --environment=prod",
-    "prebuild": "mkdir -p ./src/assets/translation/ && cp -r ./node_modules/vizabi/build/dist/assets/translation/* ./src/assets/translation/ && cp ./node_modules/vizabi/build/dist/vizabi.css ./src/assets/vizabi.css",
+    "prebuild": "cp ./node_modules/vizabi/build/dist/vizabi.css ./src/assets/vizabi.css",
     "build:stage": "npm run prebuild && ng build --base-href /tools/ --target=production --environment=stage",
-    "build:dev": "npm run prebuild && ng build --base-href /tools/ --target=production --environment=dev",
+    "build:dev": "npm run prebuild && ng build --base-href /tools/ --target=development --environment=dev",
     "build:prod": "npm run prebuild && ng build --base-href /tools/ --target=production --environment=prod",
     "build:demo": "npm run prebuild && ng build --base-href /ng2-tools-page/ --target=development --environment=dev",
-    "start": "npm run dev"
+    "start": "npm run dev",
+    "start:dev": "npm run build:dev && ws -d ./dist/ -p 3011 --rewrite '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'"
   },
   "private": true,
   "dependencies": {
@@ -30,7 +31,7 @@
     "@types/lodash": "4.14.39",
     "core-js": "^2.4.1",
     "lodash": "4.17.2",
-    "ng2-vizabi": "0.18.3-30",
+    "ng2-vizabi": "0.18.3-22",
     "rxjs": "5.0.0-beta.12",
     "ts-helpers": "^1.1.1",
     "vizabi-ws-reader": "0.1.1",
@@ -49,6 +50,7 @@
     "karma-jasmine": "^1.0.2",
     "karma-remap-istanbul": "^0.2.1",
     "protractor": "4.0.9",
+    "local-web-server": "1.2.6",
     "ts-node": "1.2.1",
     "tslint": "3.13.0",
     "typescript": "2.0.10",

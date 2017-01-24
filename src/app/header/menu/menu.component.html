@@ -1,10 +1,10 @@
 
 <li class="nav-expandable">
-  <div *ngFor="let item of MenuItems; let indexId=index;" class="nav-expandable-item">
+  <div *ngFor="let item of menuItems; let indexId=index;" class="nav-expandable-item">
 
     <a class="nav-toggle-expanded" (click)="switchSubMenu(indexId)">{{ item.menu_label }}</a>
 
-    <div class="nav-expanded" [hidden]="!IndexedMenuItems[indexId]">
+    <div class="nav-expanded" [hidden]="!indexedMenuItems[indexId]">
 
       <div class="nav-expanded-columns nav-expanded-columns-2 nav-expanded-columns-icons">
         <div class="nav-expanded-columns-inner">

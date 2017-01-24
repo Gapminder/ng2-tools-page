@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ToolService } from './../tool.service';
 
 @Component({
@@ -7,46 +7,30 @@ import { ToolService } from './../tool.service';
   templateUrl: './see-also.component.html',
   styleUrls: ['./see-also.component.styl']
 })
-export class SeeAlsoComponent implements OnInit {
+export class SeeAlsoComponent {
 
-  toolActive: String;
+  public tools: any = {};
+  public toolKeys: Array<string> = [];
+  public toolActive: string;
 
-  tools = {};
-  toolKeys = [];
+  constructor(private toolService: ToolService) {
 
-  private toolsServiceLoaderEmitter: EventEmitter<any>;
-  private toolsServiceChangeEmitter: EventEmitter<any>;
+    this.toolService.getToolLoaderEmitter().subscribe(data => {
+      this.tools = data.items;
+      this.toolKeys = data.keys;
+      this.toolActive = data.active;
+    });
 
-  constructor( private toolService:ToolService ) {
-
-    this.toolsServiceLoaderEmitter = this.toolService.getToolLoaderEmitter()
-      .subscribe(data => {
-        this.tools = data.items;
-        this.toolKeys = data.keys;
-        this.toolActive = data.active;
-      });
-
-    this.toolsServiceChangeEmitter = this.toolService.getToolChangeEmitter()
-      .subscribe(data => {
-        this.toolActive = data.active;
-      });
+    this.toolService.getToolChangeEmitter().subscribe(data => {
+      this.toolActive = data.active;
+    });
   }
 
-  getLink(toolKey) {
-    return window.location.pathname + '#_chart-type=' + toolKey;
+  public getLink(toolKey: string): string {
+    return `${window.location.pathname}#_chart-type=${toolKey}`;
   }
 
-
-  changeHandler(toolKey) {
+  public changeHandler(toolKey: string): void {
     this.toolService.changeActiveTool(toolKey);
   }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
-    this.toolsServiceLoaderEmitter.unsubscribe();
-    this.toolsServiceChangeEmitter.unsubscribe();
-  }
-
 }

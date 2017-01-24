@@ -1,7 +1,8 @@
 import { Http } from '@angular/http';
 import { Location } from '@angular/common';
 import { Router }  from '@angular/router';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
+import * as _ from "lodash";
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -9,25 +10,17 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
   templateUrl: './social-buttons.component.html',
   styleUrls: ['./social-buttons.component.styl']
 })
-export class SocialButtonsComponent implements OnInit {
+export class SocialButtonsComponent {
 
-  http: Http;
-  location: Location;
-  router: Router;
+  constructor(private http: Http, private location: Location, private router: Router) {
 
-  constructor(http: Http, location: Location, router: Router) {
-    this.http = http;
-    this.location = location;
-    this.router = router;
   }
 
-  ngOnInit() {
-  }
-
-  public getEmbeddedUrl() {
+  public getEmbeddedUrl(): void {
 
     //const pathBase = this.location['_platformStrategy']['_platformLocation']['_location']['origin'];
     //noinspection TypeScriptUnresolvedVariable
+
     const pathBase = window.location.origin;
     const pathBaseHref = this.location['_baseHref'];
 
@@ -41,15 +34,20 @@ export class SocialButtonsComponent implements OnInit {
     prompt('Copy link:', externalLink);
   }
 
-  public shareLink() {
+  public shareLink(): void {
 
     const bitlyUrl = 'https://api-ssl.bitly.com/v3/shorten';
-    const baseDomain = document.URL;
+    const baseUrl = document.URL;
     //const baseDomain = 'http://gapminderdev.org/tools/';
+
+    if (!_.includes(baseUrl, 'gapminder')) {
+      prompt('Copy the following link: ', baseUrl);
+      return;
+    }
 
     const params = {
       access_token: 'c5c5bdef4905a307a3a64664b1d06add09c48eb8',
-      longUrl: encodeURIComponent(baseDomain)
+      longUrl: encodeURIComponent(baseUrl)
     };
 
     const serviceUrl = this.getQueryByParams(bitlyUrl, params);
@@ -65,19 +63,14 @@ export class SocialButtonsComponent implements OnInit {
       );
   }
 
-  private getQueryByParams(base, obj) {
+  private getQueryByParams(base: string, obj: any): string {
 
     const parts = [];
     const baseParts = [base, '?'];
 
-    for (let key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        parts.push(key + "=" + obj[key]);
-      }
-    }
+    _.forOwn(obj, (key) => parts.push(`${key}=${obj[key]}`));
 
     baseParts.push(parts.join("&"));
     return baseParts.join("");
   }
-
 }

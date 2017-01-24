@@ -9,12 +9,18 @@ import { LanguageSwitcherService } from './language-switcher/language-switcher.s
 })
 export class HeaderComponent {
 
-  mobileMenuHidden = true;
-  languageSwitcherService: LanguageSwitcherService;
+  private mobileMenuHidden: boolean = true;
 
   constructor(languageSwitcherService: LanguageSwitcherService) {
-    this.languageSwitcherService = languageSwitcherService;
-    this.languageSwitcherService.getLanguageChangeEmitter()
-      .subscribe(langItem => this.mobileMenuHidden = true);
+    languageSwitcherService.getLanguageChangeEmitter()
+      .subscribe(() => this.mobileMenuHidden = true);
+  }
+
+  public switchMobileMenuState(): void {
+    this.mobileMenuHidden = !this.mobileMenuHidden;
+  }
+
+  public getMobileMenuState(): boolean {
+    return this.mobileMenuHidden;
   }
 }

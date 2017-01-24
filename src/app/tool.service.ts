@@ -5,13 +5,13 @@ import { environment } from './../environments/environment';
 @Injectable()
 export class ToolService {
 
-  toolActive: String;
+  private toolActive: string;
 
-  tools = {};
-  toolKeys = [];
+  private tools: any = {};
+  private toolKeys: Array<string> = [];
 
-  toolChangeEmitter: EventEmitter<any> = new EventEmitter();
-  toolLoadEmitter: EventEmitter<any> = new EventEmitter();
+  private toolChangeEmitter: EventEmitter<any> = new EventEmitter();
+  private toolLoadEmitter: EventEmitter<any> = new EventEmitter();
 
   constructor( private http:Http ) {
     this.http
@@ -19,7 +19,7 @@ export class ToolService {
       .subscribe(res => this.setupItems(res.json()) );
   }
 
-  private setupItems(items) {
+  private setupItems(items: Array<any>): void {
     const WS_SERVER = environment.wsUrl;
     const that = this;
 
@@ -39,32 +39,30 @@ export class ToolService {
     });
   }
 
-  public changeActiveTool(slug) {
+  public changeActiveTool(slug: string): void {
     this.toolActive = slug;
     this.toolChangeEmitter.emit({
       active: this.toolActive
     });
   }
 
-  public getActive() {
+  public getActive():string {
     return this.toolActive;
   }
 
-  public getTools() {
+  public getTools():Array<any> {
     return this.tools;
   }
 
-  public getToolKeys() {
+  public getToolKeys():Array<string> {
     return this.toolKeys;
   }
 
-  public getToolChangeEmitter() {
+  public getToolChangeEmitter():EventEmitter<any> {
     return this.toolChangeEmitter;
   }
 
-  public getToolLoaderEmitter() {
+  public getToolLoaderEmitter():EventEmitter<any> {
     return this.toolLoadEmitter;
   }
-
-
 }

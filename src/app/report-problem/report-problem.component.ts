@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { FlashDetectService } from './flash-detect.service';
 
 @Component({
@@ -7,18 +7,15 @@ import { FlashDetectService } from './flash-detect.service';
   templateUrl: './report-problem.component.html',
   styleUrls: ['./report-problem.component.styl']
 })
-export class ReportProblemComponent implements OnInit {
+export class ReportProblemComponent {
 
-  flashDetectService;
+  private flashDetectService: any;
 
   constructor() {
     this.flashDetectService = new FlashDetectService();
   }
 
-  ngOnInit() {
-  }
-
-  public isFlashAvailable () {
+  public isFlashAvailable (): boolean {
     return this.flashDetectService.installed;
   }
 

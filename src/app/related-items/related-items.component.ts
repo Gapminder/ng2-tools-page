@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ToolService } from './../tool.service';
 
 @Component({
@@ -7,38 +7,24 @@ import { ToolService } from './../tool.service';
   templateUrl: './related-items.component.html',
   styleUrls: ['./related-items.component.styl']
 })
-export class RelatedItemsComponent implements OnInit {
+export class RelatedItemsComponent {
 
-  loaded = false;
-  toolItems = {};
-  relatedItems = [];
+  private loaded: boolean = false;
+  private toolItems: any = {};
+  private relatedItems: Array<any> = [];
 
-  private toolsServiceLoaderEmitter: EventEmitter<any>;
-  private toolsServiceChangeEmitter: EventEmitter<any>;
+  constructor(private toolService: ToolService) {
 
-  constructor(private toolService:ToolService) {
+    this.toolService.getToolLoaderEmitter().subscribe(data => {
+      this.loaded = true;
+      this.toolItems = data.items;
+      this.relatedItems = this.toolItems[<string>data.active].relateditems;
+    });
 
-    this.toolsServiceLoaderEmitter = this.toolService.getToolLoaderEmitter()
-      .subscribe(data => {
-        this.loaded = true;
-        this.toolItems = data.items;
+    this.toolService.getToolChangeEmitter().subscribe(data => {
+      if (this.loaded) {
         this.relatedItems = this.toolItems[<string>data.active].relateditems;
-      });
-
-    this.toolsServiceChangeEmitter = this.toolService.getToolChangeEmitter()
-      .subscribe(data => {
-        if(this.loaded) {
-          this.relatedItems = this.toolItems[<string>data.active].relateditems;
-        }
-      });
+      }
+    });
   }
-
-  ngOnInit() {
-  }
-
-  ngOnDestroy() {
-    this.toolsServiceLoaderEmitter.unsubscribe();
-    this.toolsServiceChangeEmitter.unsubscribe();
-  }
-
 }
