@@ -81,7 +81,8 @@ export class HomeComponent {
 
     // Home url by default
     window.location.href = `${window.location.pathname}#_chart-type=${this.toolDefault}`;
-    // this.toolService.changeActiveTool(this.toolDefault);
+    this.currentHashModel = {'chart-type': this.toolDefault};
+    this.toolService.changeActiveTool(this.toolDefault);
   }
 
   private validateChartType(hashModel: any): boolean {
