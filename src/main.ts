@@ -1,3 +1,5 @@
+import './viz';
+
 import './polyfills.ts';
 import 'ng2-vizabi';
 import 'zone.js/dist/zone';
