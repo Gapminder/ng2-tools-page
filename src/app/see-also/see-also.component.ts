@@ -9,16 +9,15 @@ import { ToolService } from './../tool.service';
 })
 export class SeeAlsoComponent {
 
-  public tools: any = {};
-  public toolKeys: Array<string> = [];
-  public toolActive: string;
+  private tools: any = {};
+  private toolKeys: Array<string> = [];
+  private toolActive: string;
 
   constructor(private toolService: ToolService) {
 
     this.toolService.getToolLoaderEmitter().subscribe(data => {
       this.tools = data.items;
       this.toolKeys = data.keys;
-      this.toolActive = data.active;
     });
 
     this.toolService.getToolChangeEmitter().subscribe(data => {

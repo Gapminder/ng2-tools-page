@@ -11,53 +11,6 @@
       "locale": {
         "filePath": "./assets/translation/"
       },
-      "ui": {
-        "buttons": [
-          "colors",
-          "find",
-          "stack",
-          "show",
-          "moreoptions",
-          "fullscreen",
-          "presentation"
-        ],
-        "buttons_expand": [],
-        "dialogs": {
-          "popup": [
-            "colors",
-            "find",
-            "stack",
-            "show",
-            "moreoptions"
-          ],
-          "sidebar": [
-            "colors",
-            "find",
-            "stack"
-          ],
-          "moreoptions": [
-            "opacity",
-            "speed",
-            "stack",
-            "axesmc",
-            "colors",
-            "presentation",
-            "about"
-          ]
-        },
-        "datawarning": {
-          "doubtDomain": [
-            1800,
-            1950,
-            2015
-          ],
-          "doubtRange": [
-            1,
-            0.8,
-            0.6
-          ]
-        }
-      },
       "data": {
         "reader": "waffle",
         "splash": true,
@@ -67,7 +20,8 @@
         "time": {
           "startOrigin": "1800",
           "endOrigin": "2015",
-          "value": "2015"
+          "value": "2015",
+          "dim": "time"
         },
         "entities": {
           "dim": "geo",
@@ -82,40 +36,33 @@
           }
         },
         "entities_colorlegend": {
-          "dim": "geo",
-          "show": {
-            "is--world_4region": true
-          }
+          "dim": "world_4region"
         },
         "entities_tags": {
           "dim": "tag"
         },
         "marker_allpossible": {
-          "space": [
-            "entities_allpossible"
-          ],
+          "space": ["entities_allpossible"],
           "label": {
             "use": "property",
             "which": "name"
           }
         },
         "marker": {
-          "space": [
-            "entities",
-            "time"
-          ],
+          "space": ["entities", "time"],
+          "opacityRegular": 0.8,
           "label": {
             "use": "property",
             "which": "name"
           },
           "axis_y": {
             "use": "indicator",
-            "which": "sg_population",
+            "which": "population_total",
             "scaleType": "linear"
           },
           "axis_x": {
             "use": "indicator",
-            "which": "sg_gdp_p_cap_const_ppp2011_dollar",
+            "which": "income_per_person_gdppercapita_ppp_inflation_adjusted",
             "scaleType": "log",
             "domainMin": 0.11,
             "domainMax": 500,
@@ -127,18 +74,14 @@
           },
           "axis_s": {
             "use": "indicator",
-            "which": "sg_gini",
+            "which": "gapminder_gini",
             "scaleType": "linear"
           },
           "color": {
             "use": "property",
             "which": "world_4region",
             "scaleType": "ordinal",
-            "syncModels": [
-              "marker_colorlegend",
-              "stack",
-              "group"
-            ]
+            "syncModels": ["marker_colorlegend", "stack", "group"]
           },
           "stack": {
             "use": "constant",
@@ -151,11 +94,9 @@
           }
         },
         "marker_colorlegend": {
-          "space": [
-            "entities_colorlegend"
-          ],
-          "type": "geometry",
-          "shape": "svg",
+          "space": ["entities_colorlegend"],
+          "opacityRegular": 0.8,
+          "opacityHighlightDim": 0.3,
           "label": {
             "use": "property",
             "which": "name"
@@ -170,9 +111,7 @@
           }
         },
         "marker_tags": {
-          "space": [
-            "entities_tags"
-          ],
+          "space": ["entities_tags"],
           "label": {
             "use": "property",
             "which": "name"
@@ -181,6 +120,18 @@
             "use": "property",
             "which": "parent"
           }
+        }
+      },
+      "ui": {
+        "datawarning": {
+          "doubtDomain": [1800, 1950, 2015],
+          "doubtRange": [1.0, 0.8, 0.6]
+        },
+        "buttons": ["colors", "find", "stack", "show", "moreoptions", "fullscreen", "presentation"],
+        "dialogs": {
+          "popup": ["colors", "find", "stack", "show", "moreoptions"],
+          "sidebar": ["colors", "find", "stack"],
+          "moreoptions": ["opacity", "speed", "stack", "axesmc", "colors", "presentation", "about"]
         }
       }
     },
@@ -282,10 +233,7 @@
           }
         },
         "entities_colorlegend": {
-          "dim": "geo",
-          "show": {
-            "is--world_4region": true
-          }
+          "dim": "world_4region"
         },
         "entities_tags": {
           "dim": "tag"
@@ -293,13 +241,11 @@
         "time": {
           "startOrigin": "1800",
           "endOrigin": "2015",
-          "value": "2015"
+          "value": "2015",
+          "dim": "time"
         },
         "marker": {
-          "space": [
-            "entities",
-            "time"
-          ],
+          "space": ["entities", "time"],
           "label": {
             "use": "property",
             "which": "name"
@@ -328,23 +274,19 @@
             "domainMax": 1400000000,
             "scaleType": "linear",
             "allow": {
-              "scales": [
-                "linear"
-              ]
+              "scales": ["linear"]
             }
           },
           "color": {
             "use": "property",
             "which": "world_4region",
-            "syncModels": [
-              "marker_colorlegend"
-            ]
+            "syncModels": ["marker_colorlegend"]
           }
         },
         "marker_colorlegend": {
-          "space": [
-            "entities_colorlegend"
-          ],
+          "space": ["entities_colorlegend"],
+          "opacityRegular": 0.8,
+          "opacityHighlightDim": 0.3,
           "label": {
             "use": "property",
             "which": "name"
@@ -359,9 +301,7 @@
           }
         },
         "marker_tags": {
-          "space": [
-            "entities_tags"
-          ],
+          "space": ["entities_tags"],
           "label": {
             "use": "property",
             "which": "name"
@@ -374,53 +314,14 @@
       },
       "ui": {
         "datawarning": {
-          "doubtDomain": [
-            1800,
-            1950,
-            2015
-          ],
-          "doubtRange": [
-            1,
-            0.3,
-            0.2
-          ]
+          "doubtDomain": [1800, 1950, 2015],
+          "doubtRange": [1.0, 0.3, 0.2]
         },
-        "buttons": [
-          "colors",
-          "find",
-          "size",
-          "trails",
-          "lock",
-          "moreoptions",
-          "fullscreen",
-          "presentation"
-        ],
-        "buttons_expand": [],
+        "buttons": ["colors", "find", "size", "trails", "lock", "moreoptions", "fullscreen", "presentation"],
         "dialogs": {
-          "popup": [
-            "colors",
-            "find",
-            "size",
-            "zoom",
-            "moreoptions"
-          ],
-          "sidebar": [
-            "colors",
-            "find",
-            "size",
-            "zoom"
-          ],
-          "moreoptions": [
-            "opacity",
-            "speed",
-            "axes",
-            "size",
-            "colors",
-            "label",
-            "zoom",
-            "presentation",
-            "about"
-          ]
+          "popup": ["colors", "find", "size", "zoom", "moreoptions"],
+          "sidebar": ["colors", "find", "size", "zoom"],
+          "moreoptions": ["opacity", "speed", "axes", "size", "colors", "label", "zoom", "presentation", "about"]
         }
       }
     },
@@ -513,55 +414,12 @@
         "splash": false,
         "path": "/api/ddf/ql/"
       },
-      "ui": {
-        "buttons": [
-          "colors",
-          "find",
-          "size",
-          "moreoptions",
-          "fullscreen",
-          "presentation"
-        ],
-        "buttons_expand": [],
-        "dialogs": {
-          "popup": [
-            "colors",
-            "find",
-            "size",
-            "moreoptions"
-          ],
-          "sidebar": [
-            "colors",
-            "find",
-            "size"
-          ],
-          "moreoptions": [
-            "opacity",
-            "speed",
-            "size",
-            "colors",
-            "presentation",
-            "about"
-          ]
-        },
-        "datawarning": {
-          "doubtDomain": [
-            1800,
-            1950,
-            2015
-          ],
-          "doubtRange": [
-            1,
-            0.3,
-            0.2
-          ]
-        }
-      },
       "state": {
         "time": {
           "startOrigin": "1800",
           "endOrigin": "2015",
-          "value": "2015"
+          "value": "2015",
+          "dim": "time"
         },
         "entities": {
           "dim": "geo",
@@ -570,19 +428,13 @@
           }
         },
         "entities_colorlegend": {
-          "dim": "geo",
-          "show": {
-            "is--world_4region": true
-          }
+          "dim": "world_4region"
         },
         "entities_tags": {
           "dim": "tag"
         },
         "marker": {
-          "space": [
-            "entities",
-            "time"
-          ],
+          "space": ["entities", "time"],
           "label": {
             "use": "property",
             "which": "name"
@@ -594,9 +446,7 @@
             "domainMin": 15,
             "domainMax": 1400000000,
             "allow": {
-              "scales": [
-                "linear"
-              ]
+              "scales": ["linear"]
             }
           },
           "hook_lat": {
@@ -613,17 +463,13 @@
             "use": "property",
             "which": "world_4region",
             "scaleType": "ordinal",
-            "syncModels": [
-              "marker_colorlegend"
-            ]
+            "syncModels": ["marker_colorlegend"]
           }
         },
         "marker_colorlegend": {
-          "space": [
-            "entities_colorlegend"
-          ],
-          "type": "geometry",
-          "shape": "svg",
+          "space": ["entities_colorlegend"],
+          "opacityRegular": 0.8,
+          "opacityHighlightDim": 0.3,
           "label": {
             "use": "property",
             "which": "name"
@@ -638,9 +484,7 @@
           }
         },
         "marker_tags": {
-          "space": [
-            "entities_tags"
-          ],
+          "space": ["entities_tags"],
           "label": {
             "use": "property",
             "which": "name"
@@ -648,6 +492,26 @@
           "hook_parent": {
             "use": "property",
             "which": "parent"
+          }
+        }
+      },
+      "ui": {
+        "datawarning": {
+          "doubtDomain": [1800, 1950, 2015],
+          "doubtRange": [1.0, 0.3, 0.2]
+        },
+        "buttons": ["colors", "find", "size", "moreoptions", "fullscreen", "presentation"],
+        "dialogs": {
+          "popup": ["colors", "find", "size", "moreoptions"],
+          "sidebar": ["colors", "find", "size"],
+          "moreoptions": ["opacity", "speed", "size", "colors", "presentation", "about"]
+        },
+        "map": {
+          "scale": 1,
+          "preserveAspectRatio": false,
+          "offset": {
+            "top": 0.05,
+            "bottom": -0.12
           }
         }
       }

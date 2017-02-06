@@ -138,7 +138,7 @@ export class HomeComponent {
     const slugUpdate = slug || this.currentHashModel['chart-type'];
 
     // first load
-    if (!slug && slugUpdate != this.toolDefault) {
+    if (!slug) {
       this.toolService.changeActiveTool(slugUpdate);
       return;
     }
