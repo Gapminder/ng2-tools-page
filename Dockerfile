@@ -11,7 +11,9 @@ WORKDIR /home/tools-page
 
 COPY ./ ./
 
-RUN npm i 
+RUN sed 's@${WS_HOST}@'\""$WAFFLE_SERVER_HOST"\"'@' src/environments/environment.docker.template > src/environments/environment.docker.ts
+
+RUN npm i
 RUN npm run build:docker
 RUN cp docker-nginx.conf /etc/nginx/nginx.conf && cp -R dist /var/www
 
