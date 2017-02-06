@@ -11,6 +11,9 @@ WORKDIR /home/tools-page
 
 COPY ./ ./
 
+ARG WAFFLE_SERVER_HOST
+ENV WAFFLE_SERVER_HOST ${WAFFLE_SERVER_HOST}
+
 RUN sed 's@${WS_HOST}@'"$WAFFLE_SERVER_HOST"'@' src/environments/environment.docker.template > src/environments/environment.docker.ts
 
 RUN npm i
