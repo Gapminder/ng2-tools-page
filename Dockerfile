@@ -11,7 +11,7 @@ WORKDIR /home/tools-page
 
 COPY ./ ./
 
-RUN sed 's@${WS_HOST}@'\""$WAFFLE_SERVER_HOST"\"'@' src/environments/environment.docker.template > src/environments/environment.docker.ts
+RUN sed 's@${WS_HOST}@'"$WAFFLE_SERVER_HOST"'@' src/environments/environment.docker.template > src/environments/environment.docker.ts
 
 RUN npm i
 RUN npm run build:docker

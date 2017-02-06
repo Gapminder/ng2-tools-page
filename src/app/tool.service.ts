@@ -30,12 +30,9 @@ export class ToolService {
       that.toolKeys.push(tool.slug);
     });
 
-    this.toolActive = 'bubbles';
-
     this.toolLoadEmitter.emit({
       keys: this.toolKeys,
-      items: this.tools,
-      active: this.toolActive
+      items: this.tools
     });
   }
 
@@ -47,7 +44,7 @@ export class ToolService {
   }
 
   public getActive():string {
-    return this.toolActive;
+    return this.toolActive || 'bubbles';
   }
 
   public getTools():Array<any> {
