@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
+  production: true,
   wsUrl: "https://waffle-server-dev.gapminderdev.org"
 };
