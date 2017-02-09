@@ -13,8 +13,7 @@
       },
       "data": {
         "reader": "waffle",
-        "splash": true,
-        "path": "/api/ddf/"
+        "path": "/api/ddf/ql/"
       },
       "state": {
         "time": {
@@ -132,7 +131,8 @@
           "popup": ["colors", "find", "stack", "show", "moreoptions"],
           "sidebar": ["colors", "find", "stack"],
           "moreoptions": ["opacity", "speed", "stack", "axesmc", "colors", "presentation", "about"]
-        }
+        },
+        "splash": true
       }
     },
     "relateditems": [
@@ -222,7 +222,6 @@
       },
       "data": {
         "reader": "waffle",
-        "splash": false,
         "path": "/api/ddf/ql/"
       },
       "state": {
@@ -322,7 +321,8 @@
           "popup": ["colors", "find", "size", "zoom", "moreoptions"],
           "sidebar": ["colors", "find", "size", "zoom"],
           "moreoptions": ["opacity", "speed", "axes", "size", "colors", "label", "zoom", "presentation", "about"]
-        }
+        },
+        "splash": true
       }
     },
     "relateditems": [
@@ -411,7 +411,6 @@
       },
       "data": {
         "reader": "waffle",
-        "splash": false,
         "path": "/api/ddf/ql/"
       },
       "state": {
@@ -500,6 +499,11 @@
           "doubtDomain": [1800, 1950, 2015],
           "doubtRange": [1.0, 0.3, 0.2]
         },
+        "map": {
+          "offset": {
+            "bottom": -0.12
+          }
+        },
         "buttons": ["colors", "find", "size", "moreoptions", "fullscreen", "presentation"],
         "dialogs": {
           "popup": ["colors", "find", "size", "moreoptions"],
@@ -513,7 +517,8 @@
             "top": 0.05,
             "bottom": -0.12
           }
-        }
+        },
+        "splash": true
       }
     },
     "relateditems": [
@@ -602,14 +607,14 @@
       },
       "data": {
         "reader": "waffle",
-        "splash": false,
         "path": "/api/ddf/ql/"
       },
       "state": {
         "time": {
           "startOrigin": "1950",
           "endOrigin": "2015",
-          "value": "2015"
+          "value": "2015",
+          "dim": "time"
         },
         "entities": {
           "dim": "geo",
@@ -618,8 +623,6 @@
           }
         },
         "entities_colorlegend": {
-          "opacityRegular": 0.8,
-          "opacityHighlightDim": 0.3,
           "dim": "world_4region"
         },
         "entities_tags": {
@@ -660,6 +663,8 @@
         },
         "marker_colorlegend": {
           "space": ["entities_colorlegend"],
+          "opacityRegular": 0.8,
+          "opacityHighlightDim": 0.3,
           "label": {
             "use": "property",
             "which": "name"
@@ -692,10 +697,11 @@
         },
         "buttons": ["colors","find","show","moreoptions","fullscreen","presentation"],
         "dialogs": {
-          "popup": ["colors","find","axes","show","moreoptions"],
-          "sidebar": ["colors","find"],
+          "popup": ["timedisplay", "colors","find","axes","show","moreoptions"],
+          "sidebar": ["timedisplay", "colors","find"],
           "moreoptions": ["opacity","speed","colors","presentation","about"]
-        }
+        },
+        "splash": true
       }
     },
     "relateditems": [
@@ -784,14 +790,14 @@
       },
       "data": {
         "reader": "waffle",
-        "splash": false,
         "path": "/api/ddf/ql/"
       },
       "state": {
         "time": {
           "startOrigin": "1800",
           "endOrigin": "2015",
-          "value": "2015"
+          "value": "2015",
+          "dim": "time"
         },
         "entities": {
           "dim": "geo",
@@ -800,8 +806,6 @@
           }
         },
         "entities_colorlegend": {
-          "opacityRegular": 0.8,
-          "opacityHighlightDim": 0.3,
           "dim": "world_4region"
         },
         "marker": {
@@ -847,6 +851,8 @@
         },
         "marker_colorlegend": {
           "space": ["entities_colorlegend"],
+          "opacityRegular": 0.8,
+          "opacityHighlightDim": 0.3,
           "label": {
             "use": "property",
             "which": "name"
@@ -882,7 +888,8 @@
           "popup": ["colors","find","show","moreoptions"],
           "sidebar": ["colors","show"],
           "moreoptions": ["opacity","speed","axes","colors","presentation","about"]
-        }
+        },
+        "splash": false
       }
     },
     "relateditems": [
