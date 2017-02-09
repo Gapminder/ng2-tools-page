@@ -126,12 +126,6 @@
           "doubtDomain": [1800, 1950, 2015],
           "doubtRange": [1.0, 0.8, 0.6]
         },
-        "buttons": ["colors", "find", "stack", "show", "moreoptions", "fullscreen", "presentation"],
-        "dialogs": {
-          "popup": ["colors", "find", "stack", "show", "moreoptions"],
-          "sidebar": ["colors", "find", "stack"],
-          "moreoptions": ["opacity", "speed", "stack", "axesmc", "colors", "presentation", "about"]
-        },
         "splash": true
       }
     },
@@ -316,12 +310,6 @@
           "doubtDomain": [1800, 1950, 2015],
           "doubtRange": [1.0, 0.3, 0.2]
         },
-        "buttons": ["colors", "find", "size", "trails", "lock", "moreoptions", "fullscreen", "presentation"],
-        "dialogs": {
-          "popup": ["colors", "find", "size", "zoom", "moreoptions"],
-          "sidebar": ["colors", "find", "size", "zoom"],
-          "moreoptions": ["opacity", "speed", "axes", "size", "colors", "label", "zoom", "presentation", "about"]
-        },
         "splash": true
       }
     },
@@ -498,17 +486,6 @@
         "datawarning": {
           "doubtDomain": [1800, 1950, 2015],
           "doubtRange": [1.0, 0.3, 0.2]
-        },
-        "map": {
-          "offset": {
-            "bottom": -0.12
-          }
-        },
-        "buttons": ["colors", "find", "size", "moreoptions", "fullscreen", "presentation"],
-        "dialogs": {
-          "popup": ["colors", "find", "size", "moreoptions"],
-          "sidebar": ["colors", "find", "size"],
-          "moreoptions": ["opacity", "speed", "size", "colors", "presentation", "about"]
         },
         "map": {
           "scale": 1,
@@ -695,12 +672,6 @@
           "doubtDomain": [1800, 1950, 2015],
           "doubtRange": [1.0, 0.8, 0.6]
         },
-        "buttons": ["colors","find","show","moreoptions","fullscreen","presentation"],
-        "dialogs": {
-          "popup": ["timedisplay", "colors","find","axes","show","moreoptions"],
-          "sidebar": ["timedisplay", "colors","find"],
-          "moreoptions": ["opacity","speed","colors","presentation","about"]
-        },
         "splash": true
       }
     },
@@ -882,12 +853,6 @@
         "datawarning": {
           "doubtDomain": [1800, 1950, 2015],
           "doubtRange": [1.0, 0.3, 0.2]
-        },
-        "buttons": ["colors","find","show","moreoptions","fullscreen","presentation"],
-        "dialogs": {
-          "popup": ["colors","find","show","moreoptions"],
-          "sidebar": ["colors","show"],
-          "moreoptions": ["opacity","speed","axes","colors","presentation","about"]
         },
         "splash": false
       }
