@@ -2,8 +2,23 @@ import { Http } from '@angular/http';
 import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from './../environments/environment';
 
+import * as AgePyramidState from 'vizabi-config-systema_globalis/AgePyramid.json';
+import * as BarRankChartState from 'vizabi-config-systema_globalis/BarRankChart.json';
+import * as BubbleChartState from 'vizabi-config-systema_globalis/BubbleChart.json';
+import * as BubbleMapState from 'vizabi-config-systema_globalis/BubbleMap.json';
+import * as LineChartState from 'vizabi-config-systema_globalis/LineChart.json';
+import * as MountainChartState from 'vizabi-config-systema_globalis/MountainChart.json';
+
 @Injectable()
 export class ToolService {
+  private static TOOLS_STATE: any = {
+    AgePyramid: AgePyramidState,
+    BarRankChart: BarRankChartState,
+    BubbleChart: BubbleChartState,
+    BubbleMap: BubbleMapState,
+    LineChart: LineChartState,
+    MountainChart: MountainChartState,
+  };
 
   private toolActive: string;
 
@@ -23,11 +38,12 @@ export class ToolService {
     const WS_SERVER = environment.wsUrl;
     const that = this;
 
-    items.forEach(function(tool, index, tools) {
-      tool.opts.data.path = WS_SERVER + tool.opts.data.path;
+    items.forEach(function(toolDescriptor, index, toolDescriptors) {
+      toolDescriptor.opts.data.path = WS_SERVER + toolDescriptor.opts.data.path;
+      Object.assign(toolDescriptor.opts, ToolService.TOOLS_STATE[toolDescriptor.tool]);
 
-      that.tools[tool.slug] = tool;
-      that.toolKeys.push(tool.slug);
+      that.tools[toolDescriptor.slug] = toolDescriptor;
+      that.toolKeys.push(toolDescriptor.slug);
     });
 
     this.toolLoadEmitter.emit({

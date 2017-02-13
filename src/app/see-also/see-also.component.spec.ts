@@ -1,7 +1,9 @@
 /* tslint:disable:no-unused-variable */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { HttpModule } from '@angular/http';
 import { DebugElement } from '@angular/core';
+import { ToolService } from '../tool.service';
 
 import { SeeAlsoComponent } from './see-also.component';
 
@@ -11,7 +13,9 @@ describe('SeeAlsoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SeeAlsoComponent ]
+      imports: [HttpModule],
+      declarations: [ SeeAlsoComponent ],
+      providers: [ ToolService ]
     })
     .compileComponents();
   }));
