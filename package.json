@@ -53,7 +53,6 @@
     "karma-cli": "1.0.1",
     "karma-jasmine": "1.1.0",
     "karma-phantomjs-launcher": "1.0.2",
-    "karma-chrome-launcher": "1.0.2",
     "karma-remap-istanbul": "0.5.0",
     "local-web-server": "1.2.6",
     "protractor": "4.0.9",
