@@ -25,7 +25,7 @@ export class DeprecatedUrlService implements CanActivate {
       const detectorResult = this.detectorList[step].process(routerUrl);
 
       if (detectorResult !== ROOT_URL) {
-        //this.router.navigateByUrl(detectorResult, {replaceUrl: true});
+        // this.router.navigateByUrl(detectorResult, {replaceUrl: true});
         window.location.href = detectorResult;
         return false;
       }
@@ -58,7 +58,7 @@ class DeprecatedUrlDetector implements UrlRuleDetectorInterface {
         const chartTypeParam = 'chart-type=' + chartType;
         const baseHref = document.getElementsByTagName('base')[0].href;
 
-        return baseHref + url.replace(oldUrl, '') + (url.indexOf("#") !== -1 ? '&' : '#_' ) + chartTypeParam;
+        return baseHref + url.replace(oldUrl, '') + (url.indexOf('#') !== -1 ? '&' : '#_' ) + chartTypeParam;
       }
     }
 

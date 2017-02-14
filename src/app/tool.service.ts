@@ -28,7 +28,7 @@ export class ToolService {
   private toolChangeEmitter: EventEmitter<any> = new EventEmitter();
   private toolLoadEmitter: EventEmitter<any> = new EventEmitter();
 
-  constructor( private http:Http ) {
+  constructor( private http: Http ) {
     this.http
       .get('assets/related-items.json')
       .subscribe(res => this.setupItems(res.json()) );
@@ -59,23 +59,23 @@ export class ToolService {
     });
   }
 
-  public getActive():string {
+  public getActive(): string {
     return this.toolActive || 'bubbles';
   }
 
-  public getTools():Array<any> {
+  public getTools(): Array<any> {
     return this.tools;
   }
 
-  public getToolKeys():Array<string> {
+  public getToolKeys(): Array<string> {
     return this.toolKeys;
   }
 
-  public getToolChangeEmitter():EventEmitter<any> {
+  public getToolChangeEmitter(): EventEmitter<any> {
     return this.toolChangeEmitter;
   }
 
-  public getToolLoaderEmitter():EventEmitter<any> {
+  public getToolLoaderEmitter(): EventEmitter<any> {
     return this.toolLoadEmitter;
   }
 }

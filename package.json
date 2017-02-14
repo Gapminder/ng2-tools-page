@@ -5,6 +5,7 @@
   "angular-cli": {},
   "scripts": {
     "test": "karma start",
+    "lint": "tslint -c tslint.json src/**/*.ts",
     "local": "npm run prebuild && ng serve --environment=local",
     "dev": "npm run prebuild && ng serve --environment=dev",
     "stage": "npm run prebuild && ng serve --environment=stage",
