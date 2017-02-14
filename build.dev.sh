@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 eval "$(ssh-agent -s)"
 cd /home/root
 
@@ -6,7 +8,7 @@ cd /home/root
 ssh-add /home/root/vizabi_tools_deploy_ssh
 
 git clone git@github.com:vizabi/vizabi.git -b develop
-git clone git@github.com:Gapminder/ng2-tools-page.git
+git clone git@github.com:Gapminder/ng2-tools-page.git -b development
 
 
 # BUILD: Vizabi ------------------------------------------------
