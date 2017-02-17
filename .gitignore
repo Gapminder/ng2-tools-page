@@ -33,3 +33,4 @@ testem.log
 .DS_Store
 Thumbs.db
 yarn.lock
+src/assets/vizabi.css

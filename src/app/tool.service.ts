@@ -1,4 +1,4 @@
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from './../environments/environment';
 
@@ -17,39 +17,21 @@ export class ToolService {
     BubbleChart: BubbleChartState,
     BubbleMap: BubbleMapState,
     LineChart: LineChartState,
-    MountainChart: MountainChartState,
+    MountainChart: MountainChartState
   };
 
   private toolActive: string;
 
   private tools: any = {};
-  private toolKeys: Array<string> = [];
+  private toolKeys: string[] = [];
 
   private toolChangeEmitter: EventEmitter<any> = new EventEmitter();
   private toolLoadEmitter: EventEmitter<any> = new EventEmitter();
 
-  constructor( private http: Http ) {
-    this.http
+  public constructor(http: Http) {
+    http
       .get('assets/related-items.json')
-      .subscribe(res => this.setupItems(res.json()) );
-  }
-
-  private setupItems(items: Array<any>): void {
-    const WS_SERVER = environment.wsUrl;
-    const that = this;
-
-    items.forEach(function(toolDescriptor, index, toolDescriptors) {
-      toolDescriptor.opts.data.path = WS_SERVER + toolDescriptor.opts.data.path;
-      Object.assign(toolDescriptor.opts, ToolService.TOOLS_STATE[toolDescriptor.tool]);
-
-      that.tools[toolDescriptor.slug] = toolDescriptor;
-      that.toolKeys.push(toolDescriptor.slug);
-    });
-
-    this.toolLoadEmitter.emit({
-      keys: this.toolKeys,
-      items: this.tools
-    });
+      .subscribe((res: Response) => this.setupItems(res.json()) );
   }
 
   public changeActiveTool(slug: string): void {
@@ -63,11 +45,11 @@ export class ToolService {
     return this.toolActive || 'bubbles';
   }
 
-  public getTools(): Array<any> {
+  public getTools(): any[] {
     return this.tools;
   }
 
-  public getToolKeys(): Array<string> {
+  public getToolKeys(): string[] {
     return this.toolKeys;
   }
 
@@ -77,5 +59,22 @@ export class ToolService {
 
   public getToolLoaderEmitter(): EventEmitter<any> {
     return this.toolLoadEmitter;
+  }
+
+  private setupItems(items: any[]): void {
+    const WS_SERVER = environment.wsUrl;
+
+    items.forEach((toolDescriptor: any) => {
+      toolDescriptor.opts.data.path = WS_SERVER + toolDescriptor.opts.data.path;
+      Object.assign(toolDescriptor.opts, ToolService.TOOLS_STATE[toolDescriptor.tool]);
+
+      this.tools[toolDescriptor.slug] = toolDescriptor;
+      this.toolKeys.push(toolDescriptor.slug);
+    });
+
+    this.toolLoadEmitter.emit({
+      keys: this.toolKeys,
+      items: this.tools
+    });
   }
 }
