@@ -66,6 +66,7 @@ body
   font-size 16px
   line-height 1.4
   text-transform uppercase
+  text-shadow rgba(0,0,0,.01) 0 0 1px;
 
 
 
@@ -109,8 +110,10 @@ body
   .vzb-dynamic-background
     font-family $courier-prime-font-family
 
-  .vzb-tool-buttonlist
-    background-color white !important
+.vzb-tool.vzb-small .vzb-tool-buttonlist,
+.vzb-tool.vzb-medium .vzb-tool-buttonlist
+  background-color white !important
+
 
 /* COMPONENT :: SEE ALSO */
 
@@ -138,7 +141,6 @@ body
 
   +for_breakpoint(small)
     background #f2fafc
-    float none
     padding 20px
     width 100%
     .heading-2
