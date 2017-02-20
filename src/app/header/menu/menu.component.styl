@@ -1,6 +1,14 @@
 @import './../../_resources/variables.styl'
 @import './../../_resources/mixins.styl'
 
+.mobile-share-menu-item
+  display flex !important
+
+  a.menu-item:hover
+    color $navbar-default-link-color !important
+    cursor default !important
+
+
 .nav-expandable
   position relative
 
@@ -14,7 +22,7 @@
       display block
       border-bottom 1px solid #f2f2f2
 
-    a
+    a.menu-item
       color $navbar-default-link-color
       cursor pointer
       display block

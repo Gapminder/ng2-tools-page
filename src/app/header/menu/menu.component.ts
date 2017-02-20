@@ -9,11 +9,14 @@ import * as _ from "lodash";
   styleUrls: ['./menu.component.styl']
 })
 export class MenuComponent {
+  public shareMenuItem: any = {
+    menu_label: "Share"
+  };
 
   private menuItems: Array<any> = [];
   private indexedMenuItems: Array<boolean> = [];
 
-  constructor(private http:Http) {
+  constructor(private http: Http) {
     this.http
       .get('assets/menu-items.json')
       .subscribe(res => this.menuItems = res.json().children);
@@ -28,7 +31,11 @@ export class MenuComponent {
   }
 
   public switchSubMenu(index: number): void {
+    const wasItemAlreadySelected = this.indexedMenuItems[index];
     _.fill(this.indexedMenuItems, false);
-    this.indexedMenuItems[index] = true;
+
+    if (!wasItemAlreadySelected) {
+      this.indexedMenuItems[index] = true;
+    }
   }
 }
