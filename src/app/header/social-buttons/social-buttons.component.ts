@@ -13,14 +13,9 @@ import * as _ from "lodash";
 export class SocialButtonsComponent {
 
   constructor(private http: Http, private location: Location, private router: Router) {
-
   }
 
   public getEmbeddedUrl(): void {
-
-    //const pathBase = this.location['_platformStrategy']['_platformLocation']['_location']['origin'];
-    //noinspection TypeScriptUnresolvedVariable
-
     const pathBase = window.location.origin;
     const pathBaseHref = this.location['_baseHref'];
 
@@ -38,7 +33,6 @@ export class SocialButtonsComponent {
 
     const bitlyUrl = 'https://api-ssl.bitly.com/v3/shorten';
     const baseUrl = document.URL;
-    //const baseDomain = 'http://gapminderdev.org/tools/';
 
     if (!_.includes(baseUrl, 'gapminder')) {
       prompt('Copy the following link: ', baseUrl);

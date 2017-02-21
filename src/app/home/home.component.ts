@@ -1,11 +1,13 @@
 import {Component, ViewEncapsulation} from '@angular/core';
+import {Location} from '@angular/common';
 import {Router, NavigationEnd, Event as NavigationEvent} from '@angular/router';
-import {LanguageSwitcherService} from './../header/language-switcher/language-switcher.service';
-import {ToolService} from './../tool.service';
-import {environment} from './../../environments/environment';
+import {LanguageSwitcherService} from '../header/language-switcher/language-switcher.service';
+import {ToolService} from '../tool.service';
+import {environment} from '../../environments/environment';
 
 import {VizabiService} from "ng2-vizabi";
 import * as _ from "lodash";
+import { GoogleAnalyticsService } from '../google-analytics.service';
 
 const WSReader = require('vizabi-ws-reader').WSReader;
 
@@ -37,9 +39,11 @@ export class HomeComponent {
   private vizabiInstances: any = {};
 
   constructor(private router: Router,
+              private location: Location,
               private vizabiService: VizabiService,
               private toolService: ToolService,
-              private langService: LanguageSwitcherService) {
+              private langService: LanguageSwitcherService,
+              private ga: GoogleAnalyticsService) {
 
     this.toolService.getToolLoaderEmitter().subscribe(data => {
       this.toolKeys = data.keys;
@@ -195,6 +199,10 @@ export class HomeComponent {
       this.currentHashModel = model;
       window.location.hash = "#" + modelForUpdate;
     }
+
+    const currentPathWithHash = this.location.path(true);
+    this.ga.trackPage(currentPathWithHash);
+    this.ga.trackVizabiModelChangedEvent(currentPathWithHash);
   }
 
   private getChartType(chartType: string): any {

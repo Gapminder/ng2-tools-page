@@ -17,6 +17,8 @@ import { LanguageSwitcherComponent } from './header/language-switcher/language-s
 import { PageComponent } from './page/page.component';
 
 import { DeprecatedUrlService } from './deprecated-url.service';
+import { Angulartics2Module, Angulartics2GoogleAnalytics } from 'angulartics2';
+import { GoogleAnalyticsService } from './google-analytics.service';
 
 @NgModule({
   imports: [
@@ -26,7 +28,8 @@ import { DeprecatedUrlService } from './deprecated-url.service';
     RouterModule.forRoot([
       { path: '', component: PageComponent, canActivate: [DeprecatedUrlService]},
       { path: '**', redirectTo: ''}
-    ])
+    ]),
+    Angulartics2Module.forRoot([ Angulartics2GoogleAnalytics ])
   ],
   declarations: [
     AppComponent,
@@ -41,7 +44,11 @@ import { DeprecatedUrlService } from './deprecated-url.service';
     LanguageSwitcherComponent,
     PageComponent
   ],
-  providers: [DeprecatedUrlService],
+  providers: [DeprecatedUrlService, GoogleAnalyticsService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  /* tslint:disable */
+  public constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {}
+  /* tslint:enable */
+}

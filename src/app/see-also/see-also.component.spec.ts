@@ -6,6 +6,8 @@ import { DebugElement } from '@angular/core';
 import { ToolService } from '../tool.service';
 
 import { SeeAlsoComponent } from './see-also.component';
+import { GoogleAnalyticsService } from '../google-analytics.service';
+import { Angulartics2 } from 'angulartics2';
 
 describe('SeeAlsoComponent', () => {
   let component: SeeAlsoComponent;
@@ -15,7 +17,12 @@ describe('SeeAlsoComponent', () => {
     TestBed.configureTestingModule({
       imports: [HttpModule],
       declarations: [ SeeAlsoComponent ],
-      providers: [ ToolService ]
+      providers: [ ToolService, GoogleAnalyticsService, {
+        provide: Angulartics2, useFactory: () => ({
+          eventTrack: jasmine.createSpyObj('eventTrack', ['next']),
+          pageTrack: jasmine.createSpyObj('pageTrack', ['next'])
+        })
+      } ]
     })
     .compileComponents();
   }));
