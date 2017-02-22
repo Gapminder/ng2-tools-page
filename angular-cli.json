@@ -19,8 +19,8 @@
       "mobile": false,
       "styles": [],
       "scripts": [],
+      "environmentSource": "environments/environment.ts",
       "environments": {
-        "source": "environments/environment.ts",
         "local": "environments/environment.local.ts",
         "dev": "environments/environment.dev.ts",
         "stage": "environments/environment.stage.ts",
