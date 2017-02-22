@@ -17,12 +17,12 @@ export class SeeAlsoComponent {
   constructor(private toolService: ToolService,
               private ga: GoogleAnalyticsService) {
 
-    this.toolService.getToolLoaderEmitter().subscribe(data => {
+    this.toolService.getToolLoadEvents().subscribe(data => {
       this.tools = data.items;
       this.toolKeys = data.keys;
     });
 
-    this.toolService.getToolChangeEmitter().subscribe(data => {
+    this.toolService.getToolChangeEvents().subscribe(data => {
       this.toolActive = data.active;
     });
   }

@@ -1,13 +1,13 @@
-import { Http, Response } from '@angular/http';
 import { Injectable, EventEmitter } from '@angular/core';
-import { environment } from './../environments/environment';
-
+import { environment } from '../environments/environment';
 import * as AgePyramidState from 'vizabi-config-systema_globalis/AgePyramid.json';
 import * as BarRankChartState from 'vizabi-config-systema_globalis/BarRankChart.json';
 import * as BubbleChartState from 'vizabi-config-systema_globalis/BubbleChart.json';
 import * as BubbleMapState from 'vizabi-config-systema_globalis/BubbleMap.json';
 import * as LineChartState from 'vizabi-config-systema_globalis/LineChart.json';
 import * as MountainChartState from 'vizabi-config-systema_globalis/MountainChart.json';
+import { Observable } from 'rxjs';
+import RelatedItems from './related-items';
 
 @Injectable()
 export class ToolService {
@@ -28,10 +28,10 @@ export class ToolService {
   private toolChangeEmitter: EventEmitter<any> = new EventEmitter();
   private toolLoadEmitter: EventEmitter<any> = new EventEmitter();
 
-  public constructor(http: Http) {
-    http
-      .get('assets/related-items.json')
-      .subscribe((res: Response) => this.setupItems(res.json()) );
+  public constructor() {
+    setTimeout(() => {
+      this.setupItems(RelatedItems);
+    }, 0)
   }
 
   public changeActiveTool(slug: string): void {
@@ -53,11 +53,11 @@ export class ToolService {
     return this.toolKeys;
   }
 
-  public getToolChangeEmitter(): EventEmitter<any> {
+  public getToolChangeEvents(): Observable<any> {
     return this.toolChangeEmitter;
   }
 
-  public getToolLoaderEmitter(): EventEmitter<any> {
+  public getToolLoadEvents(): Observable<any> {
     return this.toolLoadEmitter;
   }
 

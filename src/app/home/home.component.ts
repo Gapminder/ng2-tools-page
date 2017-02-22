@@ -45,13 +45,13 @@ export class HomeComponent {
               private langService: LanguageSwitcherService,
               private ga: GoogleAnalyticsService) {
 
-    this.toolService.getToolLoaderEmitter().subscribe(data => {
+    this.toolService.getToolLoadEvents().subscribe(data => {
       this.toolKeys = data.keys;
       this.toolItems = data.items;
       this.process();
     });
 
-    this.toolService.getToolChangeEmitter().subscribe(data => {
+    this.toolService.getToolChangeEvents().subscribe(data => {
       this.updateChartType(data.active);
     });
 

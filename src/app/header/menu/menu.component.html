@@ -1,10 +1,4 @@
 <li class="nav-expandable">
-  <div class="nav-expandable-item mobile-share-menu-item">
-    <ul class="social-list mobile">
-      <app-social-buttons></app-social-buttons>
-    </ul>
-  </div>
-
   <div *ngFor="let item of menuItems; let indexId=index;" class="nav-expandable-item">
 
     <a class="menu-item nav-toggle-expanded" (click)="switchSubMenu(indexId)">{{ item.menu_label }}</a>
@@ -28,5 +22,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="nav-expandable-item mobile-share-menu-item">
+    <ul class="social-list mobile">
+      <app-social-buttons></app-social-buttons>
+    </ul>
   </div>
 </li>

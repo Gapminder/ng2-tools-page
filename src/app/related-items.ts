@@ -1,4 +1,4 @@
-[
+export default [
   {
     "tool": "MountainChart",
     "slug": "mountain",
