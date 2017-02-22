@@ -45,7 +45,6 @@ export class SocialButtonsComponent {
     };
 
     const serviceUrl = this.getQueryByParams(bitlyUrl, params);
-
     this.http
       .get(serviceUrl)
       .subscribe(
@@ -57,12 +56,12 @@ export class SocialButtonsComponent {
       );
   }
 
-  private getQueryByParams(base: string, obj: any): string {
+  private getQueryByParams(base: string, params: any): string {
 
     const parts = [];
     const baseParts = [base, '?'];
 
-    _.forOwn(obj, (key) => parts.push(`${key}=${obj[key]}`));
+    _.forOwn(params, (value: any, key: string) => parts.push(`${key}=${value}`));
 
     baseParts.push(parts.join("&"));
     return baseParts.join("");

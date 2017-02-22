@@ -1,31 +1,28 @@
 # ToolsPage
 
-This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.19-3.
-
-## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class`.
+## Quickstart
+  - clone this project (or download as a zip)
+  - cd `project directory`
+  - `npm i`
+  - `npm start`
+  - access application on http://localhost:4200
 
 ## Build
+  - `npm run build:prod` - builds application for a production environment.
+  - `npm run build:stage` - builds application for a stage environment.
+  - `npm run build:dev` - builds application for a development environment. Development does'n mean local! For local development have a look at [Quickstart](#quickstart).
+  - `npm run build:docker` - builds application for a distribution via docker image. This one is used by [Waffle Server](https://github.com/Gapminder/waffle-server) in its [standalone mode](https://github.com/Gapminder/waffle-server/wiki/Standalone-Waffle-Server).
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
-
-## Deploying to Github Pages
-
-Run `ng github-pages:deploy` to deploy to Github Pages.
-
-## Further help
-
-To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## Testing
+  - `npm run lint` - checks code style compliance against tslint rules.
+  - `npm run test` - runs all the tests.
+  - `npm run test:w` - runs all the tests and watches for changes, once changes occurred - reruns the tests.
+  - `npm run cover` - runs all the tests and calculates coverage report, that will be stored in a `coverage` directory.
+  
+## Run
+  - `npm run local` - builds application with local env settings and makes it accessible on http://localhost:4200
+  - `npm run dev` - builds application with dev env settings and makes it accessible on http://localhost:4200
+  - `npm run stage` - builds application with stage env settings and makes it accessible on http://localhost:4200
+  - `npm run prod` - builds application with prod env settings and makes it accessible on http://localhost:4200
+  - `npm run start:dev` - builds application in a dist folder with dev env settings and serves static content using [local-web-server](https://www.npmjs.com/package/local-web-server) on port 3011. 
+    This mode is interesting cause it rewrites urls so that app is accessible on http://localhost:3011/tools
