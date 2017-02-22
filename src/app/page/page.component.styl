@@ -121,7 +121,14 @@ body
     padding 20px 0
 
   +for_breakpoint(not-small)
-    padding-top 0px
+    padding-top 0
+
+  ul.social-list
+    display none
+
+    +for_breakpoint(small)
+      display flex
+      justify-content center
 
 .about
   float right
