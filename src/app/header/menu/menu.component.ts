@@ -9,10 +9,6 @@ import * as _ from "lodash";
   styleUrls: ['./menu.component.styl']
 })
 export class MenuComponent {
-  public shareMenuItem: any = {
-    menu_label: "Share"
-  };
-
   private menuItems: Array<any> = [];
   private indexedMenuItems: Array<boolean> = [];
 

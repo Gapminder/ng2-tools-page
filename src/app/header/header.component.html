@@ -4,12 +4,12 @@
     GAPMINDER TOOLS
   </a>
 
-  <div (click)="switchMobileMenuState()" [ngClass]="{'open' : !getMobileMenuState(), 'menu-mobile' : true }">
-    <div class="icon"></div>
-  </div>
-
   <div (click)="switchMobileMenuState()" class="social-share-icon">
     <i class="fa fa-share-alt icon"></i>
+  </div>
+
+  <div (click)="switchMobileMenuState()" [ngClass]="{'open' : !getMobileMenuState(), 'menu-mobile' : true }">
+    <div class="icon"></div>
   </div>
 
   <ul class="nav navbar-nav navbar-nav-left desktop">
