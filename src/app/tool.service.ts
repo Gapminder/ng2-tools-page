@@ -1,4 +1,4 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import * as AgePyramidState from 'vizabi-config-systema_globalis/AgePyramid.json';
 import * as BarRankChartState from 'vizabi-config-systema_globalis/BarRankChart.json';
@@ -6,7 +6,7 @@ import * as BubbleChartState from 'vizabi-config-systema_globalis/BubbleChart.js
 import * as BubbleMapState from 'vizabi-config-systema_globalis/BubbleMap.json';
 import * as LineChartState from 'vizabi-config-systema_globalis/LineChart.json';
 import * as MountainChartState from 'vizabi-config-systema_globalis/MountainChart.json';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import RelatedItems from './related-items';
 
 @Injectable()
@@ -25,18 +25,27 @@ export class ToolService {
   private tools: any = {};
   private toolKeys: string[] = [];
 
-  private toolChangeEmitter: EventEmitter<any> = new EventEmitter();
-  private toolLoadEmitter: EventEmitter<any> = new EventEmitter();
+  private toolChangeEmitter: Subject<any>;
+  private toolLoadEmitter: Subject<any>;
 
   public constructor() {
-    setTimeout(() => {
-      this.setupItems(RelatedItems);
-    }, 25);
+    const {tools, toolKeys} = this.setupItems(RelatedItems);
+    this.tools = tools;
+    this.toolKeys = toolKeys;
+
+    this.toolChangeEmitter = new BehaviorSubject({
+      active: this.getActive()
+    });
+
+    this.toolLoadEmitter = new BehaviorSubject({
+      keys: toolKeys,
+      items: tools
+    });
   }
 
   public changeActiveTool(slug: string): void {
     this.toolActive = slug;
-    this.toolChangeEmitter.emit({
+    this.toolChangeEmitter.next({
       active: this.toolActive
     });
   }
@@ -61,20 +70,14 @@ export class ToolService {
     return this.toolLoadEmitter;
   }
 
-  private setupItems(items: any[]): void {
-    const WS_SERVER = environment.wsUrl;
-
-    items.forEach((toolDescriptor: any) => {
-      toolDescriptor.opts.data.path = WS_SERVER + toolDescriptor.opts.data.path;
+  private setupItems(items: any[]): any {
+    return items.reduce((result: any, toolDescriptor: any) => {
+      toolDescriptor.opts.data.path = `${environment.wsUrl}${toolDescriptor.opts.data.path}`;
       Object.assign(toolDescriptor.opts, ToolService.TOOLS_STATE[toolDescriptor.tool]);
 
-      this.tools[toolDescriptor.slug] = toolDescriptor;
-      this.toolKeys.push(toolDescriptor.slug);
-    });
-
-    this.toolLoadEmitter.emit({
-      keys: this.toolKeys,
-      items: this.tools
-    });
+      result.tools[toolDescriptor.slug] = toolDescriptor;
+      result.toolKeys.push(toolDescriptor.slug);
+      return result;
+    }, {tools: {}, toolKeys: []});
   }
 }

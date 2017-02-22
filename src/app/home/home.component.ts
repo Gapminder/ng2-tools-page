@@ -1,4 +1,4 @@
-import {Component, ViewEncapsulation} from '@angular/core';
+import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core';
 import {Location} from '@angular/common';
 import {Router, NavigationEnd, Event as NavigationEvent} from '@angular/router';
 import {LanguageSwitcherService} from '../header/language-switcher/language-switcher.service';
@@ -18,8 +18,7 @@ const WSReader = require('vizabi-ws-reader').WSReader;
   styleUrls: ['./home.component.styl']
 })
 
-export class HomeComponent {
-
+export class HomeComponent implements AfterViewInit {
   private readerModuleObject: any;
   private readerGetMethod: string;
   private readerParams: Array<any>;
@@ -44,7 +43,9 @@ export class HomeComponent {
               private toolService: ToolService,
               private langService: LanguageSwitcherService,
               private ga: GoogleAnalyticsService) {
+  }
 
+  public ngAfterViewInit(): void {
     this.toolService.getToolLoadEvents().subscribe(data => {
       this.toolKeys = data.keys;
       this.toolItems = data.items;
@@ -176,6 +177,10 @@ export class HomeComponent {
       this.currentHashModel = this.vizabiService.stringToModel(hashModelString);
       const hashChartType = this.currentHashModel['chart-type'];
 
+      if(!this.isVizabiInstanceInitialized(hashChartType)) {
+        return;
+      }
+
       // check if chart changed :: back button
       if (this.currentChartType !== hashChartType) {
         // store state for init
@@ -226,8 +231,16 @@ export class HomeComponent {
     }
   }
 
+  private isVizabiInstanceInitialized(chartType: string): boolean {
+    return !_.isEmpty(_.get(this.vizabiInstances, `${chartType}.instance`))
+  }
+
   private updateLanguage(langItem: any): void {
     if (!this.currentHashModel) {
+      return;
+    }
+
+    if(!this.isVizabiInstanceInitialized(this.currentChartType)) {
       return;
     }
 
@@ -246,6 +259,7 @@ export class HomeComponent {
     // reset instance for switching
     setTimeout(() => {
       const slug = this.getChartType(changes.type);
+
 
       // clear hash model after init :: required after chart switching
       this.vizabiInstances[slug].modelHash = '';
