@@ -31,7 +31,7 @@ export class ToolService {
   public constructor() {
     setTimeout(() => {
       this.setupItems(RelatedItems);
-    }, 0);
+    }, 25);
   }
 
   public changeActiveTool(slug: string): void {
