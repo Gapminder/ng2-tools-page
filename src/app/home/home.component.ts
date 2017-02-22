@@ -95,8 +95,11 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private getUrlHash(hash: string = window.location.hash): string {
-    const hashPosition = hash.indexOf("#") + 1;
-    return hash.substring(hashPosition);
+    const hashPosition = hash.indexOf("#");
+    if (hashPosition === -1) {
+      return '';
+    }
+    return hash.slice(hashPosition + 1);
   }
 
   private setupVizabiDataBase(): void {
