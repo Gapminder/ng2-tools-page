@@ -49,15 +49,24 @@ fdescribe('SeeAlsoComponent', () => {
   });
 
   it('should not change active tool if ctrl was pressed while clicking on "see also" chart', inject([ToolService], (toolService) => {
-    component.changeHandler({ctrlKey: true} as MouseEvent, null);
+    const event = document.createEvent("MouseEvents");
+    event.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, true, false, false, false, 0, null);
+    event.preventDefault = jasmine.createSpy('preventDefault');
+
+    component.changeHandler(event, null);
 
     expect(toolService.changeActiveTool).not.toHaveBeenCalled();
   }));
 
   it('should change active tool if one of "see also" charts was clicked', inject([ToolService], (toolService) => {
-    component.changeHandler({ctrlKey: false} as MouseEvent, 'linechart');
+    const event = document.createEvent("MouseEvents");
+    event.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
+    event.preventDefault = jasmine.createSpy('preventDefault');
+
+    component.changeHandler(event, 'linechart');
 
     expect(toolService.changeActiveTool).toHaveBeenCalledTimes(1);
     expect(toolService.changeActiveTool).toHaveBeenCalledWith('linechart');
+    expect(event.preventDefault).toHaveBeenCalled();
   }));
 });
