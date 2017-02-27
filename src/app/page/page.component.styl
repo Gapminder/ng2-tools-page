@@ -32,14 +32,9 @@ body
 
 /* COMPONENT :: SOCIAL */
 
-.wrap-social
-  display inline-block
-  width 100%
-  text-align center
-
 .social-list
   list-style none
-  margin 9px 200px 0 0
+  margin 5px 200px 0 0
   padding 0
   float right
   +for_breakpoint(medium)
@@ -66,6 +61,7 @@ body
   font-size 16px
   line-height 1.4
   text-transform uppercase
+  text-shadow rgba(0,0,0,.01) 0 0 1px;
 
 
 
@@ -104,10 +100,15 @@ body
 /* COMPONENT :: VIZABI */
 
 .vzb-tool
-  font-family 'Bariol Regular', "Lucida Sans Unicode","Lucida Grande",sans-serif !important
+  font-family 'Bariol Regular', "Lucida Sans Unicode", "Lucida Grande", sans-serif !important
 
-  .vzb-tool-buttonlist
-    background-color white !important
+  .vzb-dynamic-background
+    font-family $courier-prime-font-family
+
+.vzb-tool.vzb-small .vzb-tool-buttonlist,
+.vzb-tool.vzb-medium .vzb-tool-buttonlist
+  background-color white !important
+
 
 /* COMPONENT :: SEE ALSO */
 
@@ -120,7 +121,14 @@ body
     padding 20px 0
 
   +for_breakpoint(not-small)
-    padding-top 0px
+    padding-top 0
+
+  ul.social-list
+    display none
+
+    +for_breakpoint(small)
+      display flex
+      justify-content center
 
 .about
   float right
@@ -135,7 +143,6 @@ body
 
   +for_breakpoint(small)
     background #f2fafc
-    float none
     padding 20px
     width 100%
     .heading-2
@@ -153,7 +160,6 @@ body
 /* embeddedView :: disable view for page except Vizabi Block */
 
 .embedded-view app-header,
-.embedded-view .wrap-social,
 .embedded-view app-report-problem,
 .embedded-view .more
 .embedded-view app-footer

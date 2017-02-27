@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ToolService } from './../tool.service';
+import { ToolService } from '../tool.service';
+import { GoogleAnalyticsService } from '../google-analytics.service';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -13,14 +14,15 @@ export class SeeAlsoComponent {
   private toolKeys: Array<string> = [];
   private toolActive: string;
 
-  constructor(private toolService: ToolService) {
+  constructor(private toolService: ToolService,
+              private ga: GoogleAnalyticsService) {
 
-    this.toolService.getToolLoaderEmitter().subscribe(data => {
+    this.toolService.getToolLoadEvents().subscribe(data => {
       this.tools = data.items;
       this.toolKeys = data.keys;
     });
 
-    this.toolService.getToolChangeEmitter().subscribe(data => {
+    this.toolService.getToolChangeEvents().subscribe(data => {
       this.toolActive = data.active;
     });
   }
@@ -29,7 +31,14 @@ export class SeeAlsoComponent {
     return `${window.location.pathname}#_chart-type=${toolKey}`;
   }
 
-  public changeHandler(toolKey: string): void {
-    this.toolService.changeActiveTool(toolKey);
+  public changeHandler($event: MouseEvent, selectedTool: string): void {
+    if ($event.ctrlKey) {
+      return;
+    }
+
+    this.ga.trackToolChangedEvent({from: this.toolActive, to: selectedTool});
+    this.toolService.changeActiveTool(selectedTool);
+
+    $event.preventDefault();
   }
 }

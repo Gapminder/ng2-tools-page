@@ -1,6 +1,6 @@
-import { Http } from '@angular/http';
 import { Component, ViewEncapsulation } from '@angular/core';
-import * as _ from "lodash";
+import * as _ from 'lodash';
+import VizabiMenuItems from './menu-items';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -9,14 +9,11 @@ import * as _ from "lodash";
   styleUrls: ['./menu.component.styl']
 })
 export class MenuComponent {
+  private menuItems: any[] = [];
+  private indexedMenuItems: boolean[] = [];
 
-  private menuItems: Array<any> = [];
-  private indexedMenuItems: Array<boolean> = [];
-
-  constructor(private http:Http) {
-    this.http
-      .get('assets/menu-items.json')
-      .subscribe(res => this.menuItems = res.json().children);
+  public constructor() {
+    this.menuItems = VizabiMenuItems.children;
   }
 
   public createIconUrl(item: any): string {
@@ -28,7 +25,11 @@ export class MenuComponent {
   }
 
   public switchSubMenu(index: number): void {
+    const wasItemAlreadySelected = this.indexedMenuItems[index];
     _.fill(this.indexedMenuItems, false);
-    this.indexedMenuItems[index] = true;
+
+    if (!wasItemAlreadySelected) {
+      this.indexedMenuItems[index] = true;
+    }
   }
 }

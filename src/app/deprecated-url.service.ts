@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
 import { CanActivate }  from '@angular/router';
-import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 const ROOT_URL = '/';
 
 @Injectable()
 export class DeprecatedUrlService implements CanActivate {
 
-  private detectorList: Array<any> = [];
+  private detectorList: any[] = [];
+  private location: Location;
 
-  constructor(private router: Router) {
+  public constructor(location: Location) {
+    this.location = location;
     this.detectorList.push(new DeprecatedUrlDetector());
     this.detectorList.push(new SlashUrlDetector());
   }
 
   public canActivate(): boolean {
-
-    const routerUrl = this.router['location'].path(true) || ROOT_URL;
-    // const routerUrl = window.location.pathname + window.location.hash;
+    const routerUrl = this.location.path(true) || ROOT_URL;
     const ruleSize = this.detectorList.length;
 
     for (let step = 0; step < ruleSize; step += 1) {
@@ -25,7 +25,6 @@ export class DeprecatedUrlService implements CanActivate {
       const detectorResult = this.detectorList[step].process(routerUrl);
 
       if (detectorResult !== ROOT_URL) {
-        //this.router.navigateByUrl(detectorResult, {replaceUrl: true});
         window.location.href = detectorResult;
         return false;
       }
@@ -45,12 +44,10 @@ class DeprecatedUrlDetector implements UrlRuleDetectorInterface {
     const oldUrlType = [
       'bubbles',
       'map',
-      'mountain',
+      'mountain'
     ];
 
-    for (let ruleIndex = 0; ruleIndex < oldUrlType.length; ruleIndex += 1) {
-
-      const chartType = oldUrlType[ruleIndex];
+    for (const chartType of oldUrlType) {
       const oldUrl = '/' + chartType;
 
       if (url.indexOf(oldUrl) !== -1) {
@@ -58,7 +55,7 @@ class DeprecatedUrlDetector implements UrlRuleDetectorInterface {
         const chartTypeParam = 'chart-type=' + chartType;
         const baseHref = document.getElementsByTagName('base')[0].href;
 
-        return baseHref + url.replace(oldUrl, '') + (url.indexOf("#") !== -1 ? '&' : '#_' ) + chartTypeParam;
+        return baseHref + url.replace(oldUrl, '') + (url.indexOf('#') !== -1 ? '&' : '#_' ) + chartTypeParam;
       }
     }
 

@@ -1,14 +1,10 @@
-
   <h2 class="heading-2">See also</h2>
-
   <div class="menu"></div>
   <ul class="menu-primary">
-
     <li class="menu-item" *ngFor="let toolKey of toolKeys" [hidden]="(toolActive == toolKey)">
-      <a [href]="getLink(toolKey)" (click)="changeHandler(toolKey)">
+      <a [href]="getLink(toolKey)" (click)="changeHandler($event, toolKey)">
         <span class="title">{{tools[toolKey].title}}</span>
-        <img class="image" [src]="'.' + tools[toolKey].image">
+        <img class="image" [src]="'.' + tools[toolKey].image"/>
       </a>
     </li>
-
   </ul>

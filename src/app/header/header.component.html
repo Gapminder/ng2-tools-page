@@ -4,7 +4,11 @@
     GAPMINDER TOOLS
   </a>
 
-  <div (click)="switchMobileMenuState()" [ngClass]="{'open' : !getMobileMenuState(), 'menu-mobile' : true }">
+  <div (click)="switchMobileMenuVisibility()" class="social-share-icon">
+    <i class="fa fa-share-alt-square icon"></i>
+  </div>
+
+  <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !isMobileMenuHidden()}">
     <div class="icon"></div>
   </div>
 
@@ -12,10 +16,10 @@
     <app-menu></app-menu>
   </ul>
 
-  <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!getMobileMenuState()">
+  <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!isMobileMenuHidden()">
 
     <!-- mobile :: language switcher-->
-    <li class="nav-expandable" [ngClass]="getMobileMenuState() ? 'hidden' : ''">
+    <li class="nav-expandable" [ngClass]="{'hidden': isMobileMenuHidden()}">
       <div class="lang-wrapper mobile">
         <app-language-switcher></app-language-switcher>
       </div>

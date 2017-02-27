@@ -8,9 +8,4 @@ import { Component, ViewEncapsulation } from '@angular/core';
 })
 
 export class FooterComponent {
-
-  constructor() {
-
-  }
-
 }

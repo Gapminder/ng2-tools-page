@@ -12,15 +12,15 @@ export class HeaderComponent {
   private mobileMenuHidden: boolean = true;
 
   constructor(languageSwitcherService: LanguageSwitcherService) {
-    languageSwitcherService.getLanguageChangeEmitter()
+    languageSwitcherService.getLanguageChangeEvents()
       .subscribe(() => this.mobileMenuHidden = true);
   }
 
-  public switchMobileMenuState(): void {
+  public switchMobileMenuVisibility(): void {
     this.mobileMenuHidden = !this.mobileMenuHidden;
   }
 
-  public getMobileMenuState(): boolean {
+  public isMobileMenuHidden(): boolean {
     return this.mobileMenuHidden;
   }
 }

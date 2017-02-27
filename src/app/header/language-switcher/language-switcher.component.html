@@ -1,8 +1,8 @@
 
-<div class="lang-current" [innerHTML]="language ? language.text : '...'" (click)="isSwitcherOpened = !isSwitcherOpened"></div>
+<div class="lang-current" [innerHTML]="selectedLanguage ? selectedLanguage.text : '...'" (click)="isSwitcherOpened = !isSwitcherOpened"></div>
 
 <ul [class.selected]="isSwitcherOpened">
-  <li *ngFor="let languageItem of languageList" (click)="changeLanguage(languageItem)">
-    {{languageItem.text}}
+  <li *ngFor="let language of languageService.getLanguages()" (click)="changeLanguage(language)">
+    {{language.text}}
   </li>
 </ul>

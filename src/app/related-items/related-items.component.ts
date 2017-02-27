@@ -16,13 +16,13 @@ export class RelatedItemsComponent {
 
   constructor(private toolService: ToolService) {
 
-    this.toolService.getToolLoaderEmitter().subscribe(data => {
+    this.toolService.getToolLoadEvents().subscribe(data => {
       this.loaded = true;
       this.toolItems = data.items;
       this.relatedItems = this.getRelatedItemsOfActiveTool();
     });
 
-    this.toolService.getToolChangeEmitter().subscribe(data => {
+    this.toolService.getToolChangeEvents().subscribe(data => {
       this.toolActive = <string>data.active;
       if (this.loaded) {
         this.relatedItems = this.getRelatedItemsOfActiveTool();
