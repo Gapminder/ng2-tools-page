@@ -9,25 +9,22 @@ import { LanguageSwitcherService } from './language-switcher.service';
 })
 export class LanguageSwitcherComponent {
 
-  private language: any;
-  private languageList: Array<any> = [];
-
+  private selectedLanguage: any;
   public isSwitcherOpened: boolean = false;
 
   constructor (private languageService: LanguageSwitcherService) {
-    this.languageService.getLanguageChangeEmitter()
-      .subscribe(langItem => this.language = langItem);
-    this.languageService.getSwitcherStateEmitter()
+    this.languageService.getLanguageChangeEvents()
+      .subscribe(langItem => this.selectedLanguage = langItem);
+
+    this.languageService.getSwitcherStateEvents()
       .subscribe(state => this.isSwitcherOpened = state);
 
-    this.languageList = this.languageService.getList();
-    this.language = this.languageService.getLanguage();
+    this.selectedLanguage = this.languageService.getLanguage();
   }
 
-  public changeLanguage(languageItem: any): void {
-    this.languageService.setLanguage(languageItem);
-    this.language = this.languageService.getLanguage();
-
+  public changeLanguage(language: any): void {
+    this.languageService.setLanguage(language);
+    this.selectedLanguage = this.languageService.getLanguage();
     this.isSwitcherOpened = false;
   }
 }

@@ -1,7 +1,7 @@
 import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
 import { Component, ViewEncapsulation } from '@angular/core';
-import { ToolService } from './../tool.service';
-import { LanguageSwitcherService } from './../header/language-switcher/language-switcher.service';
+import { ToolService } from '../tool.service';
+import { LanguageSwitcherService } from '../header/language-switcher/language-switcher.service';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -17,7 +17,7 @@ export class PageComponent {
 
   constructor(private router: Router, private languageSwitcherService: LanguageSwitcherService) {
 
-    this.languageSwitcherService.getSwitcherStateEmitter()
+    this.languageSwitcherService.getSwitcherStateEvents()
       .subscribe(langItem => this.languageKey = langItem.key);
 
     this.router.events.subscribe((event: NavigationEvent) => {

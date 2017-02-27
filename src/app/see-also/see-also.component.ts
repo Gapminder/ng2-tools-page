@@ -38,5 +38,7 @@ export class SeeAlsoComponent {
 
     this.ga.trackToolChangedEvent({from: this.toolActive, to: selectedTool});
     this.toolService.changeActiveTool(selectedTool);
+
+    $event.preventDefault();
   }
 }

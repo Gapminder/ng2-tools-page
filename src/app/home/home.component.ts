@@ -1,11 +1,11 @@
 import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core';
-import {Location} from '@angular/common';
-import {Router, NavigationEnd, Event as NavigationEvent} from '@angular/router';
-import {LanguageSwitcherService} from '../header/language-switcher/language-switcher.service';
-import {ToolService} from '../tool.service';
-import {environment} from '../../environments/environment';
+import { Location } from '@angular/common';
+import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router';
+import { LanguageSwitcherService } from '../header/language-switcher/language-switcher.service';
+import { ToolService } from '../tool.service';
+import { environment } from '../../environments/environment';
 
-import {VizabiService} from "ng2-vizabi";
+import { VizabiService } from "ng2-vizabi";
 import * as _ from "lodash";
 import { GoogleAnalyticsService } from '../google-analytics.service';
 
@@ -62,7 +62,7 @@ export class HomeComponent implements AfterViewInit {
       }
     });
 
-    this.langService.getLanguageChangeEmitter().subscribe(langItem => {
+    this.langService.getLanguageChangeEvents().subscribe(langItem => {
       this.updateLanguage(langItem);
     });
   }
@@ -74,9 +74,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private processUrl(): void {
-
-    const hash = this.getUrlHash();
-    const hashModel = this.vizabiService.stringToModel(hash);
+    const hashModel = this.vizabiService.stringToModel(ToolService.getUrlHash());
 
     if (this.validateChartType(hashModel)) {
       this.currentHashModel = hashModel;
@@ -94,14 +92,6 @@ export class HomeComponent implements AfterViewInit {
     return hashModel.hasOwnProperty('chart-type') && _.includes(this.toolKeys, hashModel['chart-type']);
   }
 
-  private getUrlHash(hash: string = window.location.hash): string {
-    const hashPosition = hash.indexOf("#");
-    if (hashPosition === -1) {
-      return '';
-    }
-    return hash.slice(hashPosition + 1);
-  }
-
   private setupVizabiDataBase(): void {
     this.readerModuleObject = new WSReader();
     this.readerGetMethod = 'getReader';
@@ -117,9 +107,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private setupVizabiDataCharts(): void {
-
-    const hash = this.getUrlHash();
-    const hashModel = this.vizabiService.stringToModel(hash);
+    const hashModel = this.vizabiService.stringToModel(ToolService.getUrlHash());
     const slugFromHash = hashModel['chart-type'] || false;
 
     this.toolKeys.forEach(slug => {
@@ -135,9 +123,8 @@ export class HomeComponent implements AfterViewInit {
       };
     });
 
-    // update hashModel from Url
     if (slugFromHash && _.includes(this.toolKeys, slugFromHash)) {
-      this.vizabiInstances[slugFromHash].modelHash = this.getUrlHash();
+      this.vizabiInstances[slugFromHash].modelHash = ToolService.getUrlHash();
     }
   }
 
@@ -170,8 +157,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private urlChanged(event: NavigationEvent): void {
-
-    const hashModelString = this.getUrlHash(event.url);
+    const hashModelString = ToolService.getUrlHash(event.url);
     const vizabiModelString = this.vizabiService.modelToString(this.currentHashModel);
 
     // update:: not from model, but from url directly (back button)
@@ -184,16 +170,12 @@ export class HomeComponent implements AfterViewInit {
         return;
       }
 
-      // check if chart changed :: back button
       if (this.currentChartType !== hashChartType) {
-        // store state for init
-        this.vizabiInstances[hashChartType].modelHash = this.getUrlHash();
-        // change tool
+        this.vizabiInstances[hashChartType].modelHash = ToolService.getUrlHash();
         this.setupChartType(hashChartType);
         return;
       }
 
-      // update vizabi model
       const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, this.currentHashModel);
       this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
     }
@@ -225,7 +207,6 @@ export class HomeComponent implements AfterViewInit {
     if (positionTo < 0) {
       const positionDiff = positionTo / durationLeft * 10;
       element.scrollTop += positionDiff;
-      // next tick
       setTimeout(() => {
         this.scrollToChart(durationLeft - 25, complete);
       }, 25);
@@ -258,21 +239,15 @@ export class HomeComponent implements AfterViewInit {
   }
 
   public onCreated(changes: any): void {
-
-    // reset instance for switching
     setTimeout(() => {
       const slug = this.getChartType(changes.type);
 
-
-      // clear hash model after init :: required after chart switching
       this.vizabiInstances[slug].modelHash = '';
       this.vizabiInstances[slug].model = _.cloneDeep(this.toolItems[slug].opts);
       this.vizabiInstances[slug].model['chart-type'] = slug;
 
-      // store vizabi instance and Initial Model
       this.vizabiInstances[slug].instance = changes.component;
       this.vizabiInstances[slug].modelInitial = changes.component.getModel();
-      //this.vizabiInstances[slug].modelInitial = _.cloneDeep(changes.model);
     }, 10);
   }
 

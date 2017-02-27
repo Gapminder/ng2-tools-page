@@ -80,4 +80,12 @@ export class ToolService {
       return result;
     }, {tools: {}, toolKeys: []});
   }
+
+  public static getUrlHash(hash: string = window.location.hash): string {
+    const hashPosition = hash.indexOf("#");
+    if (hashPosition === -1) {
+      return '';
+    }
+    return hash.slice(hashPosition + 1);
+  }
 }
