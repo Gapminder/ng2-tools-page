@@ -13,10 +13,10 @@ interface Language {
 @Injectable()
 export class LanguageSwitcherService {
 
-  private static AVAILABLE_LANGUAGES: Language[] = Object.freeze([
+  private static AVAILABLE_LANGUAGES: ReadonlyArray<Language> = [
     {key: 'en', text: 'English'},
     {key: 'ar-SA', text: 'العربية'}
-  ]);
+  ];
 
   private language: Language;
 
@@ -51,7 +51,7 @@ export class LanguageSwitcherService {
     return this.switcherStateEvents;
   }
 
-  public getLanguages(): Language[] {
+  public getLanguages(): ReadonlyArray<Language> {
     return LanguageSwitcherService.AVAILABLE_LANGUAGES;
   }
 
