@@ -31,7 +31,11 @@ export class SeeAlsoComponent {
     return `${window.location.pathname}#_chart-type=${toolKey}`;
   }
 
-  public changeHandler(selectedTool: string): void {
+  public changeHandler($event: MouseEvent, selectedTool: string): void {
+    if ($event.ctrlKey) {
+      return;
+    }
+
     this.ga.trackToolChangedEvent({from: this.toolActive, to: selectedTool});
     this.toolService.changeActiveTool(selectedTool);
   }
