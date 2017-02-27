@@ -28,6 +28,14 @@ export class ToolService {
   private toolChangeEmitter: Subject<any>;
   private toolLoadEmitter: Subject<any>;
 
+  public static getUrlHash(hash: string = window.location.hash): string {
+    const hashPosition = hash.indexOf('#');
+    if (hashPosition === -1) {
+      return '';
+    }
+    return hash.slice(hashPosition + 1);
+  }
+
   public constructor() {
     const {tools, toolKeys} = this.setupItems(RelatedItems);
     this.tools = tools;
@@ -79,13 +87,5 @@ export class ToolService {
       result.toolKeys.push(toolDescriptor.slug);
       return result;
     }, {tools: {}, toolKeys: []});
-  }
-
-  public static getUrlHash(hash: string = window.location.hash): string {
-    const hashPosition = hash.indexOf("#");
-    if (hashPosition === -1) {
-      return '';
-    }
-    return hash.slice(hashPosition + 1);
   }
 }
