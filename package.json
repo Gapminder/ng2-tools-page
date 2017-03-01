@@ -8,10 +8,10 @@
     "test:w": "npm run lint && ng test",
     "cover": "ng test --watch=false --code-coverage",
     "lint": "tslint src/**/*.ts",
-    "local": "npm run prebuild && ng serve -pc proxy-config.js --environment=local",
-    "dev": "npm run prebuild && ng serve -pc proxy-config.js --environment=dev",
-    "stage": "npm run prebuild && ng serve -pc proxy-config.js --environment=stage",
-    "prod": "npm run prebuild && ng serve -pc proxy-config.js --environment=prod",
+    "local": "npm run prebuild && ng serve --environment=local",
+    "dev": "npm run prebuild && ng serve --environment=dev",
+    "stage": "npm run prebuild && ng serve --environment=stage",
+    "prod": "npm run prebuild && ng serve --environment=prod",
     "prebuild": "cp ./node_modules/vizabi/build/dist/vizabi.css ./src/assets/vizabi.css",
     "build:stage": "npm run prebuild && ng build --output-hashing bundles --base-href /tools/ --target=production --environment=stage",
     "build:dev": "npm run prebuild && ng build --output-hashing bundles --base-href /tools/ --target=development --environment=dev",
@@ -19,7 +19,7 @@
     "build:demo": "npm run prebuild && ng build --output-hashing bundles --base-href /ng2-tools-page/ --target=development --environment=dev",
     "build:docker": "npm run prebuild && ng build --output-hashing bundles --base-href /tools/ --target=production --environment=docker",
     "start": "npm run dev",
-    "start:dev": "npm run build:dev && ws -d ./dist/ -p 3011 --rewrite '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'"
+    "start:dev": "npm run build:dev && ws -d ./dist/ -p 3011 --rewrite '/assets/fonts/* -> /tools/assets/fonts/$1' '/assets/images/* -> /tools/assets/images/$1' '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'"
   },
   "private": true,
   "dependencies": {
