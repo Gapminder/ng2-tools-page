@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 import { VizabiService } from "ng2-vizabi";
 import * as _ from "lodash";
 import { GoogleAnalyticsService } from '../google-analytics.service';
+import { Language } from '../types';
 
 const WSReader = require('vizabi-ws-reader').WSReader;
 
@@ -62,8 +63,8 @@ export class HomeComponent implements AfterViewInit {
       }
     });
 
-    this.langService.getLanguageChangeEvents().subscribe(langItem => {
-      this.updateLanguage(langItem);
+    this.langService.getLanguageChangeEvents().subscribe((language: Language) => {
+      this.updateLanguage(language);
     });
   }
 
@@ -219,7 +220,7 @@ export class HomeComponent implements AfterViewInit {
     return !_.isEmpty(_.get(this.vizabiInstances, `${chartType}.instance`))
   }
 
-  private updateLanguage(langItem: any): void {
+  private updateLanguage(language: Language): void {
     if (!this.currentHashModel) {
       return;
     }
@@ -228,7 +229,7 @@ export class HomeComponent implements AfterViewInit {
       return;
     }
 
-    const langModel = {locale: {id: langItem.key}};
+    const langModel = {locale: {id: language.key}};
     const updateModel = _.extend({}, this.currentHashModel, langModel);
 
     this.updateUrlHash(updateModel);
