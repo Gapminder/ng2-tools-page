@@ -49,6 +49,7 @@ body
     .social-list
       float left
       margin 5px 0 0 200px
+      clear both
 
       li
         float right
@@ -62,11 +63,16 @@ body
       left 0
 
     .header:after
-      left 20px
-      right auto
+        left 20px
+        right auto
 
-      +for_breakpoint(small)
-        left 43px
+        +for_breakpoint(medium)
+          content 'alpha version'
+          font-size 24px
+          bottom 10px
+
+        +for_breakpoint(small)
+          left 90px
 
     .wrap-report-problem
       .report-problem
@@ -84,3 +90,8 @@ body
 
     .related
       float right
+
+    .social-share-icon
+      +for_breakpoint(small,medium)
+        left 45px
+        right initial

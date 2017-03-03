@@ -18,8 +18,10 @@ export class PageComponent {
 
   constructor(private router: Router, private languageSwitcherService: LanguageSwitcherService) {
 
-    this.languageSwitcherService.getSwitcherStateEvents()
-      .subscribe((language: Language) => this.languageKey = language.key);
+    this.languageSwitcherService.getLanguageChangeEvents()
+      .subscribe((language: Language) => {
+        this.languageKey = language.key
+      });
 
     this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
@@ -29,7 +31,7 @@ export class PageComponent {
   }
 
   public getPageClass(): string {
-    let pageClass = ['wrapper'];
+    const pageClass = ['wrapper'];
     this.embeddedView && pageClass.push('embedded-view');
     this.languageKey && pageClass.push(`page-lang-${this.languageKey}`);
     return pageClass.join(' ');

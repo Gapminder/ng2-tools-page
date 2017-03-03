@@ -16,15 +16,9 @@ export class SeeAlsoComponent {
 
   constructor(private toolService: ToolService,
               private ga: GoogleAnalyticsService) {
-
-    this.toolService.getToolLoadEvents().subscribe(data => {
-      this.tools = data.items;
-      this.toolKeys = data.keys;
-    });
-
-    this.toolService.getToolChangeEvents().subscribe(data => {
-      this.toolActive = data.active;
-    });
+    this.toolActive = toolService.getActive();
+    this.tools = toolService.getTools();
+    this.toolKeys = toolService.getToolKeys();
   }
 
   public getLink(toolKey: string): string {
@@ -37,8 +31,9 @@ export class SeeAlsoComponent {
     }
 
     this.ga.trackToolChangedEvent({from: this.toolActive, to: selectedTool});
-    this.toolService.changeActiveTool(selectedTool);
 
+    this.toolActive = selectedTool;
+    this.toolService.changeActiveTool(selectedTool);
     $event.preventDefault();
   }
 }

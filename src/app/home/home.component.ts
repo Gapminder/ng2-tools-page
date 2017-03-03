@@ -10,6 +10,9 @@ import * as _ from "lodash";
 import { GoogleAnalyticsService } from '../google-analytics.service';
 import { Language } from '../types';
 
+import { Observable } from 'rxjs';
+import 'rxjs/add/operator/distinctUntilChanged';
+
 const WSReader = require('vizabi-ws-reader').WSReader;
 
 @Component({
@@ -47,20 +50,24 @@ export class HomeComponent implements AfterViewInit {
   }
 
   public ngAfterViewInit(): void {
-    this.toolService.getToolLoadEvents().subscribe(data => {
-      this.toolKeys = data.keys;
-      this.toolItems = data.items;
-      this.process();
-    });
+    this.toolItems = this.toolService.getTools();
+    this.toolKeys = this.toolService.getToolKeys();
+    this.setupVizabiDataBase();
+    this.setupVizabiDataCharts();
+    this.processUrl();
+    this.updateChartType(this.toolService.getActive());
 
     this.toolService.getToolChangeEvents().subscribe(data => {
       this.updateChartType(data.active);
     });
 
-    this.router.events.subscribe((event: NavigationEvent) => {
-      if (event instanceof NavigationEnd) {
-        this.urlChanged(event);
-      }
+    this.router.events
+    .filter((event: any) => event instanceof NavigationEnd)
+    .distinctUntilChanged((prev: NavigationEnd, curr: NavigationEnd) => {
+      return this.areStringModelsEqual(ToolService.getUrlHash(prev.url), ToolService.getUrlHash(curr.url));
+    })
+    .subscribe((event: NavigationEvent) => {
+      this.urlChanged(event);
     });
 
     this.langService.getLanguageChangeEvents().subscribe((language: Language) => {
@@ -68,28 +75,18 @@ export class HomeComponent implements AfterViewInit {
     });
   }
 
-  private process(): void {
-    this.setupVizabiDataBase();
-    this.setupVizabiDataCharts();
-    this.processUrl();
-  }
-
   private processUrl(): void {
     const hashModel = this.vizabiService.stringToModel(ToolService.getUrlHash());
-
-    if (this.validateChartType(hashModel)) {
+    if (this.chartTypeExistsIn(hashModel)) {
       this.currentHashModel = hashModel;
       this.setupChartType();
-      return;
+    } else {
+      window.location.href = `${window.location.pathname}#_chart-type=${this.toolDefault}`;
+      this.currentHashModel = {'chart-type': this.toolDefault};
     }
-
-    // Home url by default
-    window.location.href = `${window.location.pathname}#_chart-type=${this.toolDefault}`;
-    this.currentHashModel = {'chart-type': this.toolDefault};
-    this.toolService.changeActiveTool(this.toolDefault);
   }
 
-  private validateChartType(hashModel: any): boolean {
+  private chartTypeExistsIn(hashModel: any): boolean {
     return hashModel.hasOwnProperty('chart-type') && _.includes(this.toolKeys, hashModel['chart-type']);
   }
 
@@ -144,7 +141,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private updateChartType(slug: string): void {
-    if (slug == this.currentChartType) {
+    if (slug === this.currentChartType) {
       return;
     }
 
@@ -162,8 +159,8 @@ export class HomeComponent implements AfterViewInit {
     const vizabiModelString = this.vizabiService.modelToString(this.currentHashModel);
 
     // update:: not from model, but from url directly (back button)
-    if (hashModelString != vizabiModelString && this.currentHashModel && this.currentChartType) {
-      // store new state to stop urlChange event
+    if (!this.areStringModelsEqual(hashModelString, vizabiModelString)) {
+
       this.currentHashModel = this.vizabiService.stringToModel(hashModelString);
       const hashChartType = this.currentHashModel['chart-type'];
 
@@ -180,20 +177,6 @@ export class HomeComponent implements AfterViewInit {
       const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, this.currentHashModel);
       this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
     }
-  }
-
-  private updateUrlHash(model: any): void {
-    const modelForUpdate = this.vizabiService.modelToString(model);
-    const modelCurrent = this.vizabiService.modelToString(this.currentHashModel);
-
-    if (modelForUpdate != modelCurrent) {
-      this.currentHashModel = model;
-      window.location.hash = "#" + modelForUpdate;
-    }
-
-    const currentPathWithHash = this.location.path(true);
-    this.ga.trackPage(currentPathWithHash);
-    this.ga.trackVizabiModelChangedEvent(currentPathWithHash);
   }
 
   private getChartType(chartType: string): any {
@@ -221,21 +204,12 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private updateLanguage(language: Language): void {
-    if (!this.currentHashModel) {
+    if (!this.currentHashModel || !this.isVizabiInstanceInitialized(this.currentChartType)) {
       return;
     }
 
-    if(!this.isVizabiInstanceInitialized(this.currentChartType)) {
-      return;
-    }
-
-    const langModel = {locale: {id: language.key}};
-    const updateModel = _.extend({}, this.currentHashModel, langModel);
-
-    this.updateUrlHash(updateModel);
-
-    this.currentHashModel = updateModel;
-    const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, updateModel);
+    const newHashModel = _.extend({}, this.currentHashModel, {locale: {id: language.key}});
+    const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, newHashModel);
     this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
   }
 
@@ -253,11 +227,27 @@ export class HomeComponent implements AfterViewInit {
   }
 
   public onChanged(changes: any): void {
-
     const modelDiff = changes.modelDiff;
     modelDiff['chart-type'] = this.getChartType(changes.type);
 
     // vizabi issue :: don't remove/reset some values from model, using `setModel`
-    this.updateUrlHash(changes.modelDiff);
+    if (!this.areModelsEqual(changes.modelDiff, this.currentHashModel)) {
+      this.currentHashModel = changes.modelDiff;
+      window.location.hash = '#' + this.vizabiService.modelToString(changes.modelDiff);
+
+      const currentPathWithHash = this.location.path(true);
+      this.ga.trackPage(currentPathWithHash);
+      this.ga.trackVizabiModelChangedEvent(currentPathWithHash);
+    }
+  }
+
+  private areModelsEqual(modelA: any, modelB: any) {
+    return _.isEqual(modelA, modelB);
+  }
+
+  private areStringModelsEqual(modelA: string, modelB: string) {
+    const modelAParsed = this.vizabiService.stringToModel(modelA);
+    const modelBParsed = this.vizabiService.stringToModel(modelB);
+    return _.isEqual(modelAParsed, modelBParsed);
   }
 }

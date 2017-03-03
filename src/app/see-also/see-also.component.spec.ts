@@ -10,7 +10,7 @@ import { GoogleAnalyticsService } from '../google-analytics.service';
 import { Angulartics2 } from 'angulartics2';
 import { Observable } from 'rxjs';
 
-fdescribe('SeeAlsoComponent', () => {
+describe('SeeAlsoComponent', () => {
   let component: SeeAlsoComponent;
   let fixture: ComponentFixture<SeeAlsoComponent>;
 
@@ -21,16 +21,8 @@ fdescribe('SeeAlsoComponent', () => {
       providers: [ToolService, GoogleAnalyticsService,
         {
           provide: Angulartics2, useFactory: () => ({
-          eventTrack: jasmine.createSpyObj('eventTrack', ['next']),
-          pageTrack: jasmine.createSpyObj('pageTrack', ['next'])
-        })
-        },
-        {
-          provide: ToolService,
-          useFactory: () => ({
-            changeActiveTool: jasmine.createSpy('changeActiveTool'),
-            getToolLoadEvents: () => Observable.empty(),
-            getToolChangeEvents: () => Observable.empty()
+            eventTrack: jasmine.createSpyObj('eventTrack', ['next']),
+            pageTrack: jasmine.createSpyObj('pageTrack', ['next'])
           })
         }
       ]
@@ -53,6 +45,8 @@ fdescribe('SeeAlsoComponent', () => {
     event.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, true, false, false, false, 0, null);
     event.preventDefault = jasmine.createSpy('preventDefault');
 
+    spyOn(toolService, 'changeActiveTool');
+
     component.changeHandler(event, null);
 
     expect(toolService.changeActiveTool).not.toHaveBeenCalled();
@@ -62,6 +56,8 @@ fdescribe('SeeAlsoComponent', () => {
     const event = document.createEvent("MouseEvents");
     event.initMouseEvent("click", true, true, window, 0, 0, 0, 80, 20, false, false, false, false, 0, null);
     event.preventDefault = jasmine.createSpy('preventDefault');
+
+    spyOn(toolService, 'changeActiveTool');
 
     component.changeHandler(event, 'linechart');
 
