@@ -34,6 +34,9 @@ body
       float left
       margin 14px -180px 0 140px
 
+      +for_breakpoint(medium)
+        margin-left 100px
+
       +for_breakpoint(small)
 
         &.desktop
@@ -49,7 +52,6 @@ body
     .social-list
       float left
       margin 5px 0 0 200px
-      clear both
 
       li
         float right
@@ -57,6 +59,10 @@ body
       +for_breakpoint(small)
         float none
         margin 0
+        clear both
+
+      +for_breakpoint(medium)
+        clear none
 
     .menu-mobile
       right auto
@@ -67,7 +73,7 @@ body
         right auto
 
         +for_breakpoint(medium)
-          content 'alpha version'
+          content 'alpha'
           font-size 24px
           bottom 10px
 
@@ -96,5 +102,3 @@ body
         left 45px
         right initial
 
-    .social-list
-      clear none
