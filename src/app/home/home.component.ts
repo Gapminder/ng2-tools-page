@@ -10,7 +10,6 @@ import * as _ from "lodash";
 import { GoogleAnalyticsService } from '../google-analytics.service';
 import { Language } from '../types';
 
-import { Observable } from 'rxjs';
 import 'rxjs/add/operator/distinctUntilChanged';
 
 const WSReader = require('vizabi-ws-reader').WSReader;
@@ -156,27 +155,23 @@ export class HomeComponent implements AfterViewInit {
 
   private urlChanged(event: NavigationEvent): void {
     const hashModelString = ToolService.getUrlHash(event.url);
-    const vizabiModelString = this.vizabiService.modelToString(this.currentHashModel);
 
     // update:: not from model, but from url directly (back button)
-    if (!this.areStringModelsEqual(hashModelString, vizabiModelString)) {
+    this.currentHashModel = this.vizabiService.stringToModel(hashModelString);
+    const hashChartType = this.currentHashModel['chart-type'];
 
-      this.currentHashModel = this.vizabiService.stringToModel(hashModelString);
-      const hashChartType = this.currentHashModel['chart-type'];
-
-      if(!this.isVizabiInstanceInitialized(hashChartType)) {
-        return;
-      }
-
-      if (this.currentChartType !== hashChartType) {
-        this.vizabiInstances[hashChartType].modelHash = ToolService.getUrlHash();
-        this.setupChartType(hashChartType);
-        return;
-      }
-
-      const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, this.currentHashModel);
-      this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
+    if (!this.isVizabiInstanceInitialized(hashChartType)) {
+      return;
     }
+
+    if (this.currentChartType !== hashChartType) {
+      this.vizabiInstances[hashChartType].modelHash = ToolService.getUrlHash();
+      this.setupChartType(hashChartType);
+      return;
+    }
+
+    const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, this.currentHashModel);
+    this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
   }
 
   private getChartType(chartType: string): any {
@@ -232,8 +227,9 @@ export class HomeComponent implements AfterViewInit {
 
     // vizabi issue :: don't remove/reset some values from model, using `setModel`
     if (!this.areModelsEqual(changes.modelDiff, this.currentHashModel)) {
-      this.currentHashModel = changes.modelDiff;
-      window.location.hash = '#' + this.vizabiService.modelToString(changes.modelDiff);
+      const locale = this.currentHashModel.locale;
+      this.currentHashModel = _.extend({locale}, changes.modelDiff);
+      window.location.hash = '#' + this.vizabiService.modelToString(this.currentHashModel);
 
       const currentPathWithHash = this.location.path(true);
       this.ga.trackPage(currentPathWithHash);
@@ -248,6 +244,6 @@ export class HomeComponent implements AfterViewInit {
   private areStringModelsEqual(modelA: string, modelB: string) {
     const modelAParsed = this.vizabiService.stringToModel(modelA);
     const modelBParsed = this.vizabiService.stringToModel(modelB);
-    return _.isEqual(modelAParsed, modelBParsed);
+    return this.areModelsEqual(modelAParsed, modelBParsed);
   }
 }
