@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { ToolService } from '../tool.service';
 import { GoogleAnalyticsService } from '../google-analytics.service';
 
@@ -8,8 +8,7 @@ import { GoogleAnalyticsService } from '../google-analytics.service';
   templateUrl: './see-also.component.html',
   styleUrls: ['./see-also.component.styl']
 })
-export class SeeAlsoComponent {
-
+export class SeeAlsoComponent implements OnInit {
   private tools: any = {};
   private toolKeys: Array<string> = [];
   private toolActive: string;
@@ -19,6 +18,12 @@ export class SeeAlsoComponent {
     this.toolActive = toolService.getActive();
     this.tools = toolService.getTools();
     this.toolKeys = toolService.getToolKeys();
+  }
+
+  public ngOnInit(): void {
+    this.toolService.getToolChangeEvents().subscribe((event: any) => {
+      this.toolActive = event.active;
+    });
   }
 
   public getLink(toolKey: string): string {
@@ -32,7 +37,6 @@ export class SeeAlsoComponent {
 
     this.ga.trackToolChangedEvent({from: this.toolActive, to: selectedTool});
 
-    this.toolActive = selectedTool;
     this.toolService.changeActiveTool(selectedTool);
     $event.preventDefault();
   }
