@@ -228,7 +228,8 @@ export class HomeComponent implements AfterViewInit {
     // vizabi issue :: don't remove/reset some values from model, using `setModel`
     if (!this.areModelsEqual(changes.modelDiff, this.currentHashModel)) {
       const locale = this.currentHashModel.locale;
-      this.currentHashModel = _.extend({locale}, changes.modelDiff);
+      const newModelBase = locale ? {locale} : {};
+      this.currentHashModel = _.extend(newModelBase, changes.modelDiff);
       window.location.hash = '#' + this.vizabiService.modelToString(this.currentHashModel);
 
       const currentPathWithHash = this.location.path(true);
