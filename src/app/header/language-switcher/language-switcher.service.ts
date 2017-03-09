@@ -4,17 +4,14 @@ import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router
 import { VizabiService } from "ng2-vizabi";
 import * as _ from "lodash";
 import { ToolService } from '../../tool.service';
-
-interface Language {
-  key: string;
-  text: string;
-}
+import { Language } from '../../types';
 
 @Injectable()
 export class LanguageSwitcherService {
+  private static DEFAULT_LANGUAGE: Language = {key: 'en', text: 'English'};
 
   private static AVAILABLE_LANGUAGES: ReadonlyArray<Language> = [
-    {key: 'en', text: 'English'},
+    LanguageSwitcherService.DEFAULT_LANGUAGE,
     {key: 'ar-SA', text: 'العربية'}
   ];
 
@@ -69,7 +66,7 @@ export class LanguageSwitcherService {
   }
 
   private detectLanguage(): Language {
-    return this.getLanguageFromUrl() || this.detectBrowserLanguage() || _.first(LanguageSwitcherService.AVAILABLE_LANGUAGES);
+    return this.getLanguageFromUrl() || LanguageSwitcherService.detectBrowserLanguage() || LanguageSwitcherService.DEFAULT_LANGUAGE;
   }
 
   private getLanguageFromUrl(): Language {
@@ -77,7 +74,7 @@ export class LanguageSwitcherService {
     return LanguageSwitcherService.findLanguageBy(_.get(model, 'locale.id') as string);
   }
 
-  private detectBrowserLanguage(): Language {
+  private static detectBrowserLanguage(): Language {
     if (typeof window === 'undefined' || typeof window.navigator === 'undefined') {
       return undefined;
     }
@@ -85,7 +82,7 @@ export class LanguageSwitcherService {
     let browserLang = window.navigator['languages'] ? window.navigator['languages'][0] : null;
 
     browserLang = browserLang ||
-      window.navigator['languages'] ||
+      window.navigator['language'] ||
       window.navigator['browserLanguage'] ||
       window.navigator['userLanguage'];
 

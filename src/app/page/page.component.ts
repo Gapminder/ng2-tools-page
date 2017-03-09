@@ -2,6 +2,7 @@ import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ToolService } from '../tool.service';
 import { LanguageSwitcherService } from '../header/language-switcher/language-switcher.service';
+import { Language } from '../types';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -17,8 +18,10 @@ export class PageComponent {
 
   constructor(private router: Router, private languageSwitcherService: LanguageSwitcherService) {
 
-    this.languageSwitcherService.getSwitcherStateEvents()
-      .subscribe(langItem => this.languageKey = langItem.key);
+    this.languageSwitcherService.getLanguageChangeEvents()
+      .subscribe((language: Language) => {
+        this.languageKey = language.key
+      });
 
     this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
@@ -28,7 +31,7 @@ export class PageComponent {
   }
 
   public getPageClass(): string {
-    let pageClass = ['wrapper'];
+    const pageClass = ['wrapper'];
     this.embeddedView && pageClass.push('embedded-view');
     this.languageKey && pageClass.push(`page-lang-${this.languageKey}`);
     return pageClass.join(' ');
@@ -41,8 +44,6 @@ export class PageComponent {
     const elemLangMobileVisible = elemLangMobile && window.getComputedStyle(elemLangMobile).display !== 'none';
 
     const elemLangDesktop = document.getElementsByClassName('lang-wrapper desktop')[0];
-    //const elemLangDesktopVisible = elemLangDesktop && window.getComputedStyle(elemLangDesktop).display!='none';
-
     const elemLangActive = elemLangMobileVisible ? elemLangMobile : elemLangDesktop;
 
     if (!elemLangActive.contains(element)) {

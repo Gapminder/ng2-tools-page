@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from '../environments/environment';
 import * as AgePyramidState from 'vizabi-config-systema_globalis/AgePyramid.json';
 import * as BarRankChartState from 'vizabi-config-systema_globalis/BarRankChart.json';
@@ -6,7 +6,7 @@ import * as BubbleChartState from 'vizabi-config-systema_globalis/BubbleChart.js
 import * as BubbleMapState from 'vizabi-config-systema_globalis/BubbleMap.json';
 import * as LineChartState from 'vizabi-config-systema_globalis/LineChart.json';
 import * as MountainChartState from 'vizabi-config-systema_globalis/MountainChart.json';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import RelatedItems from './related-items';
 
 @Injectable()
@@ -25,8 +25,7 @@ export class ToolService {
   private tools: any = {};
   private toolKeys: string[] = [];
 
-  private toolChangeEmitter: Subject<any>;
-  private toolLoadEmitter: Subject<any>;
+  private toolChangeEvents: EventEmitter<any> = new EventEmitter<any>();
 
   public static getUrlHash(hash: string = window.location.hash): string {
     const hashPosition = hash.indexOf('#');
@@ -40,22 +39,11 @@ export class ToolService {
     const {tools, toolKeys} = this.setupItems(RelatedItems);
     this.tools = tools;
     this.toolKeys = toolKeys;
-
-    this.toolChangeEmitter = new BehaviorSubject({
-      active: this.getActive()
-    });
-
-    this.toolLoadEmitter = new BehaviorSubject({
-      keys: toolKeys,
-      items: tools
-    });
   }
 
   public changeActiveTool(slug: string): void {
     this.toolActive = slug;
-    this.toolChangeEmitter.next({
-      active: this.toolActive
-    });
+    this.toolChangeEvents.emit({ active: this.toolActive });
   }
 
   public getActive(): string {
@@ -71,11 +59,7 @@ export class ToolService {
   }
 
   public getToolChangeEvents(): Observable<any> {
-    return this.toolChangeEmitter;
-  }
-
-  public getToolLoadEvents(): Observable<any> {
-    return this.toolLoadEmitter;
+    return this.toolChangeEvents;
   }
 
   private setupItems(items: any[]): any {

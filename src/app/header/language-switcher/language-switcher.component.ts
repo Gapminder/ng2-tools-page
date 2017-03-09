@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { LanguageSwitcherService } from './language-switcher.service';
+import { Language } from '../../types';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -8,23 +9,15 @@ import { LanguageSwitcherService } from './language-switcher.service';
   styleUrls: ['language-switcher.component.styl']
 })
 export class LanguageSwitcherComponent {
-
-  private selectedLanguage: any;
   public isSwitcherOpened: boolean = false;
 
   constructor (private languageService: LanguageSwitcherService) {
-    this.languageService.getLanguageChangeEvents()
-      .subscribe(langItem => this.selectedLanguage = langItem);
-
     this.languageService.getSwitcherStateEvents()
       .subscribe(state => this.isSwitcherOpened = state);
-
-    this.selectedLanguage = this.languageService.getLanguage();
   }
 
-  public changeLanguage(language: any): void {
-    this.languageService.setLanguage(language);
-    this.selectedLanguage = this.languageService.getLanguage();
+  public changeLanguage(language: Language): void {
     this.isSwitcherOpened = false;
+    this.languageService.setLanguage(language);
   }
 }

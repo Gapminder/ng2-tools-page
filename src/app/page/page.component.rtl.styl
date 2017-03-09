@@ -34,6 +34,9 @@ body
       float left
       margin 14px -180px 0 140px
 
+      +for_breakpoint(medium)
+        margin-left 100px
+
       +for_breakpoint(small)
 
         &.desktop
@@ -56,17 +59,26 @@ body
       +for_breakpoint(small)
         float none
         margin 0
+        clear both
+
+      +for_breakpoint(medium)
+        clear none
 
     .menu-mobile
       right auto
       left 0
 
     .header:after
-      left 20px
-      right auto
+        left 20px
+        right auto
 
-      +for_breakpoint(small)
-        left 43px
+        +for_breakpoint(medium)
+          content 'alpha'
+          font-size 24px
+          bottom 10px
+
+        +for_breakpoint(small)
+          left 90px
 
     .wrap-report-problem
       .report-problem
@@ -84,3 +96,9 @@ body
 
     .related
       float right
+
+    .social-share-icon
+      +for_breakpoint(small,medium)
+        left 45px
+        right initial
+
