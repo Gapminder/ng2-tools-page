@@ -31,7 +31,7 @@ export class HomeComponent implements AfterViewInit {
   private stopUrlRedirect: boolean;
 
   private currentChartType: string = '';
-  private currentHashModel: any;
+  public currentHashModel: any;
   private switchingReady: boolean = true;
 
   private toolDefault = 'bubbles';
@@ -222,15 +222,13 @@ export class HomeComponent implements AfterViewInit {
   }
 
   public onChanged(changes: any): void {
-    const modelDiff = changes.modelDiff;
-    modelDiff['chart-type'] = this.getChartType(changes.type);
-
     // vizabi issue :: don't remove/reset some values from model, using `setModel`
     if (!this.areModelsEqual(changes.modelDiff, this.currentHashModel)) {
       const locale = this.currentHashModel.locale;
       const newModelBase = locale ? {locale} : {};
-      this.currentHashModel = _.extend(newModelBase, changes.modelDiff);
-      window.location.hash = '#' + this.vizabiService.modelToString(this.currentHashModel);
+      console.log(window.location.hash);
+      this.currentHashModel = _.extend(newModelBase, changes.modelDiff, {'chart-type': this.getChartType(changes.type)});
+      window.location.hash = `#${this.vizabiService.modelToString(this.currentHashModel)}`;
 
       const currentPathWithHash = this.location.path(true);
       this.ga.trackPage(currentPathWithHash);
