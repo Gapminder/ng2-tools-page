@@ -40,12 +40,12 @@ describe('HomeComponent', () => {
     const changes = {type: 'BarRankChart'};
     component.onChanged(changes);
 
-    expect(component.currentHashModel).toEqual({'chart-type': 'barrank'});
-    expect(window.location.hash).toEqual('#_chart-type=barrank');
+    expect(component.currentHashModel).toEqual({'chart-type': 'barrank', locale: { id: 'en' }});
+    expect(window.location.hash).toEqual('#_locale_id=en;&chart-type=barrank');
   });
 
   it(`should properly handle Vizabi's onChanged event: preserve locale`, () => {
-    component.currentHashModel = {locale: {id: 'en'}};
+    component.currentHashModel = {locale: {id: 'ar-SA'}};
 
     const changes = {type: 'BarRankChart'};
     component.onChanged(changes);
