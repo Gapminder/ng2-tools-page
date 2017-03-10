@@ -11,7 +11,7 @@ import { VizabiService, VizabiModule } from 'ng2-vizabi';
 import { ToolService } from '../tool.service';
 import { Angulartics2Module, Angulartics2GoogleAnalytics } from 'angulartics2';
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<TestComponent>;
 
