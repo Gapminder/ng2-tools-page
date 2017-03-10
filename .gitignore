@@ -34,3 +34,4 @@ e2e/*.map
 Thumbs.db
 yarn.lock
 src/assets/vizabi.css
+src/assets/barrankchart.css
