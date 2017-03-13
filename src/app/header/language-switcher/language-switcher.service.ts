@@ -4,7 +4,7 @@ import { Router, NavigationEnd, Event as NavigationEvent } from '@angular/router
 import { VizabiService } from "ng2-vizabi";
 import * as _ from "lodash";
 import { ToolService } from '../../tool.service';
-import { Language } from '../../types';
+import { Language, VizabiLocale } from '../../types';
 
 @Injectable()
 export class LanguageSwitcherService {
@@ -21,6 +21,7 @@ export class LanguageSwitcherService {
   private switcherStateEvents: EventEmitter<boolean> = new EventEmitter();
 
   constructor(private router: Router, private vService: VizabiService) {
+    this.language = this.detectLanguage();
     this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
         if(this.languageIsNotSet() || this.languageChanged()) {
@@ -63,6 +64,10 @@ export class LanguageSwitcherService {
 
   public getLanguage(): Language {
     return this.language;
+  }
+
+  public getLocale(language: Language = this.language): VizabiLocale {
+    return {locale: {id: language.key}};
   }
 
   private detectLanguage(): Language {

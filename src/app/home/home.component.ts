@@ -31,7 +31,7 @@ export class HomeComponent implements AfterViewInit {
   private stopUrlRedirect: boolean;
 
   private currentChartType: string = '';
-  private currentHashModel: any;
+  public currentHashModel: any;
   private switchingReady: boolean = true;
 
   private toolDefault = 'bubbles';
@@ -125,6 +125,14 @@ export class HomeComponent implements AfterViewInit {
     }
   }
 
+  public getVizabiInitialModel(slug: string): any {
+    const initialModel = _.extend(this.vizabiInstances[slug].model, this.langService.getLocale());
+    if (slug === 'mountain') {
+      _.extend(_.get(initialModel, 'state.marker.group'), {manualSorting: ["asia", "africa", "americas", "europe"]});
+    }
+    return initialModel;
+  }
+
   private setupChartType(slug: string = ''): void {
 
     const slugUpdate = slug || this.currentHashModel['chart-type'];
@@ -203,7 +211,7 @@ export class HomeComponent implements AfterViewInit {
       return;
     }
 
-    const newHashModel = _.extend({}, this.currentHashModel, {locale: {id: language.key}});
+    const newHashModel = _.extend({}, this.currentHashModel, this.langService.getLocale(language));
     const newModelState = _.extend({}, this.vizabiInstances[this.currentChartType].modelInitial, newHashModel);
     this.vizabiInstances[this.currentChartType].instance.setModel(newModelState);
   }
@@ -215,22 +223,16 @@ export class HomeComponent implements AfterViewInit {
       this.vizabiInstances[slug].modelHash = '';
       this.vizabiInstances[slug].model = _.cloneDeep(this.toolItems[slug].opts);
       this.vizabiInstances[slug].model['chart-type'] = slug;
-
       this.vizabiInstances[slug].instance = changes.component;
       this.vizabiInstances[slug].modelInitial = changes.component.getModel();
     }, 10);
   }
 
   public onChanged(changes: any): void {
-    const modelDiff = changes.modelDiff;
-    modelDiff['chart-type'] = this.getChartType(changes.type);
-
-    // vizabi issue :: don't remove/reset some values from model, using `setModel`
     if (!this.areModelsEqual(changes.modelDiff, this.currentHashModel)) {
-      const locale = this.currentHashModel.locale;
-      const newModelBase = locale ? {locale} : {};
-      this.currentHashModel = _.extend(newModelBase, changes.modelDiff);
-      window.location.hash = '#' + this.vizabiService.modelToString(this.currentHashModel);
+      const newModelBase = this.langService.getLocale();
+      this.currentHashModel = _.extend(newModelBase, changes.modelDiff, {'chart-type': this.getChartType(changes.type)});
+      window.location.hash = `#${this.vizabiService.modelToString(this.currentHashModel)}`;
 
       const currentPathWithHash = this.location.path(true);
       this.ga.trackPage(currentPathWithHash);

@@ -12,7 +12,7 @@
             (onCreated)="onCreated($event)"
             (onChanged)="onChanged($event)"
             [chartType]="vizabiInstances[toolKey].chartType"
-            [model]="vizabiInstances[toolKey].model"
+            [model]="getVizabiInitialModel(toolKey)"
             [modelHash]="vizabiInstances[toolKey].modelHash"
     ></vizabi>
   </div>
