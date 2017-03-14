@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-cd ./$1
+cd /opt/ng2-tools-page
 npm run stop:blue
+
 cd /opt
-rm -rf  ng2-tools-page/*
-cp -r ./$1/dist/* ./ng2-tools-page
+rm -rf  ng2-tools-page-nginx/*
+cp -r ./ng2-tools-page/dist/* ./ng2-tools-page-nginx
 
