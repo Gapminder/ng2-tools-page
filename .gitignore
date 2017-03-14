@@ -35,3 +35,5 @@ Thumbs.db
 yarn.lock
 src/assets/vizabi.css
 src/assets/barrankchart.css
+
+logs
