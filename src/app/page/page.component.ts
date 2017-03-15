@@ -14,20 +14,22 @@ import { Language } from '../types';
 export class PageComponent {
 
   private embeddedView: boolean = false;
-  private languageKey: string = '';
+  private languageKey: string;
 
   constructor(private router: Router, private languageSwitcherService: LanguageSwitcherService) {
+    this.languageKey = this.languageSwitcherService.getLanguage().key;
 
     this.languageSwitcherService.getLanguageChangeEvents()
       .subscribe((language: Language) => {
         this.languageKey = language.key
       });
 
-    this.router.events.subscribe((event: NavigationEvent) => {
-      if(event instanceof NavigationEnd) {
-        this.detectEmbeddedView();
-      }
-    });
+    this.router.events
+      .subscribe((event: NavigationEvent) => {
+        if(event instanceof NavigationEnd) {
+          this.detectEmbeddedView();
+        }
+      });
   }
 
   public getPageClass(): string {

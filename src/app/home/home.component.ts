@@ -62,9 +62,7 @@ export class HomeComponent implements AfterViewInit {
 
     this.router.events
     .filter((event: any) => event instanceof NavigationEnd)
-    .distinctUntilChanged((prev: NavigationEnd, curr: NavigationEnd) => {
-      return this.areStringModelsEqual(ToolService.getUrlHash(prev.url), ToolService.getUrlHash(curr.url));
-    })
+    .filter((event: NavigationEnd) => !this.currentModelEqualsToModelInUrl(event.url))
     .subscribe((event: NavigationEvent) => {
       this.urlChanged(event);
     });
@@ -240,13 +238,12 @@ export class HomeComponent implements AfterViewInit {
     }
   }
 
-  private areModelsEqual(modelA: any, modelB: any) {
-    return _.isEqual(modelA, modelB);
+  private currentModelEqualsToModelInUrl(modelFromUrlAsString: string): boolean {
+    const hashModelFromUrl = this.vizabiService.stringToModel(ToolService.getUrlHash(modelFromUrlAsString));
+    return this.areModelsEqual(hashModelFromUrl, this.currentHashModel);
   }
 
-  private areStringModelsEqual(modelA: string, modelB: string) {
-    const modelAParsed = this.vizabiService.stringToModel(modelA);
-    const modelBParsed = this.vizabiService.stringToModel(modelB);
-    return this.areModelsEqual(modelAParsed, modelBParsed);
+  private areModelsEqual(modelA: any, modelB: any) {
+    return _.isEqual(modelA, modelB);
   }
 }
