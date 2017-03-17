@@ -49,6 +49,7 @@
     "vizabi": "0.20.2-10",
     "vizabi-barrankchart": "1.0.6-0",
     "vizabi-bubblechart": "1.0.2",
+    "vizabi-bubblemap": "1.0.1",
     "vizabi-config-systema_globalis": "1.0.0",
     "vizabi-linechart": "1.0.2",
     "vizabi-mountainchart": "1.0.2",
