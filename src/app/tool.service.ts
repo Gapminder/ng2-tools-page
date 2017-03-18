@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from '../environments/environment';
-import * as PopByAgeState from 'vizabi-config-systema_globalis/PopByAge.json'; 
+import * as PopByAgeState from 'vizabi-config-systema_globalis/PopByAge.json';
 import * as BarRankChartState from 'vizabi-config-systema_globalis/BarRankChart.json';
 import * as BubbleChartState from 'vizabi-config-systema_globalis/BubbleChart.json';
 import * as BubbleMapState from 'vizabi-config-systema_globalis/BubbleMap.json';
