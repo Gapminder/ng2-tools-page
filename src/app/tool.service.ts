@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from '../environments/environment';
-import * as AgePyramidState from 'vizabi-config-systema_globalis/AgePyramid.json';
+import * as PopByAgeState from 'vizabi-config-systema_globalis/PopByAge.json';
 import * as BarRankChartState from 'vizabi-config-systema_globalis/BarRankChart.json';
 import * as BubbleChartState from 'vizabi-config-systema_globalis/BubbleChart.json';
 import * as BubbleMapState from 'vizabi-config-systema_globalis/BubbleMap.json';
@@ -12,7 +12,7 @@ import RelatedItems from './related-items';
 @Injectable()
 export class ToolService {
   private static TOOLS_STATE: any = {
-    AgePyramid: AgePyramidState,
+    PopByAge: PopByAgeState,
     BarRankChart: BarRankChartState,
     BubbleChart: BubbleChartState,
     BubbleMap: BubbleMapState,

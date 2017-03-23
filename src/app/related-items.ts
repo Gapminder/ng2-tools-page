@@ -6,7 +6,7 @@ export default [
     "slug": "mountain",
     "category": "Tools",
     "image": "/assets/images/chart/mountainchart.png",
-    "title": "Mountain Chart",
+    "title": "Mountains",
     "description": "This graph shows the amount of people in the world across each income level.",
     "__v": 5,
     "opts": {
@@ -103,7 +103,7 @@ export default [
     "slug": "bubbles",
     "image": "/assets/images/chart/bubblechart.png",
     "category": "Tools",
-    "title": "Bubble Chart",
+    "title": "Bubbles",
     "description": "This graph shows how long people live and how much money they earn. Click the play button to see how countries have developed since 1800.",
     "__v": 4,
     "opts": {
@@ -200,7 +200,7 @@ export default [
     "slug": "map",
     "category": "Tools",
     "image": "/assets/images/chart/bubblemap.png",
-    "title": "Bubble Map",
+    "title": "Maps",
     "description": "This graph shows the population on a map",
     "opts": {
       "locale": {
@@ -304,7 +304,7 @@ export default [
     "slug": "barrank",
     "category": "Tools",
     "image": "/assets/images/chart/barrankchart.png",
-    "title": "Bar Rank",
+    "title": "Rankings",
     "description": "This graph shows the population on a map",
     "opts": {
       "locale": {
@@ -400,7 +400,7 @@ export default [
     "slug": "linechart",
     "category": "Tools",
     "image": "/assets/images/chart/linechart.png",
-    "title": "Line chart",
+    "title": "Lines",
     "description": "This graph shows how a trend changes across the years",
     "opts": {
       "locale": {
