@@ -228,10 +228,10 @@ export class HomeComponent implements AfterViewInit {
 
   public onChanged(changes: any): void {
     const newModelBase = this.langService.getLocale();
-    const modelDiff = _.extend(newModelBase, changes.modelDiff, {'chart-type': this.getChartType(changes.type)});
+    const modelDiff = _.extend(newModelBase, changes.modelDiff);
 
     if (!this.areModelsEqual(modelDiff, this.currentHashModel)) {
-      this.currentHashModel = modelDiff;
+      this.currentHashModel = _.extend(modelDiff, {'chart-type': this.getChartType(changes.type)});
       window.location.hash = `#${this.vizabiService.modelToString(this.currentHashModel)}`;
 
       const currentPathWithHash = this.location.path(true);
