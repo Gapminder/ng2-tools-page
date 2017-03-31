@@ -1,4 +1,5 @@
 /* tslint:disable:no-unused-variable */
+import { isEqual } from 'lodash';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement, Component } from '@angular/core';
@@ -61,8 +62,8 @@ describe('HomeComponent', () => {
     const changes = {type: 'BarRankChart', modelDiff: {locale: {id: 'en'}}};
     component.onChanged(changes);
 
-    expect(component.currentHashModel === initialState).toBe(true);
-    expect(window.location.hash).toEqual('#_chart-type=bubbles');
+    expect(isEqual(component.currentHashModel, initialState)).toBe(true);
+    expect(window.location.hash).toEqual('#_locale_id=en;&chart-type=barrank');
   });
 });
 
