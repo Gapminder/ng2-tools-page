@@ -55,12 +55,13 @@ describe('HomeComponent', () => {
   });
 
   it(`should properly handle Vizabi's onChanged event: if model wasn't changed - nothing is propagated`, () => {
-    component.currentHashModel = {locale: {id: 'en'}};
+    const initialState = {'chart-type': 'barrank', locale: {id: 'en'}};
+    component.currentHashModel = initialState;
 
     const changes = {type: 'BarRankChart', modelDiff: {locale: {id: 'en'}}};
     component.onChanged(changes);
 
-    expect(component.currentHashModel).toEqual({locale: {id: 'en'}});
+    expect(component.currentHashModel === initialState).toBe(true);
     expect(window.location.hash).toEqual('#_chart-type=bubbles');
   });
 });
