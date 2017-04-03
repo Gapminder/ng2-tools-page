@@ -25,7 +25,7 @@ export class LanguageSwitcherService {
     this.router.events.subscribe((event: NavigationEvent) => {
       if(event instanceof NavigationEnd) {
         if(this.languageIsNotSet() || this.languageChanged()) {
-          const detectedLanguage = this.language || this.detectLanguage();
+          const detectedLanguage = this.detectLanguage();
           this.setLanguage(detectedLanguage);
         }
       }
