@@ -21,7 +21,7 @@
     "start": "npm run dev",
     "stop:blue": "forever stopall",
     "start:blue": "npm run build:prod && mkdir -p logs && forever start -l forever.log -o logs/out.log -e logs/error.log -a -p logs --minUptime 1000 --spinSleepTime 1000 ./node_modules/.bin/ws -d dist -p 3001 --rewrite '/assets/fonts/* -> /tools/assets/fonts/$1' '/assets/images/* -> /tools/assets/images/$1' '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'",
-    "start:dev": "npm run build:prod && npm run start:local-web-server",
+    "start:dev": "npm run build:dev && npm run start:local-web-server",
     "start:local-web-server": "ws -d ./dist/ -p 3001 --rewrite '/assets/fonts/* -> /tools/assets/fonts/$1' '/assets/images/* -> /tools/assets/images/$1' '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'"
   },
   "private": true,
