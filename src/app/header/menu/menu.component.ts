@@ -9,7 +9,7 @@ import VizabiMenuItems from './menu-items';
   styleUrls: ['./menu.component.styl']
 })
 export class MenuComponent {
-  private menuItems: any[] = [];
+  public menuItems: any[] = [];
   private indexedMenuItems: boolean[] = [];
 
   public constructor() {

@@ -9,8 +9,8 @@ import { GoogleAnalyticsService } from '../google-analytics.service';
   styleUrls: ['./see-also.component.styl']
 })
 export class SeeAlsoComponent implements OnInit {
+  public toolKeys: Array<string> = [];
   private tools: any = {};
-  private toolKeys: Array<string> = [];
   private toolActive: string;
 
   constructor(private toolService: ToolService,
