@@ -16,7 +16,10 @@ export class SocialButtonsComponent {
   }
 
   public getEmbeddedUrl(): void {
-    const pathBase = window.location.origin;
+    const iframeStart = '<iframe src="';
+    const iframeEnd = '" style="width: 100%; height: 500px; margin: 0 0 0 0; border: 1px solid grey;"></iframe>';
+    
+    const pathBase = window.location.origin.replace(/http:|https:/,"");
     const pathBaseHref = this.location['_baseHref'];
 
     const pathSearch = this.router.url;
@@ -25,8 +28,8 @@ export class SocialButtonsComponent {
     urlTree.queryParams = urlTree.queryParams || {};
     urlTree.queryParams['embedded'] = 'true';
 
-    const externalLink = pathBase + pathBaseHref + this.router.serializeUrl(urlTree);
-    prompt('Copy link:', externalLink);
+    const externalLink = iframeStart + pathBase + pathBaseHref + this.router.serializeUrl(urlTree) + iframeEnd;
+    prompt('Copy this fragment and paste it in your website or blog:\n(more instructions on vizabi.org/tutorials)', externalLink);
   }
 
   public shareLink(): void {
