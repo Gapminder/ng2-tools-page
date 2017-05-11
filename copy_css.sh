@@ -6,3 +6,4 @@ cp ./node_modules/vizabi-bubblechart/build/bubblechart.css ./src/assets/bubblech
 cp ./node_modules/vizabi-bubblemap/build/bubblemap.css ./src/assets/bubblemap.css
 cp ./node_modules/vizabi-mountainchart/build/mountainchart.css ./src/assets/mountainchart.css
 cp ./node_modules/vizabi-linechart/build/linechart.css ./src/assets/linechart.css
+cp ./node_modules/vizabi-popbyage/build/popbyage.css ./src/assets/popbyage.css
