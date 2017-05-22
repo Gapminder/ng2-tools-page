@@ -9,6 +9,7 @@ module.exports = function (config) {
       require('karma-jasmine'),
       require('karma-phantomjs-launcher'),
       require('karma-coverage-istanbul-reporter'),
+      require('karma-spec-reporter'),
       require('@angular/cli/plugins/karma')
     ],
     files: [
@@ -27,8 +28,8 @@ module.exports = function (config) {
       environment: 'dev'
     },
     reporters: config.angularCli && config.angularCli.codeCoverage
-      ? ['progress', 'coverage-istanbul']
-      : ['progress'],
+      ? ['spec', 'coverage-istanbul']
+      : ['spec'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,

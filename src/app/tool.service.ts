@@ -8,6 +8,7 @@ import * as LineChartState from 'vizabi-config-systema_globalis/LineChart.json';
 import * as MountainChartState from 'vizabi-config-systema_globalis/MountainChart.json';
 import { Observable } from 'rxjs';
 import RelatedItems from './related-items';
+import { has as _has, cloneDeep as _cloneDeep } from 'lodash';
 
 @Injectable()
 export class ToolService {
@@ -63,9 +64,14 @@ export class ToolService {
   }
 
   private setupItems(items: any[]): any {
-    return items.reduce((result: any, toolDescriptor: any) => {
-      toolDescriptor.opts.data.path = `${environment.wsUrl}${toolDescriptor.opts.data.path}`;
+    const itemsCloned = _cloneDeep(items);
+    return itemsCloned.reduce((result: any, toolDescriptor: any) => {
+      if (_has(environment, 'dataset')) {
+        toolDescriptor.opts.data.dataset = (environment as any).dataset;
+      }
+
       Object.assign(toolDescriptor.opts, ToolService.TOOLS_STATE[toolDescriptor.tool]);
+      toolDescriptor.opts.data.path = `${environment.wsUrl}${toolDescriptor.opts.data.path}`;
 
       result.tools[toolDescriptor.slug] = toolDescriptor;
       result.toolKeys.push(toolDescriptor.slug);
