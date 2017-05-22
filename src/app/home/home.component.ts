@@ -22,6 +22,10 @@ const WSReader = require('vizabi-ws-reader').WSReader;
 })
 
 export class HomeComponent implements AfterViewInit {
+  public currentChartType: string = '';
+  public currentHashModel: any;
+  public toolKeys: Array<any>;
+
   private readerModuleObject: any;
   private readerGetMethod: string;
   private readerParams: Array<any>;
@@ -30,12 +34,8 @@ export class HomeComponent implements AfterViewInit {
   private extResources: any;
   private stopUrlRedirect: boolean;
 
-  private currentChartType: string = '';
-  public currentHashModel: any;
   private switchingReady: boolean = true;
-
   private toolDefault = 'bubbles';
-  private toolKeys: Array<any>;
   private toolItems: any;
   private toolTypeMatch: any = {};
   private vizabiInstances: any = {};
@@ -63,7 +63,7 @@ export class HomeComponent implements AfterViewInit {
     this.router.events
     .filter((event: any) => event instanceof NavigationEnd)
     .filter((event: NavigationEnd) => !this.currentModelEqualsToModelInUrl(event.url))
-    .subscribe((event: NavigationEvent) => {
+    .subscribe((event: NavigationEnd) => {
       this.urlChanged(event);
     });
 
@@ -159,7 +159,7 @@ export class HomeComponent implements AfterViewInit {
     });
   }
 
-  private urlChanged(event: NavigationEvent): void {
+  private urlChanged(event: NavigationEnd): void {
     const hashModelString = ToolService.getUrlHash(event.url);
 
     // update:: not from model, but from url directly (back button)

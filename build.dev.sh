@@ -19,7 +19,7 @@ git pull origin develop
 
 rm -rf node_modules
 npm i --unsafe-perm
-npm run build:prod
+npm run build
 
 # BUILD: Tools Page --------------------------------------------
 cd ../ng2-tools-page

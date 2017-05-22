@@ -9,8 +9,8 @@ import { ToolService } from '../tool.service';
 })
 export class RelatedItemsComponent {
 
+  public relatedItems = [];
   private toolItems: any = {};
-  private relatedItems = [];
   private toolActive: string;
 
   constructor(private toolService: ToolService) {

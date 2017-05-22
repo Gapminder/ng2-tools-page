@@ -11,7 +11,7 @@ import { Language } from '../../types';
 export class LanguageSwitcherComponent {
   public isSwitcherOpened: boolean = false;
 
-  constructor (private languageService: LanguageSwitcherService) {
+  constructor (public languageService: LanguageSwitcherService) {
     this.languageService.getSwitcherStateEvents()
       .subscribe(state => this.isSwitcherOpened = state);
   }
