@@ -5,3 +5,4 @@ require('vizabi-mountainchart');
 require('vizabi-bubblechart');
 require('vizabi-linechart');
 require('vizabi-bubblemap');
+require('vizabi-popbyage');
