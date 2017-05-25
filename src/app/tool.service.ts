@@ -1,11 +1,11 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { environment } from '../environments/environment';
-import * as PopByAgeState from 'vizabi-config-systema_globalis/PopByAge.json';
-import * as BarRankChartState from 'vizabi-config-systema_globalis/BarRankChart.json';
-import * as BubbleChartState from 'vizabi-config-systema_globalis/BubbleChart.json';
-import * as BubbleMapState from 'vizabi-config-systema_globalis/BubbleMap.json';
-import * as LineChartState from 'vizabi-config-systema_globalis/LineChart.json';
-import * as MountainChartState from 'vizabi-config-systema_globalis/MountainChart.json';
+import * as PopByAgeState from 'vizabi-config-systema_globalis/dist/PopByAge.json';
+import * as BarRankChartState from 'vizabi-config-systema_globalis/dist/BarRankChart.json';
+import * as BubbleChartState from 'vizabi-config-systema_globalis/dist/BubbleChart.json';
+import * as BubbleMapState from 'vizabi-config-systema_globalis/dist/BubbleMap.json';
+import * as LineChartState from 'vizabi-config-systema_globalis/dist/LineChart.json';
+import * as MountainChartState from 'vizabi-config-systema_globalis/dist/MountainChart.json';
 import { Observable } from 'rxjs';
 import RelatedItems from './related-items';
 import { has as _has, cloneDeep as _cloneDeep } from 'lodash';
