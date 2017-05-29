@@ -15,6 +15,7 @@ export default [
       },
       "data": {
         "reader": "waffle",
+        "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/"
       },
       "ui": {
@@ -112,6 +113,7 @@ export default [
       },
       "data": {
         "reader": "waffle",
+        "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/"
       },
       "ui": {
@@ -208,6 +210,7 @@ export default [
       },
       "data": {
         "reader": "waffle",
+        "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/"
       },
       "ui": {
@@ -312,6 +315,7 @@ export default [
       },
       "data": {
         "reader": "waffle",
+        "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/"
       },
       "ui": {
@@ -408,6 +412,7 @@ export default [
       },
       "data": {
         "reader": "waffle",
+        "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/"
       },
       "ui": {
@@ -504,7 +509,7 @@ export default [
       },
       "data": {
         "reader": "waffle",
-        "dataset": "open-numbers/ddf--gapminder--population#develop",
+        "dataset": "open-numbers/ddf--gapminder--population",
         "path": "/api/ddf/ql/",
       },
       "ui": {
