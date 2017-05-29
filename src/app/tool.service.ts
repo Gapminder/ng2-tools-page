@@ -66,8 +66,8 @@ export class ToolService {
   private setupItems(items: any[]): any {
     const itemsCloned = _cloneDeep(items);
     return itemsCloned.reduce((result: any, toolDescriptor: any) => {
-      if (_has(environment, 'dataset')) {
-        toolDescriptor.opts.data.dataset = (environment as any).dataset;
+      if (_has(environment, 'datasetBranch')) {
+        toolDescriptor.opts.data.dataset += (environment as any).datasetBranch;
       }
 
       Object.assign(toolDescriptor.opts, ToolService.TOOLS_STATE[toolDescriptor.tool]);
