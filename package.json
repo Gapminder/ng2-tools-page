@@ -40,7 +40,7 @@
     "@types/lodash": "4.14.64",
     "angulartics2": "2.2.1",
     "core-js": "2.4.1",
-    "d3": "4.9.1",
+    "d3": "4.7.4",
     "forever": "0.15.3",
     "lodash": "4.17.4",
     "ng2-vizabi": "1.0.1",
