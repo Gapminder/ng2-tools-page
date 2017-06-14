@@ -1,32 +1,48 @@
-// Protractor configuration file, see link for more information
-// https://github.com/angular/protractor/blob/master/docs/referenceConf.js
-
-/*global jasmine */
-var SpecReporter = require('jasmine-spec-reporter');
+'use strict';
 
 exports.config = {
-  allScriptsTimeout: 11000,
   specs: [
-    './e2e/**/*.e2e-spec.ts'
+    './e2e/**/*-spec.js'
   ],
-  capabilities: {
-    'browserName': 'chrome'
-  },
+  multiCapabilities: [
+    {
+      browserName: 'chrome',
+      loggingPrefs: {
+        'driver': 'INFO',
+        'browser': 'INFO'},
+      shardTestFiles: true,
+      maxInstances: 5,
+      count: 1,
+      chromeOptions: {
+        args: ['no-sandbox', 'disable-infobars']
+      },
+    },
+
+  ],
   directConnect: true,
   baseUrl: 'http://localhost:4200/',
+  useAllAngular2AppRoots: true,
+  allScriptsTimeout: 180000,
+  getPageTimeout: 180000,
+  restartBrowserBetweenTests: true,
+  untrackOutstandingTimeouts: true,
   framework: 'jasmine',
   jasmineNodeOpts: {
+    showTiming: true,
     showColors: true,
-    defaultTimeoutInterval: 30000,
+    isVerbose: false,
+    includeStackTrace: false,
+    defaultTimeoutInterval: 300000,
     print: function() {}
   },
-  useAllAngular2AppRoots: true,
-  beforeLaunch: function() {
-    require('ts-node').register({
-      project: 'e2e'
-    });
-  },
-  onPrepare: function() {
-    jasmine.getEnv().addReporter(new SpecReporter());
+
+  onPrepare: () => {
+    let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
+
+    jasmine.getEnv().addReporter(new SpecReporter({
+      spec: {
+        displayStacktrace: false
+      }
+    }));
   }
 };
