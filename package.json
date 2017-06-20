@@ -9,7 +9,7 @@
     "cover": "ng test --watch=false --code-coverage",
     "lint": "tslint src/**/*.ts",
     "local": "npm run prebuild && ng serve --environment=local",
-    "dev": "npm run prebuild && ng serve --environment=dev --host 0.0.0.0",
+    "dev": "npm run prebuild && ng serve -w --environment=dev --host 0.0.0.0",
     "stage": "npm run prebuild && ng serve --environment=stage --host 0.0.0.0",
     "prod": "npm run prebuild && ng serve --environment=prod --host 0.0.0.0",
     "standalone-ws": "npm run prebuild && ng serve --environment=docker --host 0.0.0.0",
@@ -55,7 +55,7 @@
     "vizabi-config-systema_globalis": "1.2.6",
     "vizabi-linechart": "1.0.16-0",
     "vizabi-mountainchart": "1.0.16-2",
-    "vizabi-ws-reader": "0.2.0",
+    "vizabi-ws-reader": "0.3.0",
     "vizabi-popbyage": "1.2.2-2",
     "zone.js": "0.8.11"
   },

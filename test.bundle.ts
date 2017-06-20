@@ -17,5 +17,5 @@ getTestBed().initTestEnvironment(
   platformBrowserDynamicTesting()
 );
 
-let context = <any>require.context('./src/app', true, /\.spec\.ts/);
+let context = (require as any).context('./src/app', true, /\.spec\.ts/);
 context.keys().map(context);

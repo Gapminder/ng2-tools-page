@@ -2,5 +2,6 @@ const WS_HOST: string = "http://${WS_HOST}:3001";
 const wsUrl: string = WS_HOST === "http://:3001" ? "http://localhost:3001" : WS_HOST;
 export const environment = {
   production: true,
-  wsUrl
+  wsUrl,
+  wsUrlAssets: wsUrl
 };
