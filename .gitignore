@@ -16,6 +16,8 @@ bower_components
 *.launch
 .settings/
 
+service-worker.js
+
 # misc
 .sass-cache
 connect.lock
