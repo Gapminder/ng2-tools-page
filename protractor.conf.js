@@ -32,7 +32,7 @@ exports.config = {
     showColors: true,
     isVerbose: false,
     includeStackTrace: false,
-    defaultTimeoutInterval: 300000,
+    defaultTimeoutInterval: 600000,
     print: function() {}
   },
 
