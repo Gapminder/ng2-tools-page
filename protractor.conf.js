@@ -20,7 +20,7 @@ exports.config = {
 
   ],
   directConnect: true,
-  baseUrl: 'http://localhost:4200/',
+  baseUrl: 'http://localhost:4200/tools/',
   useAllAngular2AppRoots: true,
   allScriptsTimeout: 180000,
   getPageTimeout: 180000,
