@@ -58,7 +58,7 @@
     "vizabi-config-systema_globalis": "1.2.6",
     "vizabi-linechart": "1.0.16",
     "vizabi-mountainchart": "1.0.16",
-    "vizabi-popbyage": "1.2.2",
+    "vizabi-popbyage": "1.2.2-2",
     "vizabi-ws-reader": "0.3.0",
     "zone.js": "0.8.11"
   },
