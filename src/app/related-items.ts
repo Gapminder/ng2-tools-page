@@ -17,7 +17,7 @@ export default [
         "reader": "waffle",
         "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/",
-        "assetsPath": "/api/vizabi/"
+        "assetsPath": "/api/ddf/assets/"
       },
       "ui": {
         "datawarning": {
@@ -116,7 +116,7 @@ export default [
         "reader": "waffle",
         "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/",
-        "assetsPath": "/api/vizabi/"
+        "assetsPath": "/api/ddf/assets/"
       },
       "ui": {
         "datawarning": {
@@ -214,7 +214,7 @@ export default [
         "reader": "waffle",
         "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/",
-        "assetsPath": "/api/vizabi/"
+        "assetsPath": "/api/ddf/assets/"
       },
       "ui": {
         "datawarning": {
@@ -320,7 +320,7 @@ export default [
         "reader": "waffle",
         "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/",
-        "assetsPath": "/api/vizabi/"
+        "assetsPath": "/api/ddf/assets/"
       },
       "ui": {
         "datawarning": {
@@ -418,7 +418,7 @@ export default [
         "reader": "waffle",
         "dataset": "open-numbers/ddf--gapminder--systema_globalis",
         "path": "/api/ddf/ql/",
-        "assetsPath": "/api/vizabi/"
+        "assetsPath": "/api/ddf/assets/"
       },
       "ui": {
         "datawarning": {
@@ -516,7 +516,7 @@ export default [
         "reader": "waffle",
         "dataset": "open-numbers/ddf--gapminder--population",
         "path": "/api/ddf/ql/",
-        "assetsPath": "/api/vizabi/"
+        "assetsPath": "/api/ddf/assets/"
       },
       "ui": {
         "datawarning": {
