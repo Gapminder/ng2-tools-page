@@ -168,9 +168,9 @@ describe('Maps chart - Acceptance', () => {
     let colorDropDownTextOnBlueBubbleMouseHover = page.rightSidePanelColorDropDown.getText();
     let sizeDropDownTextOnBlueBubbleMouseHover = page.rightSidePanelSizeDropDown.getText();
 
-    expect(axisYTextOnBlueBubbleMouseHover).toEqual('Size: 182M people');
+    expect(axisYTextOnBlueBubbleMouseHover).toEqual('Size: 181M people');
     expect(colorDropDownTextOnBlueBubbleMouseHover).toEqual('Africa');
-    expect(sizeDropDownTextOnBlueBubbleMouseHover).toEqual('182M people');
+    expect(sizeDropDownTextOnBlueBubbleMouseHover).toEqual('181M people');
 
     page.hoverMouseOverBiggestYellowBubbleMapsChart();
 
@@ -178,9 +178,9 @@ describe('Maps chart - Acceptance', () => {
     let colorDropDownTextOnYellowBubbleMouseHover = page.rightSidePanelColorDropDown.getText();
     let sizeDropDownTextOnYellowBubbleMouseHover = page.rightSidePanelSizeDropDown.getText();
 
-    expect(axisYTextOnYellowBubbleMouseHover).toEqual('Size: 143M people');
+    expect(axisYTextOnYellowBubbleMouseHover).toEqual('Size: 144M people');
     expect(colorDropDownTextOnYellowBubbleMouseHover).toEqual('Europe');
-    expect(sizeDropDownTextOnYellowBubbleMouseHover).toEqual('143M people');
+    expect(sizeDropDownTextOnYellowBubbleMouseHover).toEqual('144M people');
 
     done();
   });

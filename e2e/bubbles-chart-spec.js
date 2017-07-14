@@ -69,7 +69,7 @@ describe('Bubbles chart - Acceptance', () => {
     page.selectBiggestGreenBubbleBubblesChart();
 
     expect(page.bubblesChartUnitedStatesBubble.getCssValue('opacity')).toEqual('1');
-    expect(page.countElementsByOpacity(page.bubblesChartAllBubbles, 0.3)).toBe(255);
+    expect(page.countElementsByOpacity(page.bubblesChartAllBubbles, 0.3)).toBe(254);
     expect(page.countElementsByOpacity(page.bubblesChartAllBubbles, 1)).toBe(1);
     expect(page.bubblesChartIndiaBubble.getCssValue('opacity')).toEqual('0.3');
 

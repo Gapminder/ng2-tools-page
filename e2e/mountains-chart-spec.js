@@ -12,7 +12,7 @@ beforeEach(() => {
 
 describe('Mountains chart - Acceptance', () => {
   it('should check that in 2015, the percentage of people living in the extreme poverty should be 11.5 ± 0.3%,' +
-    ' and the world population should be 7.3B(TC19)', done => {
+    ' and the world population should be 7.33B(TC19)', done => {
     page.openMountainsChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
 
@@ -20,7 +20,7 @@ describe('Mountains chart - Acceptance', () => {
     expect(page.mountainsChartExtremePovertyPercentage.getText()).toBeLessThan(11.8 + '%');
 
     page.hoverMouseOver500AxisXOnMountainsChart();
-    expect(page.mountainsChartVisualizationWorldPopulation.getText()).toEqual('7.3B');
+    expect(page.mountainsChartVisualizationWorldPopulation.getText()).toEqual('7.33B');
 
     done();
   });
@@ -32,7 +32,7 @@ describe('Mountains chart - Acceptance', () => {
 
     page.hoverMouserOverExtremePovertyTitleMapsChart();
 
-    expect(page.mountainsChartVisualizationWorldPopulation.getText()).toEqual('830M');
+    expect(page.mountainsChartVisualizationWorldPopulation.getText()).toEqual('833M');
 
     page.dragSliderToBeginning();
     page.hoverMouserOverExtremePovertyTitleMapsChart();
@@ -104,7 +104,7 @@ describe('Mountains chart - Acceptance', () => {
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(165);
     page.searchAndSelectCountry("China");
     browser.wait(EC.presenceOf(page.mountainsChartLeftSidePanelSelectedCountries.first()));
-    expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.38B people");
+    expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.4B people");
     expect(page.mountainsChartVisualizationSelectedCountries.count()).toEqual(1);
     expect(page.mountainsChartVisualizationSelectedCountries.get(0).getAttribute('style')).toContain('opacity: 1;');
 
@@ -116,7 +116,7 @@ describe('Mountains chart - Acceptance', () => {
 
     page.searchAndSelectCountry("Brazil");
     browser.wait(EC.presenceOf(page.mountainsChartLeftSidePanelSelectedCountries.get(2)));
-    expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 208M");
+    expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 206M");
     expect(page.mountainsChartVisualizationSelectedCountries.count()).toEqual(3);
     expect(page.mountainsChartVisualizationSelectedCountries.get(2).getAttribute('style')).toContain('opacity: 1;');
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(162);
