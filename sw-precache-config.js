@@ -2,6 +2,7 @@ module.exports = {
   staticFileGlobs: [
     'dist/tools/**.html',
     'dist/tools/assets/images/chart/**.*',
+    'dist/tools/assets/images/answers/**.*',
     'dist/tools/assets/images/icons/menu/**.*',
     'dist/tools/assets/images/**.*',
     'dist/tools/assets/fonts/**.*',
@@ -49,16 +50,6 @@ module.exports = {
       handler: 'cacheFirst',
       options: {
         name: 'vizabi statics'
-      }
-    },
-    {
-      urlPattern: /cms\.gapminder\.org\/files-api\/p3media\/file\/image(.*)/,
-      handler: 'cacheFirst',
-      options: {
-        cache: {
-          name: 'cms.gapminder.org',
-          maxAgeSeconds: 60 * 60 * 24 * 30
-        }
       }
     }
   ]

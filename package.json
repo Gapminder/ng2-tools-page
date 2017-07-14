@@ -59,7 +59,7 @@
     "vizabi-linechart": "1.0.16-0",
     "vizabi-mountainchart": "1.0.16-2",
     "vizabi-popbyage": "1.2.2-2",
-    "vizabi-ws-reader": "0.3.0",
+    "vizabi-ws-reader": "1.0.0",
     "zone.js": "0.8.11"
   },
   "devDependencies": {
