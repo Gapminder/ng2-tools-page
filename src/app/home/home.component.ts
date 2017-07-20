@@ -12,7 +12,7 @@ import { Language } from '../types';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 
-const WSReader = require('vizabi-ws-reader').WSReader;
+const { WsReader } = require('vizabi-ws-reader');
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -88,7 +88,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   private setupVizabiDataBase(): void {
-    this.readerModuleObject = new WSReader();
+    this.readerModuleObject = WsReader;
     this.readerGetMethod = 'getReader';
     this.readerParams = [];
     this.readerName = 'waffle';

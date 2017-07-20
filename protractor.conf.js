@@ -9,17 +9,21 @@ exports.config = {
       browserName: 'chrome',
       loggingPrefs: {
         'driver': 'INFO',
-        'browser': 'INFO'},
+        'browser': 'INFO'
+      },
       shardTestFiles: true,
       maxInstances: 5,
       count: 1,
+      screenResolution: "1920x1080",
       chromeOptions: {
         args: ['no-sandbox', 'disable-infobars']
       },
     },
 
   ],
+
   directConnect: true,
+
   baseUrl: 'http://localhost:4200/tools/',
   useAllAngular2AppRoots: true,
   allScriptsTimeout: 180000,
@@ -32,8 +36,9 @@ exports.config = {
     showColors: true,
     isVerbose: false,
     includeStackTrace: false,
-    defaultTimeoutInterval: 600000,
-    print: function() {}
+    defaultTimeoutInterval: 300000,
+    print: function () {
+    }
   },
 
   onPrepare: () => {

@@ -72,7 +72,7 @@ export class ToolService {
 
       Object.assign(toolDescriptor.opts, ToolService.TOOLS_STATE[toolDescriptor.tool]);
       toolDescriptor.opts.data.path = `${environment.wsUrl}${toolDescriptor.opts.data.path}`;
-      toolDescriptor.opts.data.assetsPath = `${environment.wsUrl}${toolDescriptor.opts.data.assetsPath}`;
+      toolDescriptor.opts.data.assetsPath = `${(environment as any).wsUrlAssets}${toolDescriptor.opts.data.assetsPath}`;
 
       result.tools[toolDescriptor.slug] = toolDescriptor;
       result.toolKeys.push(toolDescriptor.slug);

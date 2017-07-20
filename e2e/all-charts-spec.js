@@ -255,19 +255,19 @@ describe('All charts - Acceptance', () => {
       expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
 
       page.searchAndSelectCountry("China");
-      expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.38B people");
+      expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.4B people");
 
       page.searchAndSelectCountry("India");
       expect(page.getSelectedCountryTextOnMountainsChart(1)).toContain("India: 1.31B");
 
       page.searchAndSelectCountry("Brazil");
-      expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 208M");
+      expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 206M");
 
       page.refreshToolsPage();
 
       expect(page.getSelectedCountryTextOnMountainsChart(1)).toContain("India: 1.31B");
-      expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.38B people");
-      expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 208M");
+      expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.4B people");
+      expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 206M");
       expect(browser.getCurrentUrl()).toContain('geo=ind');
       expect(browser.getCurrentUrl()).toContain('geo=chn');
       expect(browser.getCurrentUrl()).toContain('geo=bra');
