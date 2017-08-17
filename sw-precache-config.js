@@ -14,13 +14,6 @@ module.exports = {
   stripPrefix: 'dist/tools/',
   runtimeCaching: [
     {
-      urlPattern: /(.*)\.js/,
-      handler: 'cacheFirst',
-      options: {
-        name: 'js'
-      }
-    },
-    {
       urlPattern: /(.*)\.ico/,
       handler: 'cacheFirst',
       options: {
