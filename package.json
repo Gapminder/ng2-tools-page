@@ -13,7 +13,7 @@
     "stage": "npm run prebuild && npm run sw-precache && ng serve --deploy-url /tools/ --environment=stage --host 0.0.0.0",
     "prod": "npm run prebuild && npm run sw-precache && ng serve --deploy-url /tools/ --environment=prod --host 0.0.0.0",
     "standalone-ws": "npm run prebuild && npm run sw-precache && ng serve --deploy-url /tools/ --environment=docker --host 0.0.0.0",
-    "prebuild": "rimraf dist && ./copy_css.sh",
+    "prebuild": "rimraf service-worker.js dist && ./copy_css.sh",
     "build:stage": "npm run prebuild && ng build --output-hashing bundles --base-href /tools/ --target=production --environment=stage && npm run sw-precache:copy-to-dist",
     "build:dev": "npm run prebuild && ng build --output-hashing bundles --base-href /tools/ --target=development --environment=dev && npm run sw-precache:copy-to-dist",
     "build:prod": "npm run prebuild && ng build --output-hashing bundles --base-href /tools/ --target=production --environment=prod && npm run sw-precache:copy-to-dist",
