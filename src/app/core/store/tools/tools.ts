@@ -41,7 +41,7 @@ const initialState: State = {
   slugs,
   defaultTool,
   toolToSlug,
-  selectedTool: null,
+  selectedTool: defaultTool,
   createdTool: null,
   currentHashModel: {},
   vizabiInstances,
