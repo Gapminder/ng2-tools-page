@@ -4,6 +4,7 @@ exports.config = {
   specs: [
     './e2e/**/*-spec.js'
   ],
+  exclude: ['./e2e/redirects-spec.js'],
   multiCapabilities: [
     {
       browserName: 'chrome',

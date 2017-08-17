@@ -125,6 +125,7 @@ let ToolsPage = function () {
   this.bubblesChartUnitedStatesTrails = element.all(by.css('g[class="vzb-bc-entity entity-trail trail-usa"] > g[class="vzb-bc-trailsegment"]'));
   this.bubblesChartLockButton = element.all(by.css('button[data-btn="lock"]')).last();
   this.bubblesChartTrailsButton = element.all(by.css('button[data-btn="trails"]')).last();
+
   /**
    * Get Tools page
    * @param url
@@ -136,9 +137,18 @@ let ToolsPage = function () {
     browser.waitForAngular();
   };
 
+  /**
+   * Waits for Tools page to be loaded
+   */
+  this.waitForToolsPageCompletelyLoaded = function () {
+    browser.wait(EC.visibilityOf(this.headerImage));
+    browser.wait(EC.visibilityOf(this.buttonPlay));
+    browser.wait(EC.invisibilityOf(this.movingSliderProgress.get(1)), 30000);
+  };
+
   this.openBubblesChart = function () {
     this.get(url);
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -147,7 +157,7 @@ let ToolsPage = function () {
   this.openMountainsChart = function () {
     this.get(url);
     this.mountainsChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -155,7 +165,7 @@ let ToolsPage = function () {
    */
   this.refreshToolsPage = function () {
     browser.refresh();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -164,7 +174,7 @@ let ToolsPage = function () {
   this.openMapsChart = function () {
     this.get(url);
     this.mapsChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -173,7 +183,7 @@ let ToolsPage = function () {
   this.openRankingsChart = function () {
     this.get(url);
     this.rankingsChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -182,17 +192,8 @@ let ToolsPage = function () {
   this.openLinesChart = function () {
     this.get(url);
     this.linesChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
     this.waitForLinesChartPageToBeLoaded();
-  };
-
-  /**
-   * Waits for Tools page to be loaded
-   */
-  this.waitForToolsPageLogosDisplayed = function () {
-    browser.wait(EC.visibilityOf(this.headerImage));
-    browser.wait(EC.visibilityOf(this.buttonPlay));
-    browser.wait(EC.invisibilityOf(this.movingSliderProgress.get(1)), 30000);
   };
 
   /**
