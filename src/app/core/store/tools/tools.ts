@@ -94,7 +94,7 @@ export function reducer(state: State = initialState, action: ToolsActions): Stat
     }
     case SelectTool.TYPE: {
       const act = action as SelectTool;
-      return Object.assign({}, state, { selectedTool: act.tool });
+      return act.tool ? Object.assign({}, state, { selectedTool: act.tool }) : state;
     }
     case VizabiModelChanged.TYPE: {
       const act = action as VizabiModelChanged;
