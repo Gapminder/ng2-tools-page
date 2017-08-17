@@ -1,16 +1,16 @@
 <li class="nav-expandable">
-  <div *ngFor="let item of menuItems; let indexId=index;" class="nav-expandable-item">
+  <div *ngFor="let item of menuItems" class="nav-expandable-item">
 
-    <a class="menu-item nav-toggle-expanded" (click)="switchSubMenu(indexId)">{{ item.menu_label }}</a>
+    <a class="menu-item nav-toggle-expanded" (click)="selectMenuItem.emit(item)">{{ item.menu_label }}</a>
 
-    <div class="nav-expanded" [hidden]="!indexedMenuItems[indexId]">
+    <div class="nav-expanded" [hidden]="item !== selectedMenuItem">
       <div class="nav-expanded-columns nav-expanded-columns-2 nav-expanded-columns-icons">
         <div class="nav-expanded-columns-inner">
           <ul>
             <li *ngFor="let child of item.children" class="expanded-column-item">
               <a class="menu-item" href="{{ child.url }}">
                 <div class="column-item-icon">
-                  <img *ngIf="hasIcon(child)" [src]="createIconUrl(child)">
+                  <img *ngIf="hasIcon(child)" [src]="getIconUrl(child)">
                 </div>
                 <div class="column-item-info">
                   <div class="column-item-heading">{{ child.menu_label }}</div>

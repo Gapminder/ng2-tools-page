@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { CanActivate }  from '@angular/router';
+import { CanActivate } from '@angular/router';
 import { Location } from '@angular/common';
 
 const ROOT_URL = '/';
 
 @Injectable()
-export class DeprecatedUrlService implements CanActivate {
+export class DeprecatedUrlGuard implements CanActivate {
 
   private detectorList: any[] = [];
   private location: Location;
 
-  public constructor(location: Location) {
+  constructor(location: Location) {
     this.location = location;
     this.detectorList.push(new DeprecatedUrlDetector());
     this.detectorList.push(new SlashUrlDetector());
   }
 
-  public canActivate(): boolean {
+  canActivate(): boolean {
     const routerUrl = this.location.path(true) || ROOT_URL;
     const ruleSize = this.detectorList.length;
 
@@ -39,7 +39,7 @@ interface UrlRuleDetectorInterface {
 
 class DeprecatedUrlDetector implements UrlRuleDetectorInterface {
 
-  public process(url: string): string {
+  process(url: string): string {
 
     const oldUrlType = [
       'bubbles',
@@ -65,7 +65,7 @@ class DeprecatedUrlDetector implements UrlRuleDetectorInterface {
 
 class SlashUrlDetector implements UrlRuleDetectorInterface {
 
-  public process(url: string): string {
+  process(url: string): string {
 
     const path = window.location.pathname + window.location.hash;
 

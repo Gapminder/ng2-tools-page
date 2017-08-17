@@ -1,22 +1,12 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { FlashDetectService } from './flash-detect.service';
+import { ChangeDetectionStrategy, Component, Input, ViewEncapsulation } from '@angular/core';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-report-problem',
   templateUrl: './report-problem.component.html',
-  styleUrls: ['./report-problem.component.styl']
+  styleUrls: ['./report-problem.component.styl'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReportProblemComponent {
-
-  private flashDetectService: any;
-
-  constructor() {
-    this.flashDetectService = new FlashDetectService();
-  }
-
-  public isFlashAvailable (): boolean {
-    return this.flashDetectService.installed;
-  }
-
+  @Input() isFlashAvailable: boolean = false;
 }

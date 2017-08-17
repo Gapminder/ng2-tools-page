@@ -1,43 +1,43 @@
-import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { ToolService } from '../tool.service';
-import { GoogleAnalyticsService } from '../google-analytics.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
+import { scrollTo } from '../core/utils';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-see-also',
   templateUrl: './see-also.component.html',
-  styleUrls: ['./see-also.component.styl']
+  styleUrls: ['./see-also.component.styl'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SeeAlsoComponent implements OnInit {
-  public toolKeys: Array<string> = [];
-  private tools: any = {};
-  private toolActive: string;
+export class SeeAlsoComponent {
+  @Input() tools: any[];
+  @Input() selectedTool: string;
 
-  constructor(private toolService: ToolService,
-              private ga: GoogleAnalyticsService) {
-    this.toolActive = toolService.getActive();
-    this.tools = toolService.getTools();
-    this.toolKeys = toolService.getToolKeys();
-  }
+  @Output() trackGaToolChangeEvent: EventEmitter<{ fromTool: string, toTool: string }> = new EventEmitter();
+  @Output() selectTool: EventEmitter<string> = new EventEmitter();
 
-  public ngOnInit(): void {
-    this.toolService.getToolChangeEvents().subscribe((event: any) => {
-      this.toolActive = event.active;
-    });
-  }
+  private switchingReady: boolean = true;
 
-  public getLink(toolKey: string): string {
+  getLink(toolKey: string): string {
     return `${window.location.pathname}#_chart-type=${toolKey}`;
   }
 
-  public changeHandler($event: MouseEvent, selectedTool: string): void {
+  onToolChanged($event: MouseEvent, newSelectedTool: string): void {
     if ($event.ctrlKey) {
       return;
     }
 
-    this.ga.trackToolChangedEvent({from: this.toolActive, to: selectedTool});
+    this.switchingReady = false;
+    scrollTo({
+      element: document.querySelector('.wrapper'),
+      complete: () => {
+        this.selectTool.emit(newSelectedTool);
+        this.trackGaToolChangeEvent.emit({fromTool: this.selectedTool, toTool: newSelectedTool});
+        setTimeout(() => {
+          this.switchingReady = true;
+        }, 10);
+      }
+    });
 
-    this.toolService.changeActiveTool(selectedTool);
     $event.preventDefault();
   }
 }

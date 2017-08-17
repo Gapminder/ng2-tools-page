@@ -1,35 +1,23 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import * as _ from 'lodash';
-import VizabiMenuItems from './menu-items';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.styl']
+  styleUrls: ['./menu.component.styl'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuComponent {
-  public menuItems: any[] = [];
-  private indexedMenuItems: boolean[] = [];
+  @Input() menuItems: any[];
+  @Input() selectedMenuItem: any;
 
-  public constructor() {
-    this.menuItems = VizabiMenuItems.children;
-  }
+  @Output() selectMenuItem: EventEmitter<any> = new EventEmitter();
 
-  public createIconUrl(item: any): string {
+  getIconUrl(item: any): string {
     return `assets${item.icon_url}`;
   }
 
-  public hasIcon(item: any): boolean {
+  hasIcon(item: any): boolean {
     return item && item.icon_url;
-  }
-
-  public switchSubMenu(index: number): void {
-    const wasItemAlreadySelected = this.indexedMenuItems[index];
-    _.fill(this.indexedMenuItems, false);
-
-    if (!wasItemAlreadySelected) {
-      this.indexedMenuItems[index] = true;
-    }
   }
 }
