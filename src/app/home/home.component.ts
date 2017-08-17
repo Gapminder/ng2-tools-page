@@ -84,21 +84,23 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         return hashModel;
       })
       .subscribe((hashModel) => {
-        this.currentHashModel = hashModel;
-        this.currentChartType = hashModel['chart-type'];
+        setTimeout(() => {
+          this.currentHashModel = hashModel;
+          this.currentChartType = hashModel['chart-type'];
 
-        const stringModel = this.vizabiToolsService.convertModelToString(this.currentHashModel);
-        window.location.hash = `#${stringModel}`;
-        this.vizabiInstances[this.currentChartType].modelHash = stringModel;
+          const stringModel = this.vizabiToolsService.convertModelToString(this.currentHashModel);
+          window.location.hash = `#${stringModel}`;
+          this.vizabiInstances[this.currentChartType].modelHash = stringModel;
 
-        const currentPathWithHash = this.location.path(true);
-        this.store.dispatch(new TrackGaPageEvent(currentPathWithHash));
-        this.store.dispatch(new TrackGaVizabiModelChangeEvent(currentPathWithHash));
+          const currentPathWithHash = this.location.path(true);
+          this.store.dispatch(new TrackGaPageEvent(currentPathWithHash));
+          this.store.dispatch(new TrackGaVizabiModelChangeEvent(currentPathWithHash));
 
-        const vizabiInstance = this.vizabiInstances[this.currentChartType].instance;
-        if (vizabiInstance.setModel && vizabiInstance._ready) {
-          vizabiInstance.setModel(this.currentHashModel);
-        }
+          const vizabiInstance = this.vizabiInstances[this.currentChartType].instance;
+          if (vizabiInstance.setModel && vizabiInstance._ready) {
+            vizabiInstance.setModel(this.currentHashModel);
+          }
+        });
       });
   }
 
