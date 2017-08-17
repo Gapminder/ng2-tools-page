@@ -8,7 +8,7 @@ module.exports = {
     'dist/tools/assets/fonts/**.*',
     'dist/tools/assets/translation/**.json',
     'dist/tools/assets/**.css',
-    'dist/tools/**.js',
+    'dist/tools/**.bundle.js',
     'dist/tools/**.ico',
   ],
   stripPrefix: 'dist/tools/',
