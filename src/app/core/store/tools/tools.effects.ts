@@ -8,11 +8,7 @@ import 'rxjs/add/observable/of';
 
 import { of } from 'rxjs/observable/of';
 import { ChangeClient, ChangeConfig } from './tools.actions';
-import { SODERTORN_STATE } from './vizabi-configurations';
-
-export const clientConfigs = {
-  sodertorn: SODERTORN_STATE
-};
+import { CLIENT_CONFIGS } from './vizabi-configurations';
 
 @Injectable()
 export class ToolsEffects {
@@ -21,7 +17,7 @@ export class ToolsEffects {
   clients$: Observable<Action> = this.actions$
     .ofType(ChangeClient.TYPE)
     .switchMap((action: ChangeClient) => {
-      return of(new ChangeConfig(clientConfigs[action.client]));
+      return of(new ChangeConfig(CLIENT_CONFIGS[action.client]));
     });
 
   constructor(private actions$: Actions) {

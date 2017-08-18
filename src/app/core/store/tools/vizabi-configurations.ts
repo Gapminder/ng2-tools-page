@@ -7,8 +7,6 @@ import * as BubbleMapState from 'vizabi-config-systema_globalis/dist/BubbleMap.j
 import * as LineChartState from 'vizabi-config-systema_globalis/dist/LineChart.json';
 import * as MountainChartState from 'vizabi-config-systema_globalis/dist/MountainChart.json';
 
-export const AVAILABLE_CLIENTS = new Set(['sodertorn']);
-
 export const DEFAULT_STATE: any = {
   PopByAge: PopByAgeState,
   BarRankChart: BarRankChartState,
@@ -136,3 +134,9 @@ const SODERTORN_BUBBLECHART_STATE = {
 };
 
 export const SODERTORN_STATE = Object.assign(_.cloneDeep(DEFAULT_STATE), { BubbleChart: SODERTORN_BUBBLECHART_STATE });
+
+export const CLIENT_CONFIGS = {
+  sodertorn: SODERTORN_STATE
+};
+
+export const AVAILABLE_CLIENTS = new Set(Object.keys(CLIENT_CONFIGS));
