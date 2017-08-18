@@ -5,17 +5,19 @@
   <ng-template #homeContainer></ng-template>
 
   <div class="more">
+    <app-related-items *ngIf="!(client$ | async)" [relatedItems]="relatedItems$ | async" class="related"></app-related-items>
     <app-see-also
       [tools]="tools$ | async"
       [selectedTool]="selectedTool$ | async"
       (selectTool)="selectTool($event)"
       (trackGaToolChangeEvent)="trackGaToolChangeEvent($event)"
       class="about"></app-see-also>
-    <app-related-items [relatedItems]="relatedItems$ | async" class="related"></app-related-items>
-    <ul class="social-list mobile">
-      <app-social-buttons></app-social-buttons>
-    </ul>
-    <app-report-problem [isFlashAvailable]="isFlashAvailable$ | async"></app-report-problem>
+    <div class="connections">
+      <ul class="social-list mobile">
+        <app-social-buttons></app-social-buttons>
+      </ul>
+      <app-report-problem [isFlashAvailable]="isFlashAvailable$ | async"></app-report-problem>
+    </div>
   </div>
 
   <app-footer></app-footer>

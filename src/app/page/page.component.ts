@@ -10,6 +10,7 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import {
+  getClient,
   getConfigChangeUID,
   getRelatedItemsOfSelectedTool,
   getSelectedTool,
@@ -25,6 +26,7 @@ import { SetLanguageChooserVisibility } from '../core/store/layout/layout.action
 import { SelectTool } from '../core/store/tools/tools.actions';
 import { TrackGaToolChangeEvent } from '../core/store/google/google.actions';
 import { HomeComponent } from '../home/home.component';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -34,14 +36,18 @@ import { HomeComponent } from '../home/home.component';
 })
 export class PageComponent implements AfterContentInit, OnDestroy {
   @ViewChild('homeContainer', { read: ViewContainerRef }) homeContainer;
-  private homeComponentRef: ComponentRef<HomeComponent>;
 
+  client$: Observable<string>;
   selectedTool$: Observable<string>;
   isEmbeddedMode$: Observable<boolean>;
   isRtl$: Observable<boolean>;
   relatedItems$: Observable<any[]>;
   isFlashAvailable$: Observable<boolean>;
   tools$: Observable<any[]>;
+
+  private configChangedSubscription: Subscription;
+
+  private homeComponentRef: ComponentRef<HomeComponent>;
 
   constructor(private store: Store<State>, private resolver: ComponentFactoryResolver) {
     this.isRtl$ = store.select(isRtl);
@@ -50,6 +56,7 @@ export class PageComponent implements AfterContentInit, OnDestroy {
     this.isFlashAvailable$ = this.store.select(isFlashAvailable);
     this.tools$ = this.store.select(getToolItemsAsArray);
     this.selectedTool$ = this.store.select(getSelectedTool);
+    this.client$ = this.store.select(getClient);
   }
 
   trackGaToolChangeEvent(transition: { fromTool: string, toTool: string }) {
@@ -75,11 +82,12 @@ export class PageComponent implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit(): void {
-    this.store.select(getConfigChangeUID).subscribe(() => this.loadHomeComponent());
+    this.configChangedSubscription = this.store.select(getConfigChangeUID).subscribe(() => this.loadHomeComponent());
   }
 
   ngOnDestroy(): void {
     this.homeComponentRef.destroy();
+    this.configChangedSubscription.unsubscribe();
   }
 
   loadHomeComponent() {

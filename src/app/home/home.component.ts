@@ -123,7 +123,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     });
 
     this.localeChangesSubscription = this.store.select(getCurrentLocale).subscribe((locale: VizabiLocale) => {
-      const model = Object.assign({}, this.currentHashModel, locale);
+      const model = Object.assign({}, this.vizabiToolsService.getModelFromUrl(), locale);
       this.store.dispatch(new VizabiModelChanged(model));
     });
   }

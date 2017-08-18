@@ -11,6 +11,7 @@ export interface State {
   defaultTool: string;
   selectedTool: string;
   toolToSlug: any;
+  client: string;
   vizabiInstances: any;
   createdTool: string;
   currentHashModel: any;
@@ -28,6 +29,7 @@ const initialState: State = {
   slugs,
   defaultTool,
   toolToSlug,
+  client: null,
   selectedTool: defaultTool,
   createdTool: null,
   currentHashModel: {},
@@ -73,18 +75,20 @@ function setupItems(items: any[], toolsState: any): any {
 export function reducer(state: State = initialState, action: ToolsActions): State {
   switch (action.type) {
     case ChangeConfig.TYPE: {
-      const config = (action as ChangeConfig).config;
-      if (!config) {
+      const act = (action as ChangeConfig);
+
+      if (!act.config) {
         return state;
       }
 
-      const { tools, slugs } = setupItems(RelatedItems, config);
+      const { tools, slugs } = setupItems(RelatedItems, act.config);
       const { vizabiInstances, toolToSlug } = setupVizabiDataCharts({tools, slugs});
 
       return Object.assign({}, state, {
         tools,
         slugs,
         toolToSlug,
+        client: act.client,
         configChangeUID: Date.now(),
         initialVizabiInstances: vizabiInstances,
       });

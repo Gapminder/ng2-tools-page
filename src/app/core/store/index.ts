@@ -21,6 +21,7 @@ export function reducers(): ActionReducerMap<State> {
 
 export const getTools = (state: State) => state.tools;
 export const getConfigChangeUID = createSelector(getTools, (toolsState: fromTools.State) => toolsState.configChangeUID);
+export const getClient = createSelector(getTools, (toolsState: fromTools.State) => toolsState.client);
 export const getToolItems = createSelector(getTools, (toolsState: fromTools.State) => toolsState.tools);
 export const getSlugs = createSelector(getTools, (toolsState: fromTools.State) => toolsState.slugs);
 export const getDefaultTool = createSelector(getTools, (toolsState: fromTools.State) => toolsState.defaultTool);

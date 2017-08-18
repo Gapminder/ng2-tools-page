@@ -30,8 +30,6 @@ body
 .invisible
   visibility hidden
 
-/* COMPONENT :: SOCIAL */
-
 .social-list
   list-style none
   margin 5px 100px 0 0
@@ -52,8 +50,6 @@ body
       float none
       display inline-block
 
-/* COMPONENT :: COMMON */
-
 .heading-2
   margin 0
   margin-bottom 10px
@@ -62,10 +58,6 @@ body
   line-height 1.4
   text-transform uppercase
   text-shadow rgba(0,0,0,.01) 0 0 1px;
-
-
-
-/* COMPONENT :: LOADER */
 
 .loader-wrapper
   box-sizing(border-box)
@@ -95,10 +87,6 @@ body
   .loader
     display block
 
-
-
-/* COMPONENT :: VIZABI */
-
 .vzb-tool
   font-family 'Bariol Regular', "Lucida Sans Unicode", "Lucida Grande", sans-serif !important
 
@@ -109,13 +97,11 @@ body
 .vzb-tool.vzb-medium .vzb-tool-buttonlist
   background-color white !important
 
-
-/* COMPONENT :: SEE ALSO */
-
 .more
   padding 20px
   box-sizing(border-box)
-  display block
+  display flex
+  flex-wrap wrap
 
   +for_breakpoint(small)
     padding 20px 0
@@ -124,22 +110,18 @@ body
     padding-top 0
 
   ul.social-list
-    display none
+    //display none
 
     +for_breakpoint(small)
-      display flex
       justify-content center
 
 .about
-  float right
+  display flex
+  flex-direction column
+  align-items center
+  flex 1 35%
+  order 1
   box-sizing(border-box)
-
-  +for_breakpoint(not-small)
-    padding-left 20px
-    float right
-    width 37%
-    &:after
-      clear both
 
   +for_breakpoint(small)
     background #f2fafc
@@ -150,14 +132,22 @@ body
 
 .related
   display block
+  flex 1 65%
+
   +for_breakpoint(small)
     padding 20px
+    flex-basis 100%
+    order 2
 
-  +for_breakpoint(not-small)
-    float left
-    width 63%
+.connections
+  display flex
+  flex 1 100%
+  order 3
+  flex-direction column
+  align-items flex-end
 
-/* embeddedView :: disable view for page except Vizabi Block */
+  +for_breakpoint(small)
+    align-items center
 
 .embedded-view app-header,
 .embedded-view app-report-problem,

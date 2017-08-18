@@ -4,7 +4,7 @@ export class ChangeConfig implements Action {
   static TYPE = 'ChangeConfig';
   type: string = ChangeConfig.TYPE;
 
-  constructor(public config: any) {
+  constructor(public config: any, public client: string = null) {
   }
 }
 

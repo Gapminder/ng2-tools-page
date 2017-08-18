@@ -17,7 +17,7 @@ export class ToolsEffects {
   clients$: Observable<Action> = this.actions$
     .ofType(ChangeClient.TYPE)
     .switchMap((action: ChangeClient) => {
-      return of(new ChangeConfig(CLIENT_CONFIGS[action.client]));
+      return of(new ChangeConfig(CLIENT_CONFIGS[action.client], action.client));
     });
 
   constructor(private actions$: Actions) {
