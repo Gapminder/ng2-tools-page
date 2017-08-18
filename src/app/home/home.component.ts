@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular
 import { Location } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import * as _ from 'lodash';
+import { get, cloneDeep, includes } from 'lodash-es';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -76,10 +76,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     });
 
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
-      .filter(hashModel => this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModel))
+      .filter(hashModel => !this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModel))
       .filter(hashModel => !!Object.keys(hashModel).length)
       .map(hashModel => {
-        if (!_.includes(this.slugs, hashModel['chart-type'])) {
+        if (!includes(this.slugs, hashModel['chart-type'])) {
           return { 'chart-type': 'bubbles' };
         }
         return hashModel;
@@ -131,7 +131,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   getVizabiInitialModel(slug: string): any {
     const initialModel = this.vizabiInstances[slug].model;
     if (slug === 'mountain') {
-      Object.assign(_.get(initialModel, 'state.marker.group'), { manualSorting: ['asia', 'africa', 'americas', 'europe'] });
+      Object.assign(get(initialModel, 'state.marker.group'), { manualSorting: ['asia', 'africa', 'americas', 'europe'] });
     }
     return initialModel;
   }
@@ -140,7 +140,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const slug = this.toolToSlug[changes.type];
     const instance: any = {
       'chart-type': slug,
-      model: _.cloneDeep(this.tools[slug].opts),
+      model: cloneDeep(this.tools[slug].opts),
       instance: changes.component
     };
 
@@ -148,7 +148,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   onChanged(changes: any): void {
-    const model = _.extend({}, this.currentHashModel, changes.modelDiff, { 'chart-type': this.toolToSlug[changes.type] });
+    const model = Object.assign({}, this.currentHashModel, changes.modelDiff, { 'chart-type': this.toolToSlug[changes.type] });
     this.store.dispatch(new VizabiModelChanged(model));
   }
 

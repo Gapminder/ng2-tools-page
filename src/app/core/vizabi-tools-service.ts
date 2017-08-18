@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { VizabiService } from 'ng2-vizabi';
 import { LocationService } from './location.service';
-import * as _ from 'lodash';
+import { isEqual, get, pick } from 'lodash-es';
 
 @Injectable()
 export class VizabiToolsService {
@@ -15,16 +15,16 @@ export class VizabiToolsService {
   }
 
   areModelsEqual(modelA: any, modelB: any): boolean {
-    return !_.isEqual(modelA, modelB);
+    return isEqual(modelA, modelB);
   }
 
   getLocaleIdFromUrl(): string {
     const model = this.getModelFromUrl();
-    return _.get(model, 'locale.id') as string;
+    return get(model, 'locale.id') as string;
   }
 
   simplifyModel(model: any): any {
-    return _.pick(this.getModelFromUrl(), ['locale', 'chart-type']);
+    return pick(this.getModelFromUrl(), ['locale', 'chart-type']);
   }
 
   getModelFromUrl(): any {

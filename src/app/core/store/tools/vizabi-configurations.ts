@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { cloneDeep } from 'lodash-es';
 
 import * as PopByAgeState from 'vizabi-config-systema_globalis/dist/PopByAge.json';
 import * as BarRankChartState from 'vizabi-config-systema_globalis/dist/BarRankChart.json';
@@ -133,7 +133,7 @@ const SODERTORN_BUBBLECHART_STATE = {
   }
 };
 
-export const SODERTORN_STATE = Object.assign(_.cloneDeep(DEFAULT_STATE), { BubbleChart: SODERTORN_BUBBLECHART_STATE });
+export const SODERTORN_STATE = Object.assign(cloneDeep(DEFAULT_STATE), { BubbleChart: SODERTORN_BUBBLECHART_STATE });
 
 export const CLIENT_CONFIGS = {
   sodertorn: SODERTORN_STATE

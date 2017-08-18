@@ -1,5 +1,5 @@
 import RelatedItems from '../../related-items';
-import * as _ from 'lodash';
+import { cloneDeep, has } from 'lodash-es';
 import { environment } from '../../../../environments/environment';
 
 import { ChangeConfig, SelectTool, ToolsActions, VizabiInstanceCreated, VizabiModelChanged } from './tools.actions';
@@ -20,7 +20,7 @@ export interface State {
 }
 
 const { tools, slugs } = setupItems(RelatedItems, DEFAULT_STATE);
-const { vizabiInstances, toolToSlug } = setupVizabiDataCharts({tools, slugs});
+const { vizabiInstances, toolToSlug } = setupVizabiDataCharts({ tools, slugs });
 
 const defaultTool = 'bubbles';
 
@@ -34,11 +34,11 @@ const initialState: State = {
   createdTool: null,
   currentHashModel: {},
   vizabiInstances,
-  initialVizabiInstances: _.cloneDeep(vizabiInstances),
+  initialVizabiInstances: cloneDeep(vizabiInstances),
   configChangeUID: Date.now()
 };
 
-function setupVizabiDataCharts({tools, slugs}): any {
+function setupVizabiDataCharts({ tools, slugs }): any {
   return slugs.reduce((result, slug) => {
     const chartType = tools[slug].tool;
 
@@ -47,7 +47,7 @@ function setupVizabiDataCharts({tools, slugs}): any {
     result.vizabiInstances[slug] = {
       modelHash: '',
       chartType: chartType,
-      model: _.cloneDeep(tools[slug].opts),
+      model: cloneDeep(tools[slug].opts),
       instance: {},
     };
 
@@ -56,9 +56,9 @@ function setupVizabiDataCharts({tools, slugs}): any {
 }
 
 function setupItems(items: any[], toolsState: any): any {
-  const itemsCloned = _.cloneDeep(items);
+  const itemsCloned = cloneDeep(items);
   return itemsCloned.reduce((result: any, toolDescriptor: any) => {
-    if (_.has(environment, 'datasetBranch')) {
+    if (has(environment, 'datasetBranch')) {
       toolDescriptor.opts.data.dataset += (environment as any).datasetBranch;
     }
 
@@ -82,7 +82,7 @@ export function reducer(state: State = initialState, action: ToolsActions): Stat
       }
 
       const { tools, slugs } = setupItems(RelatedItems, act.config);
-      const { vizabiInstances, toolToSlug } = setupVizabiDataCharts({tools, slugs});
+      const { vizabiInstances, toolToSlug } = setupVizabiDataCharts({ tools, slugs });
 
       return Object.assign({}, state, {
         tools,

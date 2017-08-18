@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import { get } from 'lodash-es';
 import { ChangeLanguage, LanguageActions } from './language.actions';
 
 export abstract class Language {
@@ -33,7 +33,7 @@ export function reducer(state: State = initialState, action: LanguageActions): S
   switch (action.type) {
     case ChangeLanguage.TYPE: {
       const act = (action as ChangeLanguage);
-      const urlLanguageKey = _.get(act.lang, 'key');
+      const urlLanguageKey = get(act.lang, 'key');
       const currentLanguage = state.lang;
 
       if (urlLanguageKey && currentLanguage && currentLanguage.key !== urlLanguageKey) {

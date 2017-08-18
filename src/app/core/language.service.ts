@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import * as _ from 'lodash';
 import { AVAILABLE_LANGUAGES, DEFAULT_LANGUAGE, Language } from './store/language/language';
 import { VizabiToolsService } from './vizabi-tools-service';
 
@@ -40,6 +39,6 @@ export class LanguageService {
   }
 
   private static findLanguageBy(key: string): Language {
-    return _.find(AVAILABLE_LANGUAGES, localeItem => localeItem.key === key);
+    return AVAILABLE_LANGUAGES.find(localeItem => localeItem.key === key);
   }
 }

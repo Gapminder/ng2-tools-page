@@ -1,5 +1,7 @@
 module.exports = {
   staticFileGlobs: [
+    'dist/tools/**.bundle.js',
+    'dist/tools/**.bundle.js.map',
     'dist/tools/**.html',
     'dist/tools/assets/images/chart/**.*',
     'dist/tools/assets/images/answers/**.*',
@@ -8,7 +10,6 @@ module.exports = {
     'dist/tools/assets/fonts/**.*',
     'dist/tools/assets/translation/**.json',
     'dist/tools/assets/**.css',
-    'dist/tools/**.bundle.js',
     'dist/tools/**.ico',
   ],
   stripPrefix: 'dist/tools/',
