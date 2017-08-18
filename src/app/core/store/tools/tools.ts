@@ -2,22 +2,8 @@ import RelatedItems from '../../related-items';
 import * as _ from 'lodash';
 import { environment } from '../../../../environments/environment';
 
-import * as PopByAgeState from 'vizabi-config-systema_globalis/dist/PopByAge.json';
-import * as BarRankChartState from 'vizabi-config-systema_globalis/dist/BarRankChart.json';
-import * as BubbleChartState from 'vizabi-config-systema_globalis/dist/BubbleChart.json';
-import * as BubbleMapState from 'vizabi-config-systema_globalis/dist/BubbleMap.json';
-import * as LineChartState from 'vizabi-config-systema_globalis/dist/LineChart.json';
-import * as MountainChartState from 'vizabi-config-systema_globalis/dist/MountainChart.json';
 import { ChangeConfig, SelectTool, ToolsActions, VizabiInstanceCreated, VizabiModelChanged } from './tools.actions';
-
-const TOOLS_STATE: any = {
-  PopByAge: PopByAgeState,
-  BarRankChart: BarRankChartState,
-  BubbleChart: BubbleChartState,
-  BubbleMap: BubbleMapState,
-  LineChart: LineChartState,
-  MountainChart: MountainChartState
-};
+import { DEFAULT_STATE } from './vizabi-configurations';
 
 export interface State {
   tools: any;
@@ -29,9 +15,10 @@ export interface State {
   createdTool: string;
   currentHashModel: any;
   initialVizabiInstances: any;
+  configChangeUID: number;
 }
 
-const { tools, slugs } = setupItems(RelatedItems);
+const { tools, slugs } = setupItems(RelatedItems, DEFAULT_STATE);
 const { vizabiInstances, toolToSlug } = setupVizabiDataCharts({tools, slugs});
 
 const defaultTool = 'bubbles';
@@ -46,6 +33,7 @@ const initialState: State = {
   currentHashModel: {},
   vizabiInstances,
   initialVizabiInstances: _.cloneDeep(vizabiInstances),
+  configChangeUID: Date.now()
 };
 
 function setupVizabiDataCharts({tools, slugs}): any {
@@ -59,21 +47,20 @@ function setupVizabiDataCharts({tools, slugs}): any {
       chartType: chartType,
       model: _.cloneDeep(tools[slug].opts),
       instance: {},
-      modelInitial: {}
     };
 
     return result;
   }, { vizabiInstances: {}, toolToSlug: {} });
 }
 
-function setupItems(items: any[]): any {
+function setupItems(items: any[], toolsState: any): any {
   const itemsCloned = _.cloneDeep(items);
   return itemsCloned.reduce((result: any, toolDescriptor: any) => {
     if (_.has(environment, 'datasetBranch')) {
       toolDescriptor.opts.data.dataset += (environment as any).datasetBranch;
     }
 
-    Object.assign(toolDescriptor.opts, TOOLS_STATE[toolDescriptor.tool]);
+    Object.assign(toolDescriptor.opts, toolsState[toolDescriptor.tool]);
     toolDescriptor.opts.data.path = `${environment.wsUrl}${toolDescriptor.opts.data.path}`;
     toolDescriptor.opts.data.assetsPath = `${(environment as any).wsUrlAssets}${toolDescriptor.opts.data.assetsPath}`;
 
@@ -87,14 +74,27 @@ export function reducer(state: State = initialState, action: ToolsActions): Stat
   switch (action.type) {
     case ChangeConfig.TYPE: {
       const config = (action as ChangeConfig).config;
-      if (!config) return state;
+      if (!config) {
+        return state;
+      }
 
-      const { tools, slugs } = setupItems(config);
-      return Object.assign({}, state, { tools, slugs });
+      const { tools, slugs } = setupItems(RelatedItems, config);
+      const { vizabiInstances, toolToSlug } = setupVizabiDataCharts({tools, slugs});
+
+      return Object.assign({}, state, {
+        tools,
+        slugs,
+        toolToSlug,
+        configChangeUID: Date.now(),
+        initialVizabiInstances: vizabiInstances,
+      });
     }
     case SelectTool.TYPE: {
       const act = action as SelectTool;
-      return act.tool ? Object.assign({}, state, { selectedTool: act.tool }) : state;
+      if (!act.tool) {
+        return state;
+      }
+      return Object.assign({}, state, { selectedTool: act.tool });
     }
     case VizabiModelChanged.TYPE: {
       const act = action as VizabiModelChanged;

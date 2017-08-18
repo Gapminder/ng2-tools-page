@@ -7,6 +7,7 @@ import { VizabiDirective, VizabiModule } from 'ng2-vizabi';
 import { BitlyService } from './bitly.service';
 import { LocationService } from './location.service';
 import { VizabiToolsService } from './vizabi-tools-service';
+import { ClientGuard } from './client.guard';
 
 @NgModule({
   imports: [VizabiModule],
@@ -20,7 +21,8 @@ import { VizabiToolsService } from './vizabi-tools-service';
     GoogleAnalyticsService,
     BitlyService,
     LocationService,
-    VizabiToolsService
+    VizabiToolsService,
+    ClientGuard
   ],
 })
 export class CoreModule {

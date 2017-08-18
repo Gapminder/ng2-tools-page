@@ -8,9 +8,10 @@ import 'rxjs/add/observable/of';
 
 import { of } from 'rxjs/observable/of';
 import { ChangeClient, ChangeConfig } from './tools.actions';
+import { SODERTORN_STATE } from './vizabi-configurations';
 
 export const clientConfigs = {
-  ikea: {}
+  sodertorn: SODERTORN_STATE
 };
 
 @Injectable()

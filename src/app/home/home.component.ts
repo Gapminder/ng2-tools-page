@@ -141,7 +141,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const instance: any = {
       'chart-type': slug,
       model: _.cloneDeep(this.tools[slug].opts),
-      // modelInitial: changes.component.getModel(),
       instance: changes.component
     };
 
@@ -154,11 +153,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.vizabiModelChangesSubscription.unsubscribe();
-    this.vizabiCreationSubscription.unsubscribe();
-    this.initialToolsSetupSubscription.unsubscribe();
-    this.localeChangesSubscription.unsubscribe();
-    this.toolChangesSubscription.unsubscribe();
-    this.routesModelChangesSubscription.unsubscribe();
+    const subscriptions = [
+      this.vizabiModelChangesSubscription,
+      this.vizabiCreationSubscription,
+      this.initialToolsSetupSubscription,
+      this.localeChangesSubscription,
+      this.toolChangesSubscription,
+      this.routesModelChangesSubscription
+    ];
+
+    subscriptions.forEach((subscription: Subscription) => subscription && subscription.unsubscribe());
   }
 }

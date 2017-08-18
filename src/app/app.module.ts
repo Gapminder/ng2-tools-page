@@ -25,6 +25,7 @@ import { InitEffects } from './core/store/init.effects';
 import { LanguageEffects } from './core/store/language/language.effects';
 import { ToolsEffects } from './core/store/tools/tools.effects';
 import { UserInteractionEffects } from './core/store/user-interaction/user-interaction.effects';
+import { ClientGuard } from './core/client.guard';
 
 const modules = [
   BrowserModule,
@@ -41,7 +42,7 @@ const modules = [
   Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
   RouterModule.forRoot([
     { path: '', component: PageComponent, canActivate: [DeprecatedUrlGuard] },
-    { path: 'for/:client', component: PageComponent },
+    { path: 'for/:client', component: PageComponent, canActivate: [ClientGuard] },
     { path: '**', redirectTo: '/' }
   ])
 ];
@@ -61,12 +62,12 @@ const modules = [
     LanguageSwitcherComponent,
     PageComponent
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [HomeComponent]
 })
 export class AppModule {
   /* tslint:disable */
   constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
   }
-
   /* tslint:enable */
 }
