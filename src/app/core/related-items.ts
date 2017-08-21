@@ -604,7 +604,7 @@ export default [
     "slug": "barchart-ds",
     "category": "Tools",
     "image": "/assets/images/chart/barchart-ds.png",
-    "title": "Bar Chart Double Side",
+    "title": "Gender inequality",
     "description": "This graph shows the population on a map",
     "opts": {
       "state": {
@@ -851,10 +851,10 @@ export default [
   },
   {
     "tool": "ExtApiMap",
-    "slug": "extapimap",
+    "slug": "extapimap-basomrade",
     "category": "Tools",
-    "image": "/assets/images/chart/extapimap.png",
-    "title": "External Api Map",
+    "image": "/assets/images/chart/extapimap-basomrade.png",
+    "title": "Basområde map",
     "description": "This graph shows the population on a map",
     "opts": {
       "state": {
@@ -1020,77 +1020,153 @@ export default [
         "datasetBranch": ""
       }
     },
-    "relateditems": [
-      {
-        "_id": "5600af4a188967b26265a73f",
-        "_relatedTo": [
-          "55f70fd5dbbfabe3d6a2753f"
-        ],
-        "link": "//www.gapminder.org/answers/how-many-are-rich-and-how-many-are-poor/",
-        "image": "assets/images/answers/poor_rich.png",
-        "subtitle": "Short answer — Most are in between",
-        "title": "How many are rich and how many are poor?",
-        "__v": 0
+    "relateditems": []
+  },  
+  {
+    "tool": "ExtApiMap",
+    "slug": "extapimap-kommun",
+    "category": "Tools",
+    "image": "/assets/images/chart/extapimap-kommun.png",
+    "title": "Kommun map",
+    "description": "This graph shows the population on a map",
+    "opts": {
+      "state": {
+        "time": {
+          "startOrigin": "1993",
+          "endOrigin": "2015",
+          "value": "2014",
+          "dim": "year",
+          "delay": 700
+        },
+        "entities": {
+          "dim": "municipality",
+          "show": {}
+        },
+        "entities_colorlegend": {
+          "dim": "municipality"
+        },
+        "entities_map_colorlegend": {
+          "dim": "municipality"
+        },
+        "entities_tags": {
+          "dim": "tag"
+        },
+        "marker": {
+          "space": ["entities", "time"],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_centroid": {
+            "use": "property",
+            "which": "map_id",
+            "_important": true
+          },
+          "size": {
+            "which": "population_20xx_12_31",
+            "use": "indicator",
+            "scaleType": "linear",
+            "extent": [0, 0.95],
+            "allow": {
+              "scales": ["linear"]
+            }
+          },
+          "color": {
+            "use": "property",
+            "which": "municipality",
+            "scaleType": "ordinal",
+            "syncModels": ["marker_colorlegend"]
+          },
+          "color_map": {
+            "use": "property",
+            "which": "municipality",
+            "scaleType": "ordinal",
+            "syncModels": ["marker_colorlegend"]
+          }
+        },
+        "marker_allpossible": {
+          "space": ["entities"],
+          "label": {
+              "use": "property",
+              "which": "name"
+          },
+          "skipFilter": true
+        },
+        "marker_colorlegend": {
+          "space": ["entities_colorlegend"],
+          "opacityRegular": 0.8,
+          "opacityHighlightDim": 0.3,
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_rank": {
+            "use": "property",
+            "which": "rank"
+          },
+          "hook_geoshape": {
+            "use": "property",
+            "which": "shape_lores_svg"
+          }
+        },
+        "marker_tags": {
+          "space": ["entities_tags"],
+          "label": {
+            "use": "property",
+            "which": "name"
+          },
+          "hook_parent": {
+            "use": "property",
+            "which": "parent"
+          }
+        }
       },
-      {
-        "_id": "560061d4fc0d7c00002110a4",
-        "title": "How Reliable is the World Population Forecast?",
-        "subtitle": "Short answer — Very reliable",
-        "image": "assets/images/answers/population_forecast.png",
-        "link": "//www.gapminder.org/answers/how-reliable-is-the-world-population-forecast/",
-        "_relatedTo": [
-          "55f71e8ccdedc1ff074e9f6d",
-          "55f70fd5dbbfabe3d6a2753f"
-        ]
+      "ui": {
+        "datawarning": {
+          "doubtDomain": [1993, 2015],
+          "doubtRange": [0, 0]
+        },
+        "map": {
+          "scale": 1,
+          "preserveAspectRatio": true,
+          "mapEngine": "mapbox",
+          "mapStyle": "mapbox://styles/mapbox/streets-v9",
+          "showBubbles": true,
+          "showAreas": true,
+          "showMap": true,
+          "offset": {
+            "top": 0.05,
+            "bottom": -0.12,
+            "left": 0,
+            "right": 0
+          },
+          "path": null,
+          "bounds": {
+            "north": 60.25,
+            "west": 17.4,
+            "south": 58.7,
+            "east": 19.6
+          },
+          "projection": "mercator",
+          "topology": {
+            "path": "assets/sodertorn-kommun.json",
+            "objects": {
+              "geo": "SWE_adm2",
+              "boundaries": "SWE_adm2"
+            },
+            "geoIdProperty": "ID_2"
+          }
+        },
+        "splash": true
       },
-      {
-        "_id": "5600ad4c188967b26265a73b",
-        "_relatedTo": [
-          "55f71e8ccdedc1ff074e9f6d",
-          "55f70fd5dbbfabe3d6a2753f"
-        ],
-        "link": "//www.gapminder.org/answers/will-saving-poor-children-lead-to-overpopulation/",
-        "image": "assets/images/answers/overpopulation.png",
-        "subtitle": "Short answer — No. The opposite.",
-        "title": "Will saving poor children lead to overpopulation?",
-        "__v": 0
-      },
-      {
-        "_id": "5600ae2b188967b26265a73c",
-        "_relatedTo": [
-          "55f71e8ccdedc1ff074e9f6d",
-          "55f70fd5dbbfabe3d6a2753f"
-        ],
-        "link": "//www.gapminder.org/answers/how-does-income-relate-to-life-expectancy/",
-        "image": "assets/images/answers/life_expectancy.png",
-        "subtitle": "Short answer — Rich people live longer",
-        "title": " How Does Income Relate to Life Expectancy?",
-        "__v": 0
-      },
-      {
-        "_id": "5600ae64188967b26265a73d",
-        "_relatedTo": [
-          "55f71e8ccdedc1ff074e9f6d",
-          "55f70fd5dbbfabe3d6a2753f"
-        ],
-        "link": "//www.gapminder.org/answers/how-did-babies-per-woman-change-in-the-world/",
-        "image": "assets/images/answers/babies_per_woman.png",
-        "subtitle": "Short answer — It dropped",
-        "title": "How Did Babies per Woman Change in the World?",
-        "__v": 0
-      },
-      {
-        "_id": "5600aedc188967b26265a73e",
-        "_relatedTo": [
-          "55f71e8ccdedc1ff074e9f6d",
-          "55f70fd5dbbfabe3d6a2753f"
-        ],
-        "link": "//www.gapminder.org/posters/gapminder-world-2013/",
-        "image": "assets/images/answers/gapminder_world_2013_v5.jpg",
-        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
-        "title": "Gapminder World Poster 2013",
-        "__v": 0
+      "data": {
+        "reader": "waffle",
+        "path": "/api/ddf/ql",
+        "dataset": "open-numbers/ddf--sodertorn--stockholm_lan_basomrade",
+        "assetsPath": "/api/ddf/assets/",
+        "datasetBranch": ""
       }
-    ]
+    },
+    "relateditems": []
   },
 ]
