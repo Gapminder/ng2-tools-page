@@ -15,31 +15,31 @@ describe('check URL correctness', () => {
 
   it('should open tools page', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
     done();
   });
 
   it('should open Mountains chart', done => {
     page.openMountainsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
     done();
   });
 
   it('should open Maps chart', done => {
     page.openMapsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=map');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=map');
     done();
   });
 
   it('should open Rankings chart', done => {
     page.openRankingsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=barrank');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=barrank');
     done();
   });
 
   it('should open Lines chart', done => {
     page.openLinesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=linechart');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=linechart');
     done();
   });
 
@@ -54,7 +54,7 @@ describe('All charts - Acceptance', () => {
 
     it('should  check side panel on Bubbles chart page', done => {
       page.openBubblesChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
       expect(page.getRightSidePanelText(0)).toContain('World Regions');
       expect(page.rightSidePanelCountriesList.count()).toBeGreaterThan(25);
@@ -69,7 +69,7 @@ describe('All charts - Acceptance', () => {
 
     it('should  check side panel on Maps chart page', done => {
       page.openMapsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=map');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=map');
 
       browser.actions().mouseMove(page.sliderSelectedYear).perform();
 
@@ -86,7 +86,7 @@ describe('All charts - Acceptance', () => {
 
     it('should  check side panel on Mountains chart page', done => {
       page.openMountainsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
       browser.actions().mouseMove(page.sliderSelectedYear).perform();
       expect(page.getRightSidePanelText(0)).toContain('World Regions');
@@ -103,7 +103,7 @@ describe('All charts - Acceptance', () => {
 
     it('should  check side panel on Lines chart page', done => {
       page.openLinesChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=linechart');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=linechart');
 
       expect(page.getRightSidePanelText(0)).toContain('World Regions');
       expect(page.linesChartRightSidePanelCountriesList.count()).toBeGreaterThan(25);
@@ -118,7 +118,7 @@ describe('All charts - Acceptance', () => {
 
     it('should  check side panel on Rankings chart page', done => {
       page.openRankingsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=barrank');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=barrank');
 
       expect(page.rankingsChartRightSidePanelYearLabel.getText()).toContain('2015');
       expect(page.rightSidePanelCountriesList.count()).toBeGreaterThan(25);
@@ -142,13 +142,14 @@ describe('All charts - Acceptance', () => {
 
     it('should set time slider to some point, refresh, timeslider should keep the point on Bubbles chart page', done => {
       page.openBubblesChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
       let initialSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       page.dragSlider();
       let finalSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       expect(initialSelectedYear).not.toEqual(finalSelectedYear);
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       let selectedYearAfterPageRefresh = page.sliderSelectedYear.getAttribute('textContent');
@@ -160,13 +161,14 @@ describe('All charts - Acceptance', () => {
     it('should set time slider to some point, refresh, timeslider should keep the point on Mountains chart page', done => {
       page.openMountainsChart();
 
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
       let initialSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       page.dragSlider();
       let finalSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       expect(initialSelectedYear).not.toEqual(finalSelectedYear);
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       let selectedYearAfterPageRefresh = page.sliderSelectedYear.getAttribute('textContent');
@@ -177,12 +179,13 @@ describe('All charts - Acceptance', () => {
 
     it('should set time slider to some point, refresh, timeslider should keep the point on Maps page', done => {
       page.openMapsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=map');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=map');
       let initialSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       page.dragSlider();
       let finalSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       expect(initialSelectedYear).not.toEqual(finalSelectedYear);
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       let selectedYearAfterPageRefresh = page.sliderSelectedYear.getAttribute('textContent');
@@ -193,12 +196,13 @@ describe('All charts - Acceptance', () => {
 
     it('should set time slider to some point, refresh, timeslider should keep the point on Rankings chart page', done => {
       page.openRankingsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=barrank');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=barrank');
       let initialSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       page.dragSlider();
       let finalSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       expect(initialSelectedYear).not.toEqual(finalSelectedYear);
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       let selectedYearAfterPageRefresh = page.sliderSelectedYear.getAttribute('textContent');
@@ -210,12 +214,13 @@ describe('All charts - Acceptance', () => {
 
     it('should set time slider to some point, refresh, timeslider should keep the point on Lines chart page', done => {
       page.openLinesChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=linechart');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=linechart');
       let initialSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       page.dragSlider();
       let finalSelectedYear = page.sliderSelectedYear.getAttribute('textContent');
       expect(initialSelectedYear).not.toEqual(finalSelectedYear);
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       let selectedYearAfterPageRefresh = page.sliderSelectedYear.getAttribute('textContent');
@@ -227,17 +232,17 @@ describe('All charts - Acceptance', () => {
 
     it('should select a few entities, refresh, entities should be selected on Bubbles chart page', done => {
       page.openBubblesChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
       page.selectCountryOnBubblesChart("Russia");
       page.selectCountryOnBubblesChart("Bangladesh");
       page.selectCountryOnBubblesChart("Nigeria");
 
-
       expect(page.bubblesChartSelectedCountries.getText()).toContain('Russia 2015');
       expect(page.bubblesChartSelectedCountries.getText()).toContain('Nigeria 2015');
       expect(page.bubblesChartSelectedCountries.getText()).toContain('Bangladesh 2015');
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       expect(page.bubblesChartSelectedCountries.getText()).toContain('Russia 2015');
@@ -252,7 +257,7 @@ describe('All charts - Acceptance', () => {
 
     it('should select a few entities, refresh, entities should be selected on Mountains chart', done => {
       page.openMountainsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
       page.searchAndSelectCountry("China");
       expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.4B people");
@@ -263,6 +268,7 @@ describe('All charts - Acceptance', () => {
       page.searchAndSelectCountry("Brazil");
       expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 206M");
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       expect(page.getSelectedCountryTextOnMountainsChart(1)).toContain("India: 1.31B");
@@ -277,7 +283,7 @@ describe('All charts - Acceptance', () => {
 
     it('should select a few entities, refresh, entities should be selected on Maps chart', done => {
       page.openMapsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=map');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=map');
 
       page.searchAndSelectCountry("China");
       expect(page.mapsChartSelectedCountries.count()).toEqual(1);
@@ -295,6 +301,7 @@ describe('All charts - Acceptance', () => {
       expect(browser.getCurrentUrl()).toContain('geo=chn');
       expect(browser.getCurrentUrl()).toContain('geo=bra');
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       expect(page.mapsChartSelectedCountries.count()).toEqual(3);
@@ -309,7 +316,7 @@ describe('All charts - Acceptance', () => {
 
     it('should select a few entities, refresh, entities should be selected on Rankings chart', done => {
       page.openRankingsChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=barrank');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=barrank');
 
       page.searchAndSelectCountry("China");
       expect(page.rankingsChartSelectedCountries.count()).toEqual(1);
@@ -320,6 +327,7 @@ describe('All charts - Acceptance', () => {
       page.searchAndSelectCountry("Brazil");
       expect(page.rankingsChartSelectedCountries.count()).toEqual(3);
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       expect(page.rankingsChartSelectedCountries.count()).toEqual(3);
@@ -332,7 +340,7 @@ describe('All charts - Acceptance', () => {
 
     it('should select a few entities, refresh, entities should be selected on Lines chart', done => {
       page.openLinesChart();
-      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=linechart');
+      expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=linechart');
 
       expect(page.linesChartSelectedCountries.count()).toEqual(4);
       page.searchAndSelectCountryOnLinesChart("Australia");
@@ -340,6 +348,7 @@ describe('All charts - Acceptance', () => {
       page.waitForLinesChartPageToBeReloadedAfterAction();
       expect(page.linesChartSelectedCountries.count()).toEqual(5);
 
+      browser.sleep(2000);
       page.refreshToolsPage();
 
       expect(page.linesChartSelectedCountries.count()).toEqual(5);
