@@ -41,5 +41,7 @@ src/assets/bubblechart.css
 src/assets/linechart.css
 src/assets/bubblemap.css
 src/assets/popbyage.css
+src/assets/extapimap.css
+src/assets/barchart-ds.css
 
 logs

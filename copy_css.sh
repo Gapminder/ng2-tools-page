@@ -7,3 +7,5 @@ cp ./node_modules/vizabi-bubblemap/build/bubblemap.css ./src/assets/bubblemap.cs
 cp ./node_modules/vizabi-mountainchart/build/mountainchart.css ./src/assets/mountainchart.css
 cp ./node_modules/vizabi-linechart/build/linechart.css ./src/assets/linechart.css
 cp ./node_modules/vizabi-popbyage/build/popbyage.css ./src/assets/popbyage.css
+cp ./node_modules/vizabi-barchart-ds/build/barchart-ds.css ./src/assets/barchart-ds.css
+cp ./node_modules/vizabi-extapimap/build/extapimap.css ./src/assets/extapimap.css

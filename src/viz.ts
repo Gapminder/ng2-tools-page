@@ -6,3 +6,5 @@ require('vizabi-bubblechart');
 require('vizabi-linechart');
 require('vizabi-bubblemap');
 require('vizabi-popbyage');
+require('vizabi-extapimap');
+require('vizabi-barchart-ds');

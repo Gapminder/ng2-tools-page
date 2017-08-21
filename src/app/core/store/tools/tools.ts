@@ -58,7 +58,10 @@ function setupVizabiDataCharts({ tools, slugs }): any {
 function setupItems(items: any[], toolsState: any): any {
   const itemsCloned = cloneDeep(items);
   return itemsCloned.reduce((result: any, toolDescriptor: any) => {
-    if (has(environment, 'datasetBranch')) {
+
+    if (has(toolDescriptor.opts.data, 'datasetBranch')) {
+      toolDescriptor.opts.data.dataset += toolDescriptor.opts.data.datasetBranch;
+    } else if (has(environment, 'datasetBranch')) {
       toolDescriptor.opts.data.dataset += (environment as any).datasetBranch;
     }
 
