@@ -17,7 +17,7 @@ import {
 } from '../core/store';
 import { TrackGaPageEvent, TrackGaVizabiModelChangeEvent } from '../core/store/google/google.actions';
 import { VizabiLocale } from '../core/store/language/language';
-import { VizabiInstanceCreated, VizabiModelChanged } from '../core/store/tools/tools.actions';
+import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/store/tools/tools.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
 
@@ -150,6 +150,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   onChanged(changes: any): void {
     const model = Object.assign({}, this.currentHashModel, changes.modelDiff, { 'chart-type': this.toolToSlug[changes.type] });
     this.store.dispatch(new VizabiModelChanged(model));
+    this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
   }
 
   ngOnDestroy(): void {
