@@ -1,9 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
-import { RouterModule }   from '@angular/router';
-
-import { VizabiModule } from 'ng2-vizabi';
+import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RelatedItemsComponent } from './related-items/related-items.component';
@@ -16,21 +14,41 @@ import { SocialButtonsComponent } from './header/social-buttons/social-buttons.c
 import { LanguageSwitcherComponent } from './header/language-switcher/language-switcher.component';
 import { PageComponent } from './page/page.component';
 
-import { DeprecatedUrlService } from './deprecated-url.service';
-import { Angulartics2Module, Angulartics2GoogleAnalytics } from 'angulartics2';
-import { GoogleAnalyticsService } from './google-analytics.service';
+import { DeprecatedUrlGuard } from './core/deprecated-url.service';
+import { Angulartics2GoogleAnalytics, Angulartics2Module } from 'angulartics2';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './core/store';
+import { EffectsModule } from '@ngrx/effects';
+import { CoreModule } from './core/core.module';
+import { GoogleEffects } from './core/store/google/google.effects';
+import { InitEffects } from './core/store/init.effects';
+import { LanguageEffects } from './core/store/language/language.effects';
+import { ToolsEffects } from './core/store/tools/tools.effects';
+import { UserInteractionEffects } from './core/store/user-interaction/user-interaction.effects';
+import { ClientGuard } from './core/client.guard';
+
+const modules = [
+  BrowserModule,
+  HttpModule,
+  CoreModule,
+  StoreModule.forRoot(reducers()),
+  EffectsModule.forRoot([
+    InitEffects,
+    GoogleEffects,
+    LanguageEffects,
+    ToolsEffects,
+    UserInteractionEffects
+  ]),
+  Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
+  RouterModule.forRoot([
+    { path: '', component: PageComponent, canActivate: [DeprecatedUrlGuard] },
+    { path: 'for/:client', component: PageComponent, canActivate: [ClientGuard] },
+    { path: '**', redirectTo: '/' }
+  ])
+];
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    HttpModule,
-    VizabiModule,
-    RouterModule.forRoot([
-      { path: '', component: PageComponent, canActivate: [DeprecatedUrlService]},
-      { path: '**', redirectTo: ''}
-    ]),
-    Angulartics2Module.forRoot([ Angulartics2GoogleAnalytics ])
-  ],
+  imports: modules,
   declarations: [
     AppComponent,
     HomeComponent,
@@ -44,11 +62,12 @@ import { GoogleAnalyticsService } from './google-analytics.service';
     LanguageSwitcherComponent,
     PageComponent
   ],
-  providers: [DeprecatedUrlService, GoogleAnalyticsService],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  entryComponents: [HomeComponent]
 })
 export class AppModule {
   /* tslint:disable */
-  public constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {}
+  constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+  }
   /* tslint:enable */
 }

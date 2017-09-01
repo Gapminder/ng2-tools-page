@@ -2,7 +2,7 @@
 @import './../_resources/mixins.styl'
 
 body
-  .page-lang-ar-SA
+  .page-lang-rtl
     direction rtl
 
     .header-title
@@ -68,18 +68,6 @@ body
       right auto
       left 0
 
-    .header:after
-        left 20px
-        right auto
-
-        +for_breakpoint(medium)
-          content 'alpha'
-          font-size 24px
-          bottom 10px
-
-        +for_breakpoint(small)
-          left 90px
-
     .wrap-report-problem
       .report-problem
         float left
@@ -97,8 +85,11 @@ body
     .related
       float right
 
+    .see-also-heading
+      margin-left 0
+      width 100%
+
     .social-share-icon
       +for_breakpoint(small,medium)
         left 45px
         right initial
-

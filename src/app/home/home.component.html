@@ -1,24 +1,18 @@
-<!--<div class="column main">-->
+<div *ngFor="let slug of slugs" [hidden]="currentChartType !== slug" class="column main">
+  <vizabi class="vizabi-placeholder"
+          *ngIf="currentChartType === slug"
+          [readerModuleObject]="readerModuleObject"
+          [readerGetMethod]="'getReader'"
+          [readerParams]="readerParams"
+          [readerName]="'waffle'"
+          [extResources]="extResources"
+          [stopUrlRedirect]="true"
+          (onCreated)="onCreated($event)"
+          (onChanged)="onChanged($event)"
+          [chartType]="vizabiInstances[slug].chartType"
+          [model]="getVizabiInitialModel(slug)"
+          [modelHash]="vizabiInstances[slug].modelHash">
+  </vizabi>
+</div>
 
-  <div *ngFor="let toolKey of toolKeys" [hidden]="currentChartType != toolKey" class="column main">
-    <vizabi class="vizabi-placeholder"
-            *ngIf="currentChartType == toolKey && switchingReady"
-            [readerModuleObject]="readerModuleObject"
-            [readerGetMethod]="readerGetMethod"
-            [readerParams]="readerParams"
-            [readerName]="readerName"
-            [extResources]="extResources"
-            [stopUrlRedirect]="stopUrlRedirect"
-            (onCreated)="onCreated($event)"
-            (onChanged)="onChanged($event)"
-            [chartType]="vizabiInstances[toolKey].chartType"
-            [model]="getVizabiInitialModel(toolKey)"
-            [modelHash]="vizabiInstances[toolKey].modelHash"
-    ></vizabi>
-  </div>
-
-  <div *ngIf="currentChartType == ''">
-    ... chart type is not detected
-  </div>
-
-<!--</div>-->
+<div *ngIf="!currentChartType">Chart is loading ...</div>

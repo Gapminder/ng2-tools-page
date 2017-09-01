@@ -12,7 +12,7 @@ beforeEach(() => {
 describe('Bubbles chart - Acceptance', () => {
   it('should check that there is a data warning to the bottom right(TC05)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.dataDoubtsLink.click();
     expect(page.dataDoubtsWindow).toBeTruthy();
@@ -23,7 +23,7 @@ describe('Bubbles chart - Acceptance', () => {
     'In 2015 the biggest red bubbles: "China", "India"; the biggest green - "United states", ' +
     'the biggest yellow is "Russia" and the biggest blue is "Nigeria"(TC06)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.hoverMouseOverBiggestYellowBubbleBubblesChart();
     expect(page.bubblesChartBubbleLabelOnMouseHover).toBeTruthy();
@@ -50,7 +50,7 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that United states have in 2015: GDP: 53354 $/year/person(TC07)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.hoverMouseOverBiggestGreenBubbleBubblesChart();
     expect(page.bubblesChartBubbleLabelOnMouseHover.getText()).toContain("United States");
@@ -62,7 +62,7 @@ describe('Bubbles chart - Acceptance', () => {
   it('should check that clicking the bubble of the United States should select it. The bubble gets full opacity, ' +
     'while the other bubbles get lower opacity(TC08)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     expect(page.countElementsByOpacity(page.bubblesChartAllBubbles, 0.3)).toBe(0);
 
@@ -78,7 +78,7 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that label "United States" can be dragged and dropped anywhere in the chart area(TC09)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.selectBiggestGreenBubbleBubblesChart();
 
@@ -100,7 +100,7 @@ describe('Bubbles chart - Acceptance', () => {
   it('should check that the bubble can be deselected by clicking on the "x" of the label "United States",' +
     ' or by clicking on the bubble(TC10)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.selectBiggestGreenBubbleBubblesChart();
     page.deselectCountryByClickingCrossMarkOnLabelBubblesChart();
@@ -116,7 +116,7 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that countries could be selected/deselected using the button "Find" to the right(TC11)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.searchAndSelectCountry("China");
     page.waitForPageToBeReloadedAfterAction();
@@ -159,7 +159,7 @@ describe('Bubbles chart - Acceptance', () => {
   it('should check that when select China and the United States bubbles and click on play,' +
     ' the trails being left for those two countries(TC13)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.searchAndSelectCountry("China");
 
@@ -185,7 +185,7 @@ describe('Bubbles chart - Acceptance', () => {
   it('should check that when select China and the United States bubbles and and drag the timeslider,' +
     ' the trails being left for those two countries(TC14)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.searchAndSelectCountry("China");
     page.searchAndSelectCountry("United states");
@@ -193,6 +193,7 @@ describe('Bubbles chart - Acceptance', () => {
     page.dragSlider();
     page.dragSliderToPosition(800, 0);
 
+    browser.sleep(2000);
     expect(page.bubblesChartChinaTrails.count()).toBeGreaterThan(100);
     expect(page.bubblesChartUnitedStatesTrails.count()).toBeGreaterThan(100);
 
@@ -202,7 +203,7 @@ describe('Bubbles chart - Acceptance', () => {
   it('should check that when select a country, click "Lock", and drag the time slider or play, ' +
     'all unselected countries stay in place and only the selected one moves(TC15)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.searchAndSelectCountry("China");
 
@@ -243,7 +244,7 @@ describe('Bubbles chart - Acceptance', () => {
   it('should check that click on Size, a pop up with size sliders comes up,' +
     ' the minimum and maximum sizes of bubbles can be changed. They update instantaneously(TC16)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     let initialRadius = page.getRadiusOfBubblesOnBubblesChart();
     initialRadius.then(function () {
@@ -262,7 +263,7 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that the indicator represented by the Size can be changed(TC16)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.rightSidePanelOptionsButton.click();
     page.rightSidePanelOptionsMenuSizeButton.click();
@@ -288,7 +289,7 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that clicking color bring the panel. Color of bubbles can be changed(TC17)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     let usaBubbleInitialColor = page.bubblesChartUnitedStatesBubble.getCssValue('fill');
     let indiaBubbleInitialColor = page.bubblesChartIndiaBubble.getCssValue('fill');
@@ -329,7 +330,7 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that on large screen resolutions panel can be dragged using the hand icon(TC18)', done => {
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.rightSidePanelOptionsButton.click();
     let optionsDialogueTopInitialPosition = page.rightSidePanelOptionsModalDialogue.getCssValue('top');
@@ -360,7 +361,7 @@ describe('Bubbles chart - Acceptance', () => {
     // Check time slider range, it should be restricted to only a few >years.
     // Switch Y back to less: time slider should be back to 1800-2015 or what we had at start
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.axisYTitle.click();
     page.axisYSearchFieldInputField.clear().sendKeys('Dollar billionaires');
@@ -387,7 +388,7 @@ describe('Bubbles chart - Acceptance', () => {
     //When X is time and showing a trail, zoom a rectangle on the part of the picture. Note min-max for x and y.
     // Refresh. Min-max for x and y should be the same. Trail should be preserved too
     page.openBubblesChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=bubbles');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
     page.searchAndSelectCountry("China");
 
