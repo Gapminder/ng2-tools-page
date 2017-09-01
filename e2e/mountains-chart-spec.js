@@ -14,7 +14,7 @@ describe('Mountains chart - Acceptance', () => {
   it('should check that in 2015, the percentage of people living in the extreme poverty should be 11.5 ± 0.3%,' +
     ' and the world population should be 7.33B(TC19)', done => {
     page.openMountainsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
     expect(page.mountainsChartExtremePovertyPercentage.getText()).toBeGreaterThan(11.2 + '%');
     expect(page.mountainsChartExtremePovertyPercentage.getText()).toBeLessThan(11.8 + '%');
@@ -28,7 +28,7 @@ describe('Mountains chart - Acceptance', () => {
   it('should check that in 2015 there is roughly the same amount of people living in the extreme poverty' +
     ' as there was in 1800 (830 and 812 Millions)(TC20)', done => {
     page.openMountainsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
     page.hoverMouserOverExtremePovertyTitleMapsChart();
 
@@ -43,7 +43,7 @@ describe('Mountains chart - Acceptance', () => {
 
   it('should check that only checked countries displayed after click "show", check a few countries(TC21)', done => {
     page.openMountainsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(165);
 
     page.mountainsChartAdvancedControlsShowButtons.get(0).click();
@@ -69,7 +69,7 @@ describe('Mountains chart - Acceptance', () => {
   it('should check that uncheck the countries from "show", when the last one is unchecked, the picture should' +
     ' return to a default view = stacked shapes of all countries(TC22)', done => {
     page.openMountainsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(165);
     page.mountainsChartAdvancedControlsShowButtons.get(0).click();
 
@@ -98,7 +98,7 @@ describe('Mountains chart - Acceptance', () => {
   it('should select a few entities, they should get selected on the visualization and their names ' +
     'should appear as a list on top left. Population should be displayed after the name(TC23)', done => {
     page.openMountainsChart();
-    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_locale_id=en;&chart-type=mountain');
+    expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
     expect(page.mountainsChartYearLabel).toBeTruthy();
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(165);

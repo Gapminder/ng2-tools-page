@@ -1,19 +1,24 @@
-<div [class]="getPageClass()" (click)="baseElementClickHandler($event)">
-  <!--Header-->
+<div class="wrapper" [ngClass]="{'embedded-view': (isEmbeddedMode$ | async), 'page-lang-rtl': (isRtl$ | async)}"
+     (click)="baseElementClickHandler($event)">
   <app-header></app-header>
 
-  <!--Content-->
-  <app-home></app-home>
+  <ng-template #homeContainer></ng-template>
 
-  <!--More-->
   <div class="more">
-    <app-see-also class="about"> ... loading (see also)</app-see-also>
-    <app-related-items class="related"> ... loading (related items)</app-related-items>
-    <ul class="social-list mobile">
-      <app-social-buttons></app-social-buttons>
-    </ul>
-    <app-report-problem> ... loading (report problem)</app-report-problem>
+    <app-related-items *ngIf="!(client$ | async)" [relatedItems]="relatedItems$ | async" class="related"></app-related-items>
+    <app-see-also
+      [tools]="tools$ | async"
+      [selectedTool]="selectedTool$ | async"
+      (selectTool)="selectTool($event)"
+      (trackGaToolChangeEvent)="trackGaToolChangeEvent($event)"
+      class="about"></app-see-also>
+    <div class="connections">
+      <ul class="social-list mobile">
+        <app-social-buttons></app-social-buttons>
+      </ul>
+      <app-report-problem [isFlashAvailable]="isFlashAvailable$ | async"></app-report-problem>
+    </div>
   </div>
 
-  <app-footer> ... loading (footer)</app-footer>
+  <app-footer></app-footer>
 </div>

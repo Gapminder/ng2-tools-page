@@ -3,6 +3,10 @@
   "rulesDirectory": "node_modules/codelyzer",
 
   "rules": {
-    "max-classes-per-file": [true, 3]
+    "directive-selector-prefix": false,
+    "use-view-encapsulation": false,
+    "component-selector": false,
+    "max-classes-per-file": [true, 3],
+    "member-access": [false, "check-constructor"]
   }
 }

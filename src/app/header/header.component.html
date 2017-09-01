@@ -8,32 +8,53 @@
     <i class="fa fa-share-alt-square icon"></i>
   </div>
 
-  <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !isMobileMenuHidden()}">
+  <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !(isMobileMenuHidden$ | async)}">
     <div class="icon"></div>
   </div>
 
   <ul class="nav navbar-nav navbar-nav-left desktop">
-    <app-menu></app-menu>
+    <app-menu
+      [selectedMenuItem]="selectedMenuItem$ | async"
+      [menuItems]="menuItems$ | async"
+      (selectMenuItem)="selectMenuItem($event)">
+    </app-menu>
   </ul>
 
-  <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!isMobileMenuHidden()">
+  <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!(isMobileMenuHidden$ | async)">
 
-    <!-- mobile :: language switcher-->
-    <li class="nav-expandable" [ngClass]="{'hidden': isMobileMenuHidden()}">
+    <li class="nav-expandable" [ngClass]="{'hidden': (isMobileMenuHidden$ | async)}">
       <div class="lang-wrapper mobile">
-        <app-language-switcher></app-language-switcher>
+        <app-language-switcher
+          [allLanguages]="allLanguages$ | async"
+          [isLanguageSwitcherVisible]="isLanguageSwitcherVisible$ | async"
+          [selectedLanguage]="selectedLanguage$ | async"
+          (changeLanguage)="changeLanguage($event)"
+          (hideLanguageChooser)="hideLanguageChooser()"
+          (switchLanguageChooser)="switchLanguageChooser()">
+        </app-language-switcher>
       </div>
     </li>
 
-    <app-menu></app-menu>
+    <app-menu
+      [selectedMenuItem]="selectedMenuItem$ | async"
+      [menuItems]="menuItems$ | async"
+      (selectMenuItem)="selectMenuItem($event)">
+    </app-menu>
   </ul>
 
   <div class="lang-wrapper desktop">
-    <app-language-switcher></app-language-switcher>
+    <app-language-switcher
+      [allLanguages]="allLanguages$ | async"
+      [isLanguageSwitcherVisible]="isLanguageSwitcherVisible$ | async"
+      [selectedLanguage]="selectedLanguage$ | async"
+      (changeLanguage)="changeLanguage($event)"
+      (hideLanguageChooser)="hideLanguageChooser()"
+      (switchLanguageChooser)="switchLanguageChooser()">
+    </app-language-switcher>
   </div>
 
   <ul class="social-list desktop">
-    <app-social-buttons></app-social-buttons>
+    <app-social-buttons (getEmbeddedUrl)="getEmbeddedUrl()" (shareLink)="shareLink()"></app-social-buttons>
   </ul>
 
 </div>

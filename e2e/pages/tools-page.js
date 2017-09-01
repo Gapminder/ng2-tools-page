@@ -62,7 +62,7 @@ let ToolsPage = function () {
    * Maps chart elements
    */
   this.mapsChartSelectedCountries = element.all(by.css('circle[class="vzb-bmc-bubble vzb-selected"]'));
-  this.mapsChartSelectedCountriesLabels = element.all(by.css('text[class="vzb-bmc-label-content"]'));
+  this.mapsChartSelectedCountriesLabels = element.all(by.css('text[class="vzb-bmc-label-content stroke"]'));
   this.mapsChartSelectedCountryLabel = element(by.css('g[class="vzb-bmc-labels"] > g'));
   this.mapsChartAllBubbles = element.all(by.css('circle[class="vzb-bmc-bubble"]'));
   this.mapsChartBubbleLabelOnMouseHover = element(by.css('g[class="vzb-bmc-tooltip"] > text'));
@@ -103,7 +103,7 @@ let ToolsPage = function () {
   /**
    * Bubbles chart elements
    */
-  this.bubblesChartSelectedCountries = element.all(by.css('text[class="vzb-bc-label-content"]'));
+  this.bubblesChartSelectedCountries = element.all(by.css('text[class="vzb-bc-label-content stroke"]'));
   this.bubblesChartCountriesList = {
     Nigeria: element(by.css('circle[class*="vzb-bc-entity bubble-nga"]')),
     India: element(by.css('circle[class*="vzb-bc-entity bubble-ind"]')),
@@ -125,20 +125,31 @@ let ToolsPage = function () {
   this.bubblesChartUnitedStatesTrails = element.all(by.css('g[class="vzb-bc-entity entity-trail trail-usa"] > g[class="vzb-bc-trailsegment"]'));
   this.bubblesChartLockButton = element.all(by.css('button[data-btn="lock"]')).last();
   this.bubblesChartTrailsButton = element.all(by.css('button[data-btn="trails"]')).last();
+
   /**
    * Get Tools page
    * @param url
    */
   this.get = function (url) {
-    browser.driver.manage().window().maximize();
+    //browser.driver.manage().window().maximize(); //disabled due to https://bugs.chromium.org/p/chromedriver/issues/detail?id=1901
+    browser.driver.manage().window().setSize(1920, 1080);
     browser.ignoreSynchronization = true;
     browser.get(url);
     browser.waitForAngular();
   };
 
+  /**
+   * Waits for Tools page to be loaded
+   */
+  this.waitForToolsPageCompletelyLoaded = function () {
+    browser.wait(EC.visibilityOf(this.headerImage));
+    browser.wait(EC.visibilityOf(this.buttonPlay));
+    browser.wait(EC.invisibilityOf(this.movingSliderProgress.get(1)), 30000);
+  };
+
   this.openBubblesChart = function () {
     this.get(url);
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -147,7 +158,7 @@ let ToolsPage = function () {
   this.openMountainsChart = function () {
     this.get(url);
     this.mountainsChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -155,7 +166,7 @@ let ToolsPage = function () {
    */
   this.refreshToolsPage = function () {
     browser.refresh();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -164,7 +175,7 @@ let ToolsPage = function () {
   this.openMapsChart = function () {
     this.get(url);
     this.mapsChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -173,7 +184,7 @@ let ToolsPage = function () {
   this.openRankingsChart = function () {
     this.get(url);
     this.rankingsChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
   };
 
   /**
@@ -182,17 +193,8 @@ let ToolsPage = function () {
   this.openLinesChart = function () {
     this.get(url);
     this.linesChart.click();
-    this.waitForToolsPageLogosDisplayed();
+    this.waitForToolsPageCompletelyLoaded();
     this.waitForLinesChartPageToBeLoaded();
-  };
-
-  /**
-   * Waits for Tools page to be loaded
-   */
-  this.waitForToolsPageLogosDisplayed = function () {
-    browser.wait(EC.visibilityOf(this.headerImage));
-    browser.wait(EC.visibilityOf(this.buttonPlay));
-    browser.wait(EC.invisibilityOf(this.movingSliderProgress.get(1)), 30000);
   };
 
   /**
