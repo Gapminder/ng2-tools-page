@@ -250,7 +250,8 @@ describe('Bubbles chart - Acceptance', () => {
       page.rightSidePanelOptionsButton.click();
       browser.wait(EC.presenceOf(page.rightSidePanelOptionsMenuSizeButton));
       page.rightSidePanelOptionsMenuSizeButton.click();
-      page.dragElementToPosition(page.rightSidePanelOptionsMenuBubblesResizeButton, -60, 0);
+      browser.wait(EC.presenceOf(page.rightSidePanelOptionsMenuBubblesResizeButton));
+      page.dragElementToPosition(page.rightSidePanelOptionsMenuBubblesResizeButton, 60, 0);
     });
 
     let finalRadius = page.getRadiusOfBubblesOnBubblesChart();

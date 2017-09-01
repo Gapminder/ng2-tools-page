@@ -40,7 +40,7 @@ let ToolsPage = function () {
   this.pageHeader = element(by.css('div[class="header"]'));
   this.rightSidePanelOptionsButton = element.all(by.css('span[data-vzb-translate="buttons/more_options"]')).last();
   this.rightSidePanelOptionsMenuSizeButton = element.all(by.css('span[data-vzb-translate="buttons/size"]')).last();
-  this.rightSidePanelOptionsMenuBubblesResizeButton = element.all(by.css('g[class="vzb-bs-slider-thumb-badge"] > path')).last();
+  this.rightSidePanelOptionsMenuBubblesResizeButton = element.all(by.css('svg[class="handle handle--w w vzb-slider-thumb"] > g[class="vzb-slider-thumb-badge"] > path')).last();
   this.rightSidePanelColorIndicatorDropdown = element.all(by.css('span[class="vzb-ip-holder"] > span')).get(8);
   this.sizeListBabiesPerWomanColorIndicator = element.all(by.css('span[class="vzb-treemenu-list-item-label"]')).first();
   this.sizeListChildMortalityRateColorIndicator = element.all(by.css('span[class="vzb-treemenu-list-item-label"]')).get(3);
@@ -62,7 +62,7 @@ let ToolsPage = function () {
    * Maps chart elements
    */
   this.mapsChartSelectedCountries = element.all(by.css('circle[class="vzb-bmc-bubble vzb-selected"]'));
-  this.mapsChartSelectedCountriesLabels = element.all(by.css('text[class="vzb-bmc-label-content"]'));
+  this.mapsChartSelectedCountriesLabels = element.all(by.css('text[class="vzb-bmc-label-content stroke"]'));
   this.mapsChartSelectedCountryLabel = element(by.css('g[class="vzb-bmc-labels"] > g'));
   this.mapsChartAllBubbles = element.all(by.css('circle[class="vzb-bmc-bubble"]'));
   this.mapsChartBubbleLabelOnMouseHover = element(by.css('g[class="vzb-bmc-tooltip"] > text'));
@@ -103,7 +103,7 @@ let ToolsPage = function () {
   /**
    * Bubbles chart elements
    */
-  this.bubblesChartSelectedCountries = element.all(by.css('text[class="vzb-bc-label-content"]'));
+  this.bubblesChartSelectedCountries = element.all(by.css('text[class="vzb-bc-label-content stroke"]'));
   this.bubblesChartCountriesList = {
     Nigeria: element(by.css('circle[class*="vzb-bc-entity bubble-nga"]')),
     India: element(by.css('circle[class*="vzb-bc-entity bubble-ind"]')),
