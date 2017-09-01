@@ -148,7 +148,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   onChanged(changes: any): void {
-    const model = Object.assign({}, this.currentHashModel, changes.modelDiff, { 'chart-type': this.toolToSlug[changes.type] });
+    const model = Object.assign({}, changes.modelDiff, { 'chart-type': this.toolToSlug[changes.type] });
+
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
   }
