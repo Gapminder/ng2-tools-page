@@ -40,7 +40,7 @@ let ToolsPage = function () {
   this.pageHeader = element(by.css('div[class="header"]'));
   this.rightSidePanelOptionsButton = element.all(by.css('span[data-vzb-translate="buttons/more_options"]')).last();
   this.rightSidePanelOptionsMenuSizeButton = element.all(by.css('span[data-vzb-translate="buttons/size"]')).last();
-  this.rightSidePanelOptionsMenuBubblesResizeButton = element.all(by.css('g[class="vzb-bs-slider-thumb-badge"] > path')).last();
+  this.rightSidePanelOptionsMenuBubblesResizeButton = element.all(by.css('svg[class="handle handle--w w vzb-slider-thumb"] > g[class="vzb-slider-thumb-badge"] > path')).last();
   this.rightSidePanelColorIndicatorDropdown = element.all(by.css('span[class="vzb-ip-holder"] > span')).get(8);
   this.sizeListBabiesPerWomanColorIndicator = element.all(by.css('span[class="vzb-treemenu-list-item-label"]')).first();
   this.sizeListChildMortalityRateColorIndicator = element.all(by.css('span[class="vzb-treemenu-list-item-label"]')).get(3);
