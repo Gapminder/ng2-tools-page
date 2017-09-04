@@ -9,6 +9,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output, ViewEncapsula
 })
 export class SocialButtonsComponent {
 
-  @Output() shareLink: EventEmitter<void> = new EventEmitter();
-  @Output() getEmbeddedUrl: EventEmitter<void> = new EventEmitter();
+  @Output() shareLink: EventEmitter<any> = new EventEmitter();
+  @Output() getEmbeddedUrl: EventEmitter<any> = new EventEmitter();
 }
