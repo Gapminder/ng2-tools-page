@@ -100,11 +100,19 @@ describe('Mountains chart - Acceptance', () => {
     page.openMountainsChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
+    browser.wait(EC.presenceOf(page.mountainsChartYearLabel));
+
     expect(page.mountainsChartYearLabel).toBeTruthy();
+
+    browser.wait(EC.presenceOf(page.mountainsChartVisualizationAllCountries));
+
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(165);
     page.searchAndSelectCountry("China");
     browser.wait(EC.presenceOf(page.mountainsChartLeftSidePanelSelectedCountries.first()));
     expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.4B people");
+
+    browser.wait(EC.presenceOf(page.mountainsChartVisualizationSelectedCountries));
+
     expect(page.mountainsChartVisualizationSelectedCountries.count()).toEqual(1);
     expect(page.mountainsChartVisualizationSelectedCountries.get(0).getAttribute('style')).toContain('opacity: 1;');
 
