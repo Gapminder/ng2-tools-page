@@ -1,7 +1,5 @@
 module.exports = {
   staticFileGlobs: [
-    'dist/tools/**.bundle.js',
-    'dist/tools/**.bundle.js.map',
     'dist/tools/**.html',
     'dist/tools/assets/images/chart/**.*',
     'dist/tools/assets/images/answers/**.*',
