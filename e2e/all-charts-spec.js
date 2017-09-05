@@ -7,6 +7,12 @@ beforeEach(() => {
   page = new ToolsPage();
 });
 
+afterEach(function() {
+  browser.manage().logs().get('browser').then(function(browserLog) {
+    console.log('\nbrowser log: ' + require('util').inspect(browserLog));
+  });
+});
+
 describe('check URL correctness', () => {
 
   /**
@@ -256,16 +262,21 @@ describe('All charts - Acceptance', () => {
     });
 
     it('should select a few entities, refresh, entities should be selected on Mountains chart', done => {
+      const EC = protractor.ExpectedConditions;
+
       page.openMountainsChart();
       expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
       page.searchAndSelectCountry("China");
+      browser.sleep(100);
       expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.4B people");
 
       page.searchAndSelectCountry("India");
+      browser.sleep(100);
       expect(page.getSelectedCountryTextOnMountainsChart(1)).toContain("India: 1.31B");
 
       page.searchAndSelectCountry("Brazil");
+      browser.sleep(100);
       expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 206M");
 
       browser.sleep(2000);
@@ -274,9 +285,10 @@ describe('All charts - Acceptance', () => {
       expect(page.getSelectedCountryTextOnMountainsChart(1)).toContain("India: 1.31B");
       expect(page.getSelectedCountryTextOnMountainsChart(0)).toContain("China: 1.4B people");
       expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 206M");
-      expect(browser.getCurrentUrl()).toContain('geo=ind');
-      expect(browser.getCurrentUrl()).toContain('geo=chn');
-      expect(browser.getCurrentUrl()).toContain('geo=bra');
+
+      browser.wait(EC.urlContains('geo=ind'), 1000);
+      browser.wait(EC.urlContains('geo=chn'), 1000);
+      browser.wait(EC.urlContains('geo=bra'), 1000);
 
       done();
     });

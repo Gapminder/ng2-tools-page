@@ -7,6 +7,9 @@
     "use-view-encapsulation": false,
     "component-selector": false,
     "max-classes-per-file": [true, 3],
-    "member-access": [false, "check-constructor"]
+    "member-access": [false, "check-constructor"],
+    "no-parameter-properties": false,
+    "typedef": [false],
+    "arrow-parens": [false]
   }
 }

@@ -3,10 +3,15 @@
 const ToolsPage = require('./pages/tools-page');
 
 let page;
-const EC = protractor.ExpectedConditions;
 
 beforeEach(() => {
   page = new ToolsPage();
+});
+
+afterEach(function() {
+  browser.manage().logs().get('browser').then(function(browserLog) {
+    console.log('\nbrowser log: ' + require('util').inspect(browserLog));
+  });
 });
 
 describe('Bubbles chart - Acceptance', () => {
@@ -115,11 +120,18 @@ describe('Bubbles chart - Acceptance', () => {
   });
 
   it('should check that countries could be selected/deselected using the button "Find" to the right(TC11)', done => {
+    const EC = protractor.ExpectedConditions;
+
     page.openBubblesChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
+    browser.wait(EC.presenceOf(page.rightSidePanelSearchInputField));
+
     page.searchAndSelectCountry("China");
     page.waitForPageToBeReloadedAfterAction();
+
+    browser.wait(EC.presenceOf(page.bubblesChartSelectedCountries));
+
     expect(page.bubblesChartSelectedCountries.count()).toEqual(1);
 
     page.searchAndSelectCountry("India");
@@ -133,21 +145,27 @@ describe('Bubbles chart - Acceptance', () => {
     expect(page.bubblesChartSelectedCountries.getText()).toContain("China 2015");
     expect(page.bubblesChartSelectedCountries.getText()).toContain("India 2015");
     expect(page.bubblesChartSelectedCountries.getText()).toContain("Brazil 2015");
-    expect(browser.getCurrentUrl()).toContain('geo=ind');
-    expect(browser.getCurrentUrl()).toContain('geo=chn');
-    expect(browser.getCurrentUrl()).toContain('geo=bra');
+
+    browser.wait(EC.urlContains('geo=ind'), 1000);
+    browser.wait(EC.urlContains('geo=chn'), 1000);
+    browser.wait(EC.urlContains('geo=bra'), 1000);
 
     page.deselectCountryInSearchMenu("India");
-    page.waitForPageToBeReloadedAfterAction();
+    browser.sleep(100);
+
     expect(page.bubblesChartSelectedCountries.count()).toEqual(2);
 
     page.deselectCountryInSearchMenu("China");
-    page.waitForPageToBeReloadedAfterAction();
+    browser.sleep(100);
+
     expect(page.bubblesChartSelectedCountries.count()).toEqual(1);
 
     page.deselectCountryInSearchMenu("Brazil");
-    page.waitForPageToBeReloadedAfterAction();
+    browser.sleep(100);
+
     expect(page.bubblesChartSelectedCountries.count()).toEqual(0);
+
+    browser.sleep(500);
 
     expect(browser.getCurrentUrl()).not.toContain('geo=ind');
     expect(browser.getCurrentUrl()).not.toContain('geo=chn');
@@ -184,6 +202,8 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that when select China and the United States bubbles and and drag the timeslider,' +
     ' the trails being left for those two countries(TC14)', done => {
+    const EC = protractor.ExpectedConditions;
+
     page.openBubblesChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 
@@ -194,8 +214,12 @@ describe('Bubbles chart - Acceptance', () => {
     page.dragSliderToPosition(800, 0);
 
     browser.sleep(2000);
-    expect(page.bubblesChartChinaTrails.count()).toBeGreaterThan(100);
-    expect(page.bubblesChartUnitedStatesTrails.count()).toBeGreaterThan(100);
+
+    browser.wait(EC.presenceOf(page.bubblesChartChinaTrails));
+    browser.wait(EC.presenceOf(page.bubblesChartUnitedStatesTrails));
+
+    expect(page.bubblesChartChinaTrails.count()).toBeGreaterThanOrEqual(99);
+    expect(page.bubblesChartUnitedStatesTrails.count()).toBeGreaterThanOrEqual(99);
 
     done();
   });
@@ -243,6 +267,8 @@ describe('Bubbles chart - Acceptance', () => {
 
   it('should check that click on Size, a pop up with size sliders comes up,' +
     ' the minimum and maximum sizes of bubbles can be changed. They update instantaneously(TC16)', done => {
+    const EC = protractor.ExpectedConditions;
+
     page.openBubblesChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=bubbles');
 

@@ -121,8 +121,8 @@ let ToolsPage = function () {
   this.bubblesChartSelectedCountryLabel = element(by.css('rect[class="vzb-label-fill vzb-tooltip-border"]'));
   this.bubblesChartCountrySelectedBiggerLabel = element(by.css('g[class="vzb-bc-labels"] > g'));
   this.bubblesChartSelectedCountryCrossMark = element(by.css('svg[class="vzb-bc-label-x-icon"]> path'));
-  this.bubblesChartChinaTrails = element.all(by.css('g[class="vzb-bc-entity entity-trail trail-chn"] > g[class="vzb-bc-trailsegment"]'));
-  this.bubblesChartUnitedStatesTrails = element.all(by.css('g[class="vzb-bc-entity entity-trail trail-usa"] > g[class="vzb-bc-trailsegment"]'));
+  this.bubblesChartChinaTrails = element.all(by.css('g[class="vzb-bc-entity entity-trail trail-chn"] > g[class="vzb-bc-trailsegment vzb-invisible"]'));
+  this.bubblesChartUnitedStatesTrails = element.all(by.css('g[class="vzb-bc-entity entity-trail trail-usa"] > g[class="vzb-bc-trailsegment vzb-invisible"]'));
   this.bubblesChartLockButton = element.all(by.css('button[data-btn="lock"]')).last();
   this.bubblesChartTrailsButton = element.all(by.css('button[data-btn="trails"]')).last();
 
@@ -176,6 +176,7 @@ let ToolsPage = function () {
     this.get(url);
     this.mapsChart.click();
     this.waitForToolsPageCompletelyLoaded();
+    browser.sleep(500);
   };
 
   /**
@@ -484,7 +485,7 @@ let ToolsPage = function () {
   };
 
   this.deselectCountryByClickingCrossMarkOnLabelMapsChart = function () {
-    browser.actions().mouseMove(this.mapsChartSelectedCountryLabel).perform();
+    browser.actions().mouseMove(this.mapsChartSelectedCountryLabel).mouseMove({x: 0, y: 5}).perform();
     this.mapsChartSelectedCountryCrossMark.click();
   };
 

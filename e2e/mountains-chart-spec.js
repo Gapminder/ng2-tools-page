@@ -3,7 +3,6 @@
 const ToolsPage = require('./pages/tools-page');
 
 let page;
-const EC = protractor.ExpectedConditions;
 
 beforeEach(() => {
   page = new ToolsPage();
@@ -13,16 +12,30 @@ beforeEach(() => {
 describe('Mountains chart - Acceptance', () => {
   it('should check that in 2015, the percentage of people living in the extreme poverty should be 11.5 ± 0.3%,' +
     ' and the world population should be 7.33B(TC19)', done => {
+    const EC = protractor.ExpectedConditions;
+
     page.openMountainsChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
-    expect(page.mountainsChartExtremePovertyPercentage.getText()).toBeGreaterThan(11.2 + '%');
-    expect(page.mountainsChartExtremePovertyPercentage.getText()).toBeLessThan(11.8 + '%');
+    browser.wait(EC.presenceOf(page.mountainsChartExtremePovertyPercentage));
 
-    page.hoverMouseOver500AxisXOnMountainsChart();
-    expect(page.mountainsChartVisualizationWorldPopulation.getText()).toEqual('7.33B');
+    const mountainsChartExtremePovertyPercentage = page.mountainsChartExtremePovertyPercentage.getText();
 
-    done();
+
+    mountainsChartExtremePovertyPercentage.then(mountainsChartExtremePovertyPercentageText => {
+      const mountainsChartExtremePovertyPercentageValue = +mountainsChartExtremePovertyPercentageText.replace(/%/, '');
+
+      expect(mountainsChartExtremePovertyPercentageValue).toBeGreaterThan(11.2);
+      expect(mountainsChartExtremePovertyPercentageValue).toBeLessThan(11.8);
+
+      page.hoverMouseOver500AxisXOnMountainsChart();
+
+      browser.wait(EC.presenceOf(page.mountainsChartVisualizationWorldPopulation));
+
+      expect(page.mountainsChartVisualizationWorldPopulation.getText()).toEqual('7.33B');
+
+      done();
+    });
   });
 
   it('should check that in 2015 there is roughly the same amount of people living in the extreme poverty' +
@@ -42,24 +55,46 @@ describe('Mountains chart - Acceptance', () => {
   });
 
   it('should check that only checked countries displayed after click "show", check a few countries(TC21)', done => {
+    const EC = protractor.ExpectedConditions;
+
     page.openMountainsChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
+
+    browser.wait(EC.presenceOf(page.mountainsChartVisualizationAllCountries));
+
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(165);
+
+    browser.wait(EC.presenceOf(page.mountainsChartAdvancedControlsShowButtons));
 
     page.mountainsChartAdvancedControlsShowButtons.get(0).click();
 
+    browser.wait(EC.presenceOf(page.mountainsChartShowButtonSearchInputField));
+    browser.wait(EC.presenceOf(page.linesChartSearchResult));
+
     page.searchAndSelectCountryInShowMenu("Ukraine");
     page.waitForPageToBeReloadedAfterAction();
+
+    browser.wait(EC.presenceOf(page.mountainsChartVisualizationAllCountries));
+    browser.wait(EC.presenceOf(page.rightSidePanelCountriesList));
+
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(1);
     expect(page.rightSidePanelCountriesList.count()).toEqual(1);
 
     page.searchAndSelectCountryInShowMenu("Austria");
     page.waitForPageToBeReloadedAfterAction();
+
+    browser.wait(EC.presenceOf(page.mountainsChartVisualizationAllCountries));
+    browser.wait(EC.presenceOf(page.rightSidePanelCountriesList));
+
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(2);
     expect(page.rightSidePanelCountriesList.count()).toEqual(2);
 
     page.searchAndSelectCountryInShowMenu("Brazil");
     page.waitForPageToBeReloadedAfterAction();
+
+    browser.wait(EC.presenceOf(page.mountainsChartVisualizationAllCountries));
+    browser.wait(EC.presenceOf(page.rightSidePanelCountriesList));
+
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(3);
     expect(page.rightSidePanelCountriesList.count()).toEqual(3);
 
@@ -97,6 +132,8 @@ describe('Mountains chart - Acceptance', () => {
 
   it('should select a few entities, they should get selected on the visualization and their names ' +
     'should appear as a list on top left. Population should be displayed after the name(TC23)', done => {
+    const EC = protractor.ExpectedConditions;
+
     page.openMountainsChart();
     expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + '#_chart-type=mountain');
 
@@ -124,13 +161,15 @@ describe('Mountains chart - Acceptance', () => {
 
     page.searchAndSelectCountry("Brazil");
     browser.wait(EC.presenceOf(page.mountainsChartLeftSidePanelSelectedCountries.get(2)));
+
     expect(page.getSelectedCountryTextOnMountainsChart(2)).toContain("Brazil: 206M");
     expect(page.mountainsChartVisualizationSelectedCountries.count()).toEqual(3);
     expect(page.mountainsChartVisualizationSelectedCountries.get(2).getAttribute('style')).toContain('opacity: 1;');
     expect(page.mountainsChartVisualizationAllCountries.count()).toEqual(162);
-    expect(browser.getCurrentUrl()).toContain('geo=ind');
-    expect(browser.getCurrentUrl()).toContain('geo=chn');
-    expect(browser.getCurrentUrl()).toContain('geo=bra');
+
+    browser.wait(EC.urlContains('geo=ind'), 1000);
+    browser.wait(EC.urlContains('geo=chn'), 1000);
+    browser.wait(EC.urlContains('geo=bra'), 1000);
 
     done();
   });
