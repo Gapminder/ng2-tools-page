@@ -48,7 +48,7 @@ function setupVizabiDataCharts({ tools, slugs }): any {
       modelHash: '',
       chartType: chartType,
       model: cloneDeep(tools[slug].opts),
-      instance: {},
+      instance: {}
     };
 
     return result;
@@ -90,7 +90,7 @@ export function reducer(state: State = initialState, action: ToolsActions): Stat
         toolToSlug,
         client: act.client,
         configChangeUID: Date.now(),
-        initialVizabiInstances: vizabiInstances,
+        initialVizabiInstances: vizabiInstances
       });
     }
     case SelectTool.TYPE: {
