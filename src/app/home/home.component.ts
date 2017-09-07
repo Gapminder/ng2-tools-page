@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular
 import { Location } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { get, cloneDeep, includes } from 'lodash-es';
+import { get, cloneDeep, includes, isEmpty } from 'lodash-es';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -21,7 +21,9 @@ import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/s
 import { Subscription } from 'rxjs/Subscription';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
 
-const { WsReader } = require('vizabi-ws-reader');
+const {WsReader} = require('vizabi-ws-reader');
+
+enum ChartSelectionType {Select, Show, Neither}
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -46,7 +48,16 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private defaultTool: string;
   private tools: any;
   private toolToSlug = {};
-  private vizabiInstances = {};
+  private vizabiInstances: any = {};
+
+  private chartsRelations = {
+    bubbles: ChartSelectionType.Select,
+    mountain: ChartSelectionType.Select,
+    map: ChartSelectionType.Select,
+    barrank: ChartSelectionType.Select,
+    linechart: ChartSelectionType.Show,
+    popbyage: ChartSelectionType.Neither
+  };
 
   private vizabiModelChangesSubscription: Subscription;
   private vizabiCreationSubscription: Subscription;
@@ -71,7 +82,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.store.dispatch(new VizabiModelChanged(model));
     });
 
-    this.vizabiCreationSubscription = this.store.select(getCreatedVizabiInstance).filter(({ tool, instance }) => !!tool).subscribe(({ tool, instance }) => {
+    this.vizabiCreationSubscription = this.store.select(getCreatedVizabiInstance).filter(({tool, instance}) => !!tool).subscribe(({tool, instance}) => {
       this.vizabiInstances[tool] = Object.assign({}, this.vizabiInstances[tool], instance);
     });
 
@@ -80,28 +91,84 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       .filter(hashModel => !!Object.keys(hashModel).length)
       .map(hashModel => {
         if (!includes(this.slugs, hashModel['chart-type'])) {
-          return { 'chart-type': 'bubbles' };
+          return {'chart-type': 'bubbles'};
         }
+
         return hashModel;
       })
       .debounceTime(200)
       .subscribe((hashModel) => {
+        const oldHashModel = this.currentHashModel;
+
         this.currentHashModel = hashModel;
         this.currentChartType = hashModel['chart-type'];
 
-        const stringModel = this.vizabiToolsService.convertModelToString(this.currentHashModel);
+        const restoredStringModel = this.restoreState(hashModel, oldHashModel);
+        const stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
+
         window.location.hash = `#${stringModel}`;
+
         this.vizabiInstances[this.currentChartType].modelHash = stringModel;
 
         const currentPathWithHash = this.location.path(true);
+
         this.store.dispatch(new TrackGaPageEvent(currentPathWithHash));
         this.store.dispatch(new TrackGaVizabiModelChangeEvent(currentPathWithHash));
 
         const vizabiInstance = this.vizabiInstances[this.currentChartType].instance;
+
         if (vizabiInstance.setModel && vizabiInstance._ready) {
           vizabiInstance.setModel(this.currentHashModel);
         }
       });
+  }
+
+  restoreState(hashModel, oldHashModel): string {
+    let newUrlHash = null;
+    let modelChanged = false;
+
+    if (hashModel.state && oldHashModel && oldHashModel.state) {
+      const oldChartType = this.chartsRelations[oldHashModel['chart-type']];
+      const currentChartType = this.chartsRelations[this.currentHashModel['chart-type']];
+
+      const isFromSelectToShow = oldChartType === ChartSelectionType.Select && currentChartType === ChartSelectionType.Show;
+      const isFromShowToSelect = oldChartType === ChartSelectionType.Show && currentChartType === ChartSelectionType.Select;
+      const isFromNeither = oldChartType === ChartSelectionType.Neither && currentChartType !== ChartSelectionType.Neither;
+      const isToNeither = oldChartType !== ChartSelectionType.Neither && currentChartType === ChartSelectionType.Neither;
+      const dim = this.vizabiInstances[this.currentChartType].model.state.entities.dim;
+
+      if (isFromSelectToShow) {
+        const dimToShow = oldHashModel.state.marker.select.map(item => item[dim]);
+
+        this.currentHashModel.state = {entities: {show: {[dim]: {$in: dimToShow}}}};
+
+        modelChanged = true;
+      }
+
+      if (isFromShowToSelect) {
+        let dimToSelect = [];
+
+        if (oldHashModel.state.entities.show[dim] && !isEmpty(oldHashModel.state.entities.show[dim].$in)) {
+          dimToSelect = oldHashModel.state.entities.show[dim].$in.map(item => ({[dim]: item}));
+        }
+
+        this.currentHashModel.state = {marker: {select: dimToSelect}};
+
+        modelChanged = true;
+      }
+
+      if (isFromNeither || isToNeither) {
+        this.currentHashModel.state = {};
+
+        modelChanged = true;
+      }
+
+      if (modelChanged) {
+        newUrlHash = this.vizabiToolsService.convertModelToString(this.currentHashModel);
+      }
+    }
+
+    return newUrlHash;
   }
 
   ngAfterViewInit(): void {
@@ -118,7 +185,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.store.dispatch(new VizabiModelChanged(
         toolInUrlIsSame
           ? urlModel
-          : Object.assign(this.vizabiToolsService.simplifyModel(urlModel), { 'chart-type': selectedTool }))
+          : Object.assign(this.vizabiToolsService.simplifyModel(urlModel), {'chart-type': selectedTool}))
       );
     });
 
@@ -131,7 +198,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   getVizabiInitialModel(slug: string): any {
     const initialModel = this.vizabiInstances[slug].model;
     if (slug === 'mountain') {
-      Object.assign(get(initialModel, 'state.marker.group'), { manualSorting: ['asia', 'africa', 'americas', 'europe'] });
+      Object.assign(get(initialModel, 'state.marker.group'), {manualSorting: ['asia', 'africa', 'americas', 'europe']});
     }
     return initialModel;
   }
@@ -148,7 +215,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   onChanged(changes: any): void {
-    const model = Object.assign({}, changes.modelDiff, { 'chart-type': this.toolToSlug[changes.type] });
+    const model = Object.assign({}, changes.modelDiff, {'chart-type': this.toolToSlug[changes.type]});
 
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
