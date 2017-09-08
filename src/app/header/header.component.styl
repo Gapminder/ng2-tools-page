@@ -1,7 +1,13 @@
 @import './../_resources/variables.styl'
 @import './../_resources/mixins.styl'
 
-.header
+a
+  text-decoration none
+  color $color-black
+  &:hover
+    color $color-blue-dark
+
+/*.header
   box-sizing(border-box)
   border-bottom 2px solid $color-primary
   min-width $body-min-width
@@ -11,7 +17,7 @@
 
   +for_breakpoint(small)
     height auto
-    min-height 30px
+    min-height 30px*/
 
 .header-title
   text-indent -9999px
@@ -44,7 +50,6 @@
 
   +for_breakpoint(small)
     position static
-    padding-top 30px
 
     &:hover
       display block !important
@@ -67,7 +72,7 @@ $menu-bar
     height 40px
 
   cursor pointer
-  right 0
+  right 15px
   top 0
   transition-duration 0.5s
   width 40px
@@ -116,11 +121,66 @@ $menu-bar
   display none
   cursor pointer
 
-  +for_breakpoint(small,medium)
+  +for_breakpoint(small)
     display block
     position: absolute
-    right 45px
+    right 65px
     padding 0 5px
     top 0
     font-size 1.4em
     color $color-primary
+
+.header
+  width 100%
+  display flex
+  flex-wrap nowrap
+  align-items center
+  height 40px
+
+  .navigation
+    flex 1 0 0
+    img
+      padding-right 3px
+
+    .breadcrumb-first-level
+      padding 0
+      margin 0
+      &:after, &:before
+        background-image url("/assets/images/gray-triangle.png")
+        background-size 8px 8px
+        background-repeat no-repeat
+        display inline-block
+        width 8px
+        height 8px
+        content ""
+        padding-top 2px
+        margin-right 5px
+        margin-left 5px
+
+  .how-to-use
+    flex 0.5 0 0;
+    min-width 200px
+    img
+      padding-right 5px
+    &.desktop
+      +for_breakpoint(small)
+        display none
+
+  .social
+    flex 1.5 0 0;
+
+    &.desktop
+      +for_breakpoint(small)
+        display none
+
+.flow-container
+  margin-left 10px
+  display flex
+  align-items center
+
+.header-divider
+  background-color $color-primary
+  height 2px
+  margin: 0
+  padding 0
+  width 100%

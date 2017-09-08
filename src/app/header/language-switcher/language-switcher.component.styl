@@ -3,7 +3,9 @@
 
 .lang-wrapper
   float: right
-  margin: 14px 0 0 -180px
+  display inline-block
+  height 18px
+  margin 0 20px 0 8px
   position: relative
   color: #425663
   font-size: 14px
@@ -50,8 +52,8 @@
   &.mobile
     display none
 
-  +for_breakpoint(medium)
-    margin-left -85px
+  /*+for_breakpoint(medium)
+    margin-left -85px*/
 
   +for_breakpoint(small)
     &.desktop

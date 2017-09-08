@@ -5,8 +5,8 @@ export default [
     "tool": "MountainChart",
     "slug": "mountain",
     "category": "Tools",
-    "image": "/assets/images/chart/mountainchart.png",
-    "title": "Mountains",
+    "image": "/assets/images/chart/income-chart.png",
+    "title": "Income",
     "description": "This graph shows the amount of people in the world across each income level.",
     "__v": 5,
     "opts": {
@@ -103,7 +103,7 @@ export default [
   {
     "tool": "BubbleChart",
     "slug": "bubbles",
-    "image": "/assets/images/chart/bubblechart.png",
+    "image": "/assets/images/chart/bubble-chart.png",
     "category": "Tools",
     "title": "Bubbles",
     "description": "This graph shows how long people live and how much money they earn. Click the play button to see how countries have developed since 1800.",
@@ -203,7 +203,7 @@ export default [
     "tool": "BubbleMap",
     "slug": "map",
     "category": "Tools",
-    "image": "/assets/images/chart/bubblemap.png",
+    "image": "/assets/images/chart/maps-chart.png",
     "title": "Maps",
     "description": "This graph shows the population on a map",
     "opts": {
@@ -309,8 +309,8 @@ export default [
     "tool": "BarRankChart",
     "slug": "barrank",
     "category": "Tools",
-    "image": "/assets/images/chart/barrankchart.png",
-    "title": "Rankings",
+    "image": "/assets/images/chart/ranks-chart.png",
+    "title": "Ranks",
     "description": "This graph shows the population on a map",
     "opts": {
       "locale": {
@@ -407,8 +407,8 @@ export default [
     "tool": "LineChart",
     "slug": "linechart",
     "category": "Tools",
-    "image": "/assets/images/chart/linechart.png",
-    "title": "Lines",
+    "image": "/assets/images/chart/trends-chart.png",
+    "title": "Trends",
     "description": "This graph shows how a trend changes across the years",
     "opts": {
       "locale": {
@@ -505,8 +505,8 @@ export default [
     "tool": "PopByAge",
     "slug": "popbyage",
     "category": "Tools",
-    "image": "/assets/images/chart/popbyage.png",
-    "title": "Population by Age",
+    "image": "/assets/images/chart/ages-chart.png",
+    "title": "Ages",
     "description": "This graph shows the population by age",
     "opts": {
       "locale": {
@@ -598,5 +598,21 @@ export default [
         "__v": 0
       }
     ]
+  },
+  {
+    "tool": "DollarStreet",
+    "url": "http://www.gapminder.org/dollar-street",
+    "image": "/assets/images/chart/dollar-street.png",
+    "title": "Dollar Street",
+    "description": "Dollar Street project",
+    "opts": {
+      "locale": {
+      },
+      "data": {
+      },
+      "ui": {
+        "splash": true
+      }
+    }
   }
 ]

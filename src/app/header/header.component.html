@@ -1,4 +1,82 @@
 <div class="header">
+  <div class="navigation">
+    <div class="flow-container">
+
+      <img src="assets/images/logo-small.png" height="30">
+      <div class="breadcrumb-first-level">Tools</div>
+      <div><a href="">Bubbles</a></div>
+
+      <div (click)="switchMobileMenuVisibility()" class="social-share-icon">
+        <i class="fa fa-share-alt-square icon"></i>
+      </div>
+
+      <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !(isMobileMenuHidden$ | async)}">
+        <div class="icon"></div>
+      </div>
+
+    </div>
+
+  </div>
+  <div class="how-to-use desktop">
+    <div class="flow-container">
+      <a href="https://vimeo.com/231885967" target="_blank"><img src="assets/images/how-to-use.png" height="23"></a>
+      <a href="https://vimeo.com/231885967" target="_blank">How to use</a>
+    </div>
+  </div>
+  <div class="social desktop">
+    <div class="flow-container" style="justify-content: flex-end">
+
+      <div>
+        <ul class="social-list desktop">
+          <app-social-buttons (getEmbeddedUrl)="getEmbeddedUrl()" (shareLink)="shareLink()"></app-social-buttons>
+        </ul>
+      </div>
+
+      <div>
+        <div class="lang-wrapper desktop">
+          <app-language-switcher
+                  [allLanguages]="allLanguages$ | async"
+                  [isLanguageSwitcherVisible]="isLanguageSwitcherVisible$ | async"
+                  [selectedLanguage]="selectedLanguage$ | async"
+                  (changeLanguage)="changeLanguage($event)"
+                  (hideLanguageChooser)="hideLanguageChooser()"
+                  (switchLanguageChooser)="switchLanguageChooser()">
+          </app-language-switcher>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="mobile">
+  <ul class="navbar-nav navbar-nav-left mobile" *ngIf="!(isMobileMenuHidden$ | async)">
+
+    <li class="nav-expandable" [ngClass]="{'hidden': (isMobileMenuHidden$ | async)}">
+      <div class="lang-wrapper mobile">
+        <app-language-switcher
+                [allLanguages]="allLanguages$ | async"
+                [isLanguageSwitcherVisible]="isLanguageSwitcherVisible$ | async"
+                [selectedLanguage]="selectedLanguage$ | async"
+                (changeLanguage)="changeLanguage($event)"
+                (hideLanguageChooser)="hideLanguageChooser()"
+                (switchLanguageChooser)="switchLanguageChooser()">
+        </app-language-switcher>
+      </div>
+    </li>
+
+    <app-menu
+            [selectedMenuItem]="selectedMenuItem$ | async"
+            [menuItems]="menuItems$ | async"
+            (selectMenuItem)="selectMenuItem($event)">
+    </app-menu>
+  </ul>
+
+</div>
+
+<div class="header-divider"></div>
+
+<!--
+<div class="header">
 
   <a class="header-title" href="http://www.gapminder.org">
     GAPMINDER TOOLS
@@ -41,20 +119,5 @@
       (selectMenuItem)="selectMenuItem($event)">
     </app-menu>
   </ul>
-
-  <div class="lang-wrapper desktop">
-    <app-language-switcher
-      [allLanguages]="allLanguages$ | async"
-      [isLanguageSwitcherVisible]="isLanguageSwitcherVisible$ | async"
-      [selectedLanguage]="selectedLanguage$ | async"
-      (changeLanguage)="changeLanguage($event)"
-      (hideLanguageChooser)="hideLanguageChooser()"
-      (switchLanguageChooser)="switchLanguageChooser()">
-    </app-language-switcher>
-  </div>
-
-  <ul class="social-list desktop">
-    <app-social-buttons (getEmbeddedUrl)="getEmbeddedUrl()" (shareLink)="shareLink()"></app-social-buttons>
-  </ul>
-
 </div>
+-->
