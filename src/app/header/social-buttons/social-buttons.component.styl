@@ -6,41 +6,19 @@
     float left
     margin 4px
     a
-      /*
-      FIX :: FontAwesome
-      color $color-primary
-      font-size 25px
-      line-height 1.2
-      */
       display inline-block
 
-  .ico-plane,
-  .yellow-box
-    background $color-primary
-    border none
-    color #fff
-    font-size 15px
-    margin 5px 0
-    border-radius (4px)
+
+  .button
+    yellow-box()
     cursor pointer
-    outline none
-    width 22px
-    height 22px
-    padding 0
-
-    path
-      fill white
-
-  .yellow-box
-    text-align center
-    line-height 22px
-
-    &.diff
-      font-size 12px
-      line-height 17px
-      i
-        position relative
-        top -1px
+    
+  .ico-code
+    font-size 12px
+    line-height 17px
+    i
+      position relative
+      top 2px
 
   .ico-plane
     svg
@@ -50,8 +28,8 @@
 
   .share-text-box
     border none
-    font-size 16px
-    margin 5px 0
+    font-size $font-size-header-regular
+    margin 3px 0
     cursor pointer
     outline none
     height 22px

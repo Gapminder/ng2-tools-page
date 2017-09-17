@@ -6,14 +6,19 @@
   background-color #f5f9fb
 
 .see-also-heading
+  display none
   color #68b4cd
   text-transform uppercase
-  font-size 15px
-  padding 5px 0 0 40px
+  get-font-size(small)
+  padding 5px 0 0 0
+  get-global-margin-left()
 
 .other-tools-container
   margin 0
-  padding 0 40px 20px 40px
+  get-global-margin-left()
+  padding 15px 40px 0 0
+  +for_breakpoint(small)
+    padding 15px 20px 0 0
   display flex
   flex-wrap wrap
   justify-content space-between
@@ -22,19 +27,22 @@
     margin 0
     width 128px
     text-align center
+    padding-bottom: 15px
 
     & > a
       transition(all 0.1s)
+      transition-duration 0.2s
       border-radius (3px)
       display block
       position relative
       cursor pointer
       text-decoration none
       max-width 400px
+      box-shadow 0 1px 11px rgba(0, 0, 0, 0.05), 0 1px 6px rgba(0, 0, 0, 0.18)
 
       .title
         color #808285
-        font-size 12px
+        get-font-size(medium)
         display block
         text-transform uppercase
 
@@ -43,7 +51,7 @@
         height auto
 
       &:hover
-        box-shadow 0 1px 11px rgba(0, 0, 0, 0.05), 0 1px 6px rgba(0, 0, 0, 0.18)
+        transform rotate(2deg)
 
         & > .title
           color $color-blue-dark

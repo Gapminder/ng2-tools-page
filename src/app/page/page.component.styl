@@ -55,7 +55,7 @@ body
   margin 0
   margin-bottom 10px
   font-family "Bariol Light","Helvetica Neue",Helvetica,Arial,sans-serif
-  font-size 16px
+  get-font-size(medium)
   line-height 1.4
   text-transform uppercase
   text-shadow rgba(0,0,0,.01) 0 0 1px;
@@ -94,10 +94,19 @@ body
   .vzb-dynamic-background
     font-family $courier-prime-font-family
 
-.vzb-tool.vzb-small .vzb-tool-buttonlist,
-.vzb-tool.vzb-medium .vzb-tool-buttonlist
+.vzb-tool-buttonlist, .vzb-dialog-zoom-buttonlist, .vzb-tool-dialogs, .vzb-sidebar, .vzb-dialog-checkbox label:before
   background-color white !important
 
+.vzb-tool.vzb-large .vzb-tool-buttonlist
+  border-top 2px solid #f5f9fb !important
+  
+.vzb-dialogs-dialog.vzb-sidebar
+  margin: 5px 0 2px -5px !important
+  
+.vzb-dialog-shadow
+  border-top none !important
+  border-bottom none !important
+  
 .more
   padding 20px
   box-sizing(border-box)
@@ -126,7 +135,6 @@ body
 
   +for_breakpoint(small)
     background #f2fafc
-    padding 20px
     width 100%
     .heading-2
       display none
@@ -136,7 +144,6 @@ body
   flex 1 65%
 
   +for_breakpoint(small)
-    padding 20px
     flex-basis 100%
     order 2
 

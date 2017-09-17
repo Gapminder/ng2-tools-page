@@ -1,28 +1,27 @@
 <div class="header">
+  
   <div class="navigation">
     <div class="flow-container">
-
-      <img src="assets/images/logo-small.png" height="30">
-      <div class="breadcrumb-first-level">Tools</div>
-      <div><a href="">Bubbles</a></div>
-
-      <div (click)="switchMobileMenuVisibility()" class="social-share-icon">
-        <i class="fa fa-share-alt-square icon"></i>
-      </div>
-
-      <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !(isMobileMenuHidden$ | async)}">
-        <div class="icon"></div>
-      </div>
-
+      <a href="https://gapminder.org"><img src="assets/images/logo-small.png" height="30"></a>
+      <div class="breadcrumb breadcrumb-first-level">Tools</div>
+      <div class="breadcrumb">Bubbles</div>
     </div>
-
   </div>
+  
   <div class="how-to-use desktop">
     <div class="flow-container">
-      <a href="https://vimeo.com/231885967" target="_blank"><img src="assets/images/how-to-use.png" height="23"></a>
-      <a href="https://vimeo.com/231885967" target="_blank">How to use</a>
+      
+      <ul class="nav navbar-nav navbar-nav-left desktop">
+        <app-menu
+          [selectedMenuItem]="selectedMenuItem$ | async"
+          [menuItems]="menuItems$ | async"
+          (selectMenuItem)="selectMenuItem($event)">
+        </app-menu>
+      </ul>
+      <a href="https://vimeo.com/231885967" class="how-to-use-video" target="_blank"><span>▶︎</span> How to use</a>
     </div>
   </div>
+  
   <div class="social desktop">
     <div class="flow-container" style="justify-content: flex-end">
 
@@ -46,6 +45,18 @@
       </div>
     </div>
   </div>
+  
+  <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !(isMobileMenuHidden$ | async)}">
+    <div class="flow-container" style="justify-content: flex-end">
+      <div class="social-share-icon">
+        <i class="fa fa-share-alt icon"></i>
+      </div>
+      <div class="menu-icon">
+        <div class="icon"></div>
+      </div>
+    </div>
+  </div>
+  
 </div>
 
 <div class="mobile">
@@ -74,50 +85,3 @@
 </div>
 
 <div class="header-divider"></div>
-
-<!--
-<div class="header">
-
-  <a class="header-title" href="http://www.gapminder.org">
-    GAPMINDER TOOLS
-  </a>
-
-  <div (click)="switchMobileMenuVisibility()" class="social-share-icon">
-    <i class="fa fa-share-alt-square icon"></i>
-  </div>
-
-  <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !(isMobileMenuHidden$ | async)}">
-    <div class="icon"></div>
-  </div>
-
-  <ul class="nav navbar-nav navbar-nav-left desktop">
-    <app-menu
-      [selectedMenuItem]="selectedMenuItem$ | async"
-      [menuItems]="menuItems$ | async"
-      (selectMenuItem)="selectMenuItem($event)">
-    </app-menu>
-  </ul>
-
-  <ul class="nav navbar-nav navbar-nav-left mobile" *ngIf="!(isMobileMenuHidden$ | async)">
-
-    <li class="nav-expandable" [ngClass]="{'hidden': (isMobileMenuHidden$ | async)}">
-      <div class="lang-wrapper mobile">
-        <app-language-switcher
-          [allLanguages]="allLanguages$ | async"
-          [isLanguageSwitcherVisible]="isLanguageSwitcherVisible$ | async"
-          [selectedLanguage]="selectedLanguage$ | async"
-          (changeLanguage)="changeLanguage($event)"
-          (hideLanguageChooser)="hideLanguageChooser()"
-          (switchLanguageChooser)="switchLanguageChooser()">
-        </app-language-switcher>
-      </div>
-    </li>
-
-    <app-menu
-      [selectedMenuItem]="selectedMenuItem$ | async"
-      [menuItems]="menuItems$ | async"
-      (selectMenuItem)="selectMenuItem($event)">
-    </app-menu>
-  </ul>
-</div>
--->

@@ -19,20 +19,21 @@
 .menu-block
   background-image url(/assets/images/logo-gray.png)
   background-repeat no-repeat
-  background-position 63px 15px
+  background-position 0 0
+  get-global-margin-left()
+  margin-top: 15px
   flex: 7 0 0;
 
 .menu-content
-  margin-top 50px
-  margin-left 30px
+  margin-top 40px
 
 .general-menu
-  font-size 14px
+  get-font-size(small)
   margin-top 5px
-  margin-bottom 17px
+  margin-bottom 10px
 
 .main-menu
-  font-size 12px
+  get-font-size(small)
 
 .service-block
   flex: 1 0 0;
