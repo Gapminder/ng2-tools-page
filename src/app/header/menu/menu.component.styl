@@ -13,8 +13,8 @@
 .nav-expandable
   position relative
 
-  &, *
-    box-sizing(border-box)
+  /*&, *
+    box-sizing(border-box)*/
 
   .nav-expandable-item
     display inline-block
@@ -27,13 +27,19 @@
       color $navbar-default-link-color
       cursor pointer
       display block
-      font-family $bariol-light-font-family
-      font-size 14px
+      font-family $bariol-regular-font-family
+      font-size $font-size-header-small
       line-height 1
-      padding 15px
+      padding 13px 15px 12px 15px
       position relative
       text-transform uppercase
+      letter-spacing 0.05em
       text-decoration none
+      font-weight lighter
+      
+      +for_breakpoint(medium)
+        padding 13px 8px 12px 8px
+        
       +for_breakpoint(small)
         padding 10px
 
@@ -59,10 +65,13 @@
           display block !important
 
     .nav-expanded
+      border-top-left-radius 3px
+      border-top-right-radius 3px
       background-color white
       border-left $navbar-border-size solid $navbar-border-color
       border-right $navbar-border-size solid $navbar-border-color
       border-bottom $navbar-border-size solid $navbar-border-color
+      border-top $navbar-border-size solid white
       box-sizing border-box
       //display none
       padding 30px 10px
@@ -89,14 +98,15 @@
         color $color-grey-medium
         display block
         font-family $bariol-bold-font-family
-        font-size 17px
         margin-bottom 10px
         text-transform uppercase
+        letter-spacing 0.05em
 
       .nav-expanded-more
         make-md-column(12)
         text-align right
         text-transform uppercase
+        letter-spacing 0.05em
 
       .nav-expanded-columns
         a
@@ -180,13 +190,13 @@
               .column-item-description
                 margin-left 80px
                 font-family $bariol-regular-font-family
-                font-size 17px
                 line-height 1.4
 
               .column-item-heading
-                font-family $bariol-regular-font-family
+                get-font-size(large)
+                font-family $bariol-light-font-family
 
               .column-item-description
                 color $color-grey-medium
-                font-size 15px
+                get-font-size(medium)
 

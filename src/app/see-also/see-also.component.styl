@@ -1,80 +1,62 @@
 @import './../_resources/variables.styl'
 @import './../_resources/mixins.styl'
 
-.menu
-  display block
-  margin 0 auto
-  font-size 1em
-  text-align left
+.see-also-block
+  width 100%
+  background-color #f5f9fb
+
+.see-also-heading
+  display none
+  color #68b4cd
   text-transform uppercase
-  margin-left 200px
+  letter-spacing 0.05em
+  get-font-size(small)
+  padding 5px 0 0 0
+  get-global-margin-left()
 
-  +for_breakpoint(not-large)
-    display none
-
-.menu-primary
-  list-style none
-  position relative
-  z-index 100
-  background white
-  padding 0
+.other-tools-container
   margin 0
-  display: flex;
-  flex-wrap: wrap;
+  get-global-margin-left()
+  padding 15px 40px 0 0
+  +for_breakpoint(small)
+    padding 15px 20px 0 0
+  display flex
+  flex-wrap wrap
+  justify-content space-between
 
-  & > .menu-item
-    color #808285
-    position relative
-    margin 0;
-    flex: 1 200px;
+  & > .other-tools-item
+    margin 0
+    width 128px
+    text-align center
+    padding-bottom: 15px
 
     & > a
       transition(all 0.1s)
+      transition-duration 0.2s
       border-radius (3px)
       display block
-      box-shadow 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.15)
       position relative
       cursor pointer
       text-decoration none
       max-width 400px
-      margin 0 0 30px 30px
-
+      box-shadow 0 1px 11px rgba(0, 0, 0, 0.05), 0 1px 6px rgba(0, 0, 0, 0.18)
 
       .title
-        font-family 'Bariol Bold'
         color #808285
-        font-size 18px
-        font-weight 300
+        get-font-size(medium)
         display block
-        padding 15px
+        text-transform uppercase
+        letter-spacing 0.05em
 
       .image
         width 100%
         height auto
 
       &:hover
-        box-shadow 0 1px 11px rgba(0, 0, 0, 0.05), 0 1px 6px rgba(0, 0, 0, 0.18)
+        transform rotate(2deg)
 
         & > .title
           color $color-blue-dark
 
     & > a[hidden]
       display none
-
-  +for_breakpoint(small)
-    background none
-    text-align center
-    display inline-block
-    & > .menu-item
-      width 48%
-      float left
-      margin 2% 0 2% 0
-      > a
-        background #fff
-        margin 0 0 10px 15px
-        display inline-block
-        .title
-          display none
-
-.see-also-heading
-  margin-left 30px

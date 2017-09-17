@@ -3,10 +3,11 @@
 
 .lang-wrapper
   float: right
-  margin: 14px 0 0 -180px
+  display inline-block
+  height 18px
+  margin 0 20px 0 8px
   position: relative
-  color: #425663
-  font-size: 14px
+  font-size $font-size-header-small
   padding: 1px 6px 1px 10px
   border: 1px solid #ffca34
   border-radius: 4px
@@ -20,7 +21,7 @@
       content '\25BC'
       padding 0 0 0 4px
       border-left 1px solid #ffca34
-      color #ffca34
+      color $brand-primary 
       position absolute
       right 4px
   ul
@@ -50,8 +51,8 @@
   &.mobile
     display none
 
-  +for_breakpoint(medium)
-    margin-left -85px
+  /*+for_breakpoint(medium)
+    margin-left -85px*/
 
   +for_breakpoint(small)
     &.desktop

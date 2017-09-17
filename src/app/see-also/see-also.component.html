@@ -1,10 +1,16 @@
-<h2 class="heading-2 see-also-heading">See also</h2>
-<div class="menu"></div>
-<ul class="menu-primary">
-  <li class="menu-item" *ngFor="let tool of tools" [hidden]="(selectedTool == tool.slug)">
-    <a [href]="getLink(tool.slug)" rel="noopener" (click)="onToolChanged($event, tool.slug)">
-      <span class="title">{{tool.title}}</span>
-      <img class="image" [src]="'.' + tool.image"/>
-    </a>
-  </li>
-</ul>
+<div class="see-also-block">
+  <h2 class="heading-2 see-also-heading">Other tools</h2>
+
+  <div class="other-tools-container">
+    <div class="other-tools-item" *ngFor="let tool of tools" [hidden]="(selectedTool == tool.slug)">
+      <a *ngIf="!!tool.slug" [href]="getLink(tool.slug)" rel="noopener" (click)="onToolChanged($event, tool.slug)">
+        <img class="image" [src]="'.' + tool.image"/>
+        <span class="title">{{tool.title}}</span>
+      </a>
+      <a *ngIf="!!tool.url" [href]="tool.url">
+        <img class="image" [src]="'.' + tool.image"/>
+        <span class="title">{{tool.title}}</span>
+      </a>
+    </div>
+  </div>
+</div>

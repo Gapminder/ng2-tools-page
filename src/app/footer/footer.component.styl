@@ -8,3 +8,64 @@
     display block
     float none
     margin 0 auto
+
+.footer-container
+  background-color #939598
+  color: $color-grey-light
+  width 100%
+  height 120px
+  display flex
+
+.menu-block
+  background-image url(/assets/images/logo-gray.png)
+  background-repeat no-repeat
+  background-position 0 0
+  get-global-margin-left()
+  margin-top: 15px
+  flex: 7 0 0;
+
+.menu-content
+  margin-top 40px
+
+.general-menu
+  get-font-size(small)
+  margin-top 5px
+  margin-bottom 10px
+  font-family $bariol-regular-font-family
+
+.main-menu
+  get-font-size(small)
+  font-family $bariol-thin-font-family
+
+.service-block
+  flex: 1 0 0;
+  min-width 90px
+  position relative
+
+.service-buttons
+  position absolute
+  top: 16px
+  right 17px
+
+.service-buttons span
+  margin-left 10px
+
+.nav
+  font-weight bold
+  list-style none
+  margin 0
+  padding 0
+
+.nav li
+  display inline
+  padding-right 15px
+
+.nav a
+  display inline-block
+  color #d7d8d9
+  text-decoration none
+  text-transform uppercase
+  letter-spacing 0.05em
+
+  &:hover
+    color $color-primary
