@@ -15,7 +15,7 @@ export default {
       "children": [
         {
           "node_id": null,
-          "menu_label": "Offline Desktop App",
+          "menu_label": "Tools Offline",
           "caption": "Download these tools for Windows, Mac or Linux",
           "url": "http://www.gapminder.org/tools-offline",
           "icon_url": "/images/icons/menu/bubchart.png",
