@@ -12,10 +12,10 @@ exports.config = {
         'driver': 'INFO',
         'browser': 'INFO'
       },
-      shardTestFiles: true,
-      maxInstances: 5,
-      count: 1,
-      screenResolution: "1920x1080",
+      // shardTestFiles: true,
+      // maxInstances: 5,
+      // count: 1,
+      // screenResolution: "1920x1080",
       chromeOptions: {
         args: ['no-sandbox', 'disable-infobars']
       },
@@ -29,7 +29,7 @@ exports.config = {
   useAllAngular2AppRoots: true,
   allScriptsTimeout: 180000,
   getPageTimeout: 180000,
-  restartBrowserBetweenTests: true,
+  // restartBrowserBetweenTests: true,
   untrackOutstandingTimeouts: true,
   framework: 'jasmine',
   jasmineNodeOpts: {
@@ -43,11 +43,12 @@ exports.config = {
   },
 
   onPrepare: () => {
+    browser.driver.manage().window().setSize(1920, 1080);
     let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
     jasmine.getEnv().addReporter(new SpecReporter({
       spec: {
-        displayStacktrace: false
+        displayStacktrace: true
       }
     }));
   }
