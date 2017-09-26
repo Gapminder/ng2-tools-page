@@ -1,25 +1,26 @@
-const using = require('jasmine-data-provider');
-const helper = require('./helpers/helper');
+import { browser, protractor } from 'protractor';
 
-const CommonChartSidebar = require('./pages/CommonChartSidebar-page');
+import { Helper } from './helpers/helper';
+import { CommonChartSidebar } from './pages/CommonChartSidebar-page';
+import { BubbleChart } from './pages/BubbleChart-page';
+import { RankingsChart } from './pages/RankingsChart-page';
+import { LineChart } from './pages/LineChart-page';
+import { MapChart } from './pages/MapChart-page';
+import { MountainChart } from './pages/MountainChart-page';
 
-const BubbleChartPage = require('./pages/BubbleChart-page');
-const MapChartPage = require('./pages/MapChart-page');
-const LineChartPage = require('./pages/LineChart-page');
-const MountainChartPage = require('./pages/MountainChart-page');
-const RankingsChartPage = require('./pages/RankingsChart-page');
+import using = require('jasmine-data-provider');
 
-let commonChartSidebar = new CommonChartSidebar();
+const commonChartSidebar = new CommonChartSidebar();
 
-let DATA_PROVIDER = {
-  'Bubbles Chart': {chart: new BubbleChartPage()},
-  'Map Chart': {chart: new MapChartPage()},
-  'Mountains Chart': {chart: new MountainChartPage()},
-  'Line Chart': {chart: new LineChartPage()},
-  'Rankings Chart': {chart: new RankingsChartPage()}
+const DATA_PROVIDER = {
+  'Bubbles Chart': {chart: new BubbleChart()},
+  'Map Chart': {chart: new MapChart()},
+  'Mountains Chart': {chart: new MountainChart()},
+  'Line Chart': {chart: new LineChart()},
+  'Rankings Chart': {chart: new RankingsChart()}
 };
 
-beforeAll(()=>{
+beforeAll(() => {
   browser.waitForAngularEnabled(false);
 });
 
@@ -29,12 +30,12 @@ describe('No additional data in URL when chart opens', () => {
    */
 
   using(DATA_PROVIDER, (data, description) => {
-    it(`URL on ${description} page`, async () => {
-      await helper.safeOpen('/');
-      let chart = data.chart;
+    it(`URL on ${description} page`, async() => {
+      await Helper.safeOpen('/');
+      const chart = data.chart;
       await chart.openByClick();
 
-      await expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + chart.url);
+      expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + chart.url);
     });
   });
 });
@@ -47,17 +48,17 @@ describe('All charts - Acceptance', () => {
      */
 
     using(DATA_PROVIDER, (data, description) => {
-      it(`Side panel on ${description} page`, async () => {
-        let chart = data.chart;
+      it(`Side panel on ${description} page`, async() => {
+        const chart = data.chart;
         await chart.openChart();
 
-        let commonSidebar = await commonChartSidebar.sidebar;
-        Object.keys(commonSidebar).forEach(element=>{
+        const commonSidebar = await commonChartSidebar.sidebar;
+        Object.keys(commonSidebar).forEach(element => {
           expect(commonSidebar[element].isPresent()).toBe(true, `${element} not found`);
         });
 
-        let chartSideBar = await chart.getSidebarElements();
-        Object.keys(chartSideBar).forEach(element=>{
+        const chartSideBar = await chart.getSidebarElements();
+        Object.keys(chartSideBar).forEach(element => {
           expect(chartSideBar[element].isPresent()).toBe(true, `${element} not found`);
         });
       });
@@ -71,13 +72,13 @@ describe('All charts - Acceptance', () => {
      */
 
     using(DATA_PROVIDER, (data, description) => {
-      it(`Timeslider hold the value after reload ${description} page`, async () => {
+      it(`Timeslider hold the value after reload ${description} page`, async() => {
         const EC = protractor.ExpectedConditions;
-        let chart = data.chart;
+        const chart = data.chart;
 
         await chart.openChart();
         const initialSelectedYear = await chart.getSliderPosition();
-        await chart.dragSlider();
+        await chart.dragSliderToMiddle();
         const finalSelectedYear = await chart.getSliderPosition();
 
         await expect(initialSelectedYear).not.toEqual(finalSelectedYear);
@@ -90,20 +91,20 @@ describe('All charts - Acceptance', () => {
         await expect(sliderAfterPageReload).not.toEqual(initialSelectedYear);
         await expect(sliderAfterPageReload).toEqual(finalSelectedYear);
         await expect(browser.getCurrentUrl()).toContain(sliderAfterPageReload);
-      })
+      });
     });
   });
 
   using(DATA_PROVIDER, (data, description) => {
     it(`Entities should be selected after page reload on ${description} page`, async() => {
-      let chart = data.chart;
+      const chart = data.chart;
 
       await chart.openChart();
-      await expect(browser.getCurrentUrl()).toEqual(browser.baseUrl + chart.url);
+      expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + chart.url);
 
-      await chart.searchAndSelectCountry("Australia");
-      await chart.searchAndSelectCountry("Bangladesh");
-      await chart.searchAndSelectCountry("India");
+      await chart.searchAndSelectCountry('Australia');
+      await chart.searchAndSelectCountry('Bangladesh');
+      await chart.searchAndSelectCountry('India');
 
       await expect(chart.getSelectedCountries().getText()).toMatch('Australia');
       await expect(chart.getSelectedCountries().getText()).toMatch('India');
@@ -117,7 +118,6 @@ describe('All charts - Acceptance', () => {
       await expect(browser.getCurrentUrl()).toContain('=aus');
       await expect(browser.getCurrentUrl()).toContain('=bgd');
       await expect(browser.getCurrentUrl()).toContain('=ind');
-    })
-  })
-
+    });
+  });
 });

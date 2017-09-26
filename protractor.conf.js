@@ -2,7 +2,7 @@
 
 exports.config = {
   specs: [
-    './e2e/**/*-spec.js'
+    './e2e/**/*-spec.ts'
   ],
   exclude: ['./e2e/redirects-spec.js'],
   multiCapabilities: [
@@ -43,6 +43,7 @@ exports.config = {
   },
 
   onPrepare: () => {
+    require('ts-node').register({ project: 'e2e' });
     browser.driver.manage().window().setSize(1920, 1080);
     let SpecReporter = require('jasmine-spec-reporter').SpecReporter;
 
