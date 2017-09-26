@@ -43,6 +43,13 @@ module.exports = {
       options: {
         name: 'vizabi statics'
       }
+    },
+    {
+      urlPattern: /tools\/(.*)/,
+      handler: 'networkOnly',
+      options: {
+        name: 'index html'
+      }
     }
   ]
 };
