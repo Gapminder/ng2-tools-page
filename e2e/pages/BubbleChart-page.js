@@ -1,5 +1,5 @@
 const EC = protractor.ExpectedConditions;
-
+const helper = require('../helpers/helper');
 const CommonChartSidebar = require('./CommonChartSidebar-page');
 const CommonChartPage = require('./CommonChartPage-page');
 const commonChartSidebar = new CommonChartSidebar();
@@ -45,9 +45,9 @@ class BubbleChart {
 
   async openByClick() {
     let currentUrl = await browser.getCurrentUrl();
-    // if we are already on this page no need to click on the link
+    // if we are already on this page no need to safeClick on the link
     if(!currentUrl.match(this.url)){
-      await commonChartPage.click(commonChartPage.bubblesChart);
+      await helper.safeClick(commonChartPage.bubblesChart);
       return await commonChartPage.waitForToolsPageCompletelyLoaded();
     }
   }

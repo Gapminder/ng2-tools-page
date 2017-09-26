@@ -1,11 +1,13 @@
 const using = require('jasmine-data-provider');
+const helper = require('./helpers/helper');
+
+const CommonChartSidebar = require('./pages/CommonChartSidebar-page');
 
 const BubbleChartPage = require('./pages/BubbleChart-page');
 const MapChartPage = require('./pages/MapChart-page');
 const LineChartPage = require('./pages/LineChart-page');
 const MountainChartPage = require('./pages/MountainChart-page');
 const RankingsChartPage = require('./pages/RankingsChart-page');
-const CommonChartSidebar = require('./pages/CommonChartSidebar-page');
 
 let commonChartSidebar = new CommonChartSidebar();
 
@@ -28,7 +30,7 @@ describe('No additional data in URL when chart opens', () => {
 
   using(DATA_PROVIDER, (data, description) => {
     it(`URL on ${description} page`, async () => {
-      await browser.get('/');
+      await helper.safeOpen('/');
       let chart = data.chart;
       await chart.openByClick();
 

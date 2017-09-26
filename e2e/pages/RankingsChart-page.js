@@ -1,3 +1,5 @@
+const helper = require('../helpers/helper');
+
 const CommonChartSidebar = require('./CommonChartSidebar-page');
 const CommonChartPage = require('./CommonChartPage-page');
 const commonChartSidebar = new CommonChartSidebar();
@@ -28,7 +30,7 @@ class RankingsChart {
   }
 
   async openByClick() {
-    await commonChartPage.click(commonChartPage.rankingsChart);
+    await helper.safeClick(commonChartPage.rankingsChart);
     return await commonChartPage.waitForToolsPageCompletelyLoaded();
   }
 

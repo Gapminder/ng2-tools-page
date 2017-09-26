@@ -1,4 +1,5 @@
 const EC = protractor.ExpectedConditions;
+const helper = require('../helpers/helper');
 
 const CommonChartSidebar = require('./CommonChartSidebar-page');
 const CommonChartPage = require('./CommonChartPage-page');
@@ -29,7 +30,7 @@ class MountainChart {
   }
 
   async openByClick() {
-    await commonChartPage.click(commonChartPage.mountainsChart);
+    await helper.safeClick(commonChartPage.mountainsChart);
     return await commonChartPage.waitForToolsPageCompletelyLoaded();
   }
 

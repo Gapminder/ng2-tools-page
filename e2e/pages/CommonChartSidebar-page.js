@@ -1,5 +1,7 @@
-const CommonChartPage = require('./CommonChartPage-page');
 const EC = protractor.ExpectedConditions;
+const helper = require('../helpers/helper');
+
+const CommonChartPage = require('./CommonChartPage-page');
 const commonChartPage = new CommonChartPage();
 
 class CommonChartSidebar {
@@ -12,7 +14,7 @@ class CommonChartSidebar {
     // this.countriesList = $$('.vzb-find-item.vzb-dialog-checkbox');
 
     this.searchInputField = $('.vzb-find-search');
-    this.searchResult = $$('div[class="vzb-find-item vzb-dialog-checkbox"] > label'); //TODO
+    this.searchResult = $('div[class="vzb-find-item vzb-dialog-checkbox"] label'); //TODO
     this.searchResults = $$('.vzb-find-item.vzb-dialog-checkbox:not([class*="hidden"])');
     this.hiddenSearchResult = $$('.vzb-find-item.vzb-dialog-checkbox').first();
 
@@ -36,42 +38,32 @@ class CommonChartSidebar {
     //TODO
   };
 
-  async searchAndSelectCountry(country) {
-    // LineChart-page Override this method
-    await browser.wait(EC.visibilityOf(this.searchInputField), 4000); //TODO
-    await this.searchInputField.clear();
-    await this.searchInputField.sendKeys(country);
-    await browser.wait(EC.visibilityOf(this.searchResult.first()), 5500);
-    await this.clickOnSearchResult(country);
-    await browser.wait(commonChartPage.waitForCountryToBeAddedInUrl(country), 7000);
+  async searchAndSelectCountry(country, inputSelector, resultSelector) {
+    // type country name in search and click on it in the results
+    // LineChart-page use it's own selectors
+
+    let searchResultSelector = resultSelector || this.searchResult; // LineChart use it's own selector
+    let searchInputFieldSelector = inputSelector || this.searchInputField; // LineChart use it's own selector
+
+    await helper.safeSendKeys(searchInputFieldSelector, country);
+
+    let countryInSearchResult = await this.findElementByExactText(searchResultSelector, country);
+
+    await helper.safeClick(countryInSearchResult);
+    await browser.wait(commonChartPage.isCountryAddedInUrl(country), 15000);
     await commonChartPage.waitForSliderToBeReady();
   };
 
-  waitForSearchResult(country) {
-    return function () {
-      return this.searchResult.filter(elem => {
-        return elem.getText().then(text => {
-          return text === country;
-        })
-      })
-    }
-  }
+  findElementByExactText(cssSelector, searchText) {
 
-  async clickOnSearchResult(country) {
-  // find country in search results and wait for it
+    return element(by.js(`var elements = document.querySelectorAll('${cssSelector.locator().value}'); 
+    for (var i = 0; i < elements.length; ++i) {
+      var element = elements[i]; 
+      var elementText = element.textContent || element.innerText || ''; 
+      if (elementText === '${searchText}') return element
+    };`));
+    };
 
-    return browser.wait(this.waitForSearchResult(country), 8000).then(()=> {
-      this.searchResult.filter(elem => {
-        return elem.getText().then(text => {
-          return text === country;
-        })
-      }).then(res => {
-        return browser.wait(EC.visibilityOf(res[0]), 5400).then(() => {
-          return commonChartPage.click(res[0]);
-        })
-      })
-    })
-  }
 }
 
 module.exports = CommonChartSidebar;
