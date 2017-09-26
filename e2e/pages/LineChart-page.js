@@ -1,4 +1,5 @@
 const EC = protractor.ExpectedConditions;
+const helper = require('../helpers/helper');
 
 const CommonChartPage = require('./CommonChartPage-page');
 const CommonChartSidebar = require('./CommonChartSidebar-page');
@@ -15,7 +16,7 @@ class LineChart {
     this.advancedControlsRightSidePanelFindButton = $$('[data-btn="find"]').last();
 
     this.searchInputField = $('.vzb-show-search');
-    this.searchResult = $$('div[class="vzb-show-item vzb-dialog-checkbox"] > label'); //TODO
+    this.searchResult = $$('div[class="vzb-show-item vzb-dialog-checkbox"] label'); //TODO
     this.selectedCountries = $$('.vzb-lc-labelname.vzb-lc-labelstroke');
 
     this.sidebar = {
@@ -37,19 +38,14 @@ class LineChart {
     return commonChartPage.getSliderPosition();
   }
 
-  async searchAndSelectCountry(country) {
-    await browser.wait(EC.visibilityOf(this.searchInputField), 2000);
-    await this.searchInputField.clear();
-    await this.searchInputField.sendKeys(country);
-    await browser.wait(EC.visibilityOf(this.searchResult.first()), 5500);
-    await commonChartSidebar.clickOnSearchResult(country);
-    await browser.wait(commonChartPage.waitForCountryToBeAddedInUrl(country), 5000);
-    await commonChartPage.waitForSliderToBeReady();
-  };
+  searchAndSelectCountry(country) {
+    return commonChartSidebar.searchAndSelectCountry(country, this.searchInputField, this.searchResult);
+  }
 
   async refreshPage() {
     await commonChartPage.refreshPage();
-    return await browser.wait(EC.visibilityOf($('.vzb-lc-labelfill')), 6000);
+    await commonChartPage.waitForToolsPageCompletelyLoaded();
+    return await browser.wait(EC.visibilityOf($('.vzb-lc-labelname.vzb-lc-labelfill')), 6000);
   };
 
   async openChart() {
@@ -58,7 +54,7 @@ class LineChart {
   }
 
   async openByClick() {
-    await commonChartPage.click(commonChartPage.linesChart);
+    await helper.safeClick(commonChartPage.linesChart);
     return await commonChartPage.waitForToolsPageCompletelyLoaded();
   }
 

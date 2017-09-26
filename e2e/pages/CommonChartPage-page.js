@@ -1,4 +1,5 @@
 const EC = protractor.ExpectedConditions;
+const helper = require('../helpers/helper');
 
 class CommonChartPage {
   constructor() {
@@ -39,14 +40,12 @@ class CommonChartPage {
   };
 
   async openChart(url) {
-    await browser.get(url);
+    await helper.safeOpen(url);
 
     return await this.waitForToolsPageCompletelyLoaded();
   }
 
   async waitForSliderToBeReady() {
-    await browser.wait(EC.invisibilityOf(this.movingSliderProgress.get(1)), 30000);
-
     return await browser.wait(EC.visibilityOf(this.sliderReady), 30000);
   }
 
@@ -60,11 +59,12 @@ class CommonChartPage {
     return await this.waitForToolsPageCompletelyLoaded();
   };
 
-  dragSlider() {
-    return browser.actions().dragAndDrop(this.sliderButton(), {x: -900, y: 0}).perform();
+  async dragSlider() {
+    await browser.actions().dragAndDrop(this.sliderButton, {x: -900, y: 0}).perform();
+    await browser.wait(EC.urlContains('#_state_time_value='), 10000);
   }
 
-  waitForCountryToBeAddedInUrl(country) {
+  isCountryAddedInUrl(country) {
     const regex = new RegExp(`=${this.countries[country]}`, 'g');
 
     return function () {
@@ -73,12 +73,6 @@ class CommonChartPage {
       });
     };
   };
-
-  click(element){
-    return browser.wait(EC.visibilityOf(element), 15000).then(()=>{
-      return element.click();
-    });
-  }
 
 
 }
