@@ -24,7 +24,7 @@ export class VizabiToolsService {
   }
 
   simplifyModel(model: any): any {
-    return pick(this.getModelFromUrl(), ['locale', 'chart-type', 'state']);
+    return pick(this.getModelFromUrl(), ['locale', 'chart-type', 'state.marker.select', 'state.entities.show']);
   }
 
   getModelFromUrl(): any {
