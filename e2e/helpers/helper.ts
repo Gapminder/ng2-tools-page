@@ -1,5 +1,5 @@
-import { browser, ElementFinder, protractor } from 'protractor';
-import { CommonChartPage } from '../pages/CommonChartPage-page';
+import { browser, by, element, ElementFinder, protractor } from 'protractor';
+import { CommonChartPage } from '../pages/common-chart.po';
 
 const EC = protractor.ExpectedConditions;
 
@@ -51,6 +51,15 @@ export class Helper {
     const timeout = interval || 10000;
 
     return browser.wait(EC.visibilityOf(element), timeout, `element ${element.locator().value} is not visible in ${timeout} ms`);
+  }
+
+  static findElementByExactText(cssSelector: ElementFinder, searchText: string): ElementFinder {
+
+    return element.all(by.cssContainingText(cssSelector.locator().value, searchText)).filter(element => {
+      return element.getText().then(text => {
+        return text === searchText;
+      });
+    }).first();
   }
 
 }

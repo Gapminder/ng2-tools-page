@@ -1,4 +1,4 @@
-import { $, $$, browser, ElementArrayFinder, ElementFinder, protractor } from 'protractor';
+import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, protractor } from 'protractor';
 
 import { Helper } from '../helpers/helper';
 
@@ -24,8 +24,8 @@ export class CommonChartPage {
   public sliderAxis: ElementFinder = $('.vzb-ts-slider');
   public speedStepper: ElementFinder = $('.vzb-tool-stepped-speed-slider');
 
-  public axisYMaxValue = $$('.vzb-bc-axis-y g[class="tick"] text').last();
-  public axisXMaxValue = $$('.vzb-bc-axis-x g[class="tick"] text').last();
+  public axisYMaxValue: ElementFinder = $$('.vzb-bc-axis-y g[class="tick"] text').last();
+  public axisXMaxValue: ElementFinder = $$('.vzb-bc-axis-x g[class="tick"] text').last();
 
   public countries = {
     'Russia': 'rus',
@@ -49,7 +49,7 @@ export class CommonChartPage {
     return await browser.wait(EC.visibilityOf(this.sliderReady), 30000);
   }
 
-  async openChart(url): Promise<{}> {
+  async openChart(url: string): Promise<{}> {
     await Helper.safeOpen(url);
 
     return await this.waitForToolsPageCompletelyLoaded();
@@ -93,7 +93,7 @@ export class CommonChartPage {
     await Helper.safeClick(CommonChartPage.buttonPause);
   }
 
-  isCountryAddedInUrl(country, state = true): Function {
+  isCountryAddedInUrl(country: string, state = true): Function {
     // if state = true use it to wait for presence string in url
     if (state) {
       return () => {

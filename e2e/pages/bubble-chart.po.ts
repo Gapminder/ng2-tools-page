@@ -1,15 +1,12 @@
-import { $, $$, browser, element, ElementArrayFinder, ElementFinder, protractor, by } from 'protractor';
+import { $, $$, browser, ElementArrayFinder, ElementFinder, protractor } from 'protractor';
 
 import { Helper } from '../helpers/helper';
-import { CommonChartSidebar } from './CommonChartSidebar-page';
-import { CommonChartPage } from './CommonChartPage-page';
+import { Sidebar } from './sidebar.po';
+import { CommonChartPage } from './common-chart.po';
 
 const EC = protractor.ExpectedConditions;
-const commonChartSidebar = new CommonChartSidebar();
-const commonChartPage = new CommonChartPage();
-
-const clientSideScripts = require('../helpers/scripts');
-
+const sidebar: Sidebar = new Sidebar();
+const commonChartPage: CommonChartPage = new CommonChartPage();
 
 export class BubbleChart {
   public url = '#_chart-type=bubbles';
@@ -17,7 +14,6 @@ export class BubbleChart {
   public dataDoubtsLink: ElementFinder = $('.vzb-data-warning');
   public dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-body');
   public allBubbles: ElementArrayFinder = $$('circle[class*="vzb-bc-entity"]');
-  // this.bubbleLabelOnMouseHover = element(by.css('g[class="vzb-bc-tooltip"] > text'));
   public bubbleLabelOnMouseHover: ElementFinder = $('g[class="vzb-bc-tooltip"]');
   public axisXValue: ElementFinder = $$('g[class="vzb-axis-value"]').first();
   public tooltipOnClick: ElementArrayFinder = $$('.vzb-bc-label-content');
@@ -26,12 +22,12 @@ export class BubbleChart {
   public selectedBubbleLabel: ElementFinder = $('.vzb-label-fill.vzb-tooltip-border');
   public xIconOnBubble: ElementFinder = $('.vzb-bc-label-x');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
-  public chinaTrails = $$('.trail-chn [class="vzb-bc-trailsegment"]');
-  public usaTrails = $$('.trail-usa [class="vzb-bc-trailsegment"]');
+  public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
+  public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
 
   public selectedCountries: ElementArrayFinder = $$('text[class="vzb-bc-label-content stroke"]');
-  public lockButton = $$('[data-btn="lock"]').last();
-  public trailsButton = $$('button[data-btn="trails"]').last();
+  public lockButton: ElementFinder = $$('[data-btn="lock"]').last();
+  public trailsButton: ElementFinder = $$('button[data-btn="trails"]').last();
 
   public sidebar = {
     bubbleOpacityControl: $('.vzb-dialog-bubbleopacity'),
@@ -80,7 +76,7 @@ export class BubbleChart {
   }
 
   async searchAndSelectCountry(country: string): Promise<{}> {
-    return commonChartSidebar.searchAndSelectCountry(country);
+    return sidebar.searchAndSelectCountry(country);
   }
 
   getSelectedCountries(): ElementArrayFinder {
@@ -139,7 +135,7 @@ export class BubbleChart {
     });
   }
 
-  async diselectBubble(country: string): Promise<{}> {
+  async deselectBubble(country: string): Promise<{}> {
     await Helper.safeClick(this.getCountryBubble(country));
 
     return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 2000);
@@ -187,8 +183,8 @@ export class BubbleChart {
   }
 
 
-  diselectCountryInSearch(country: string) {
-    return commonChartSidebar.diselectCountryInSearch(country);
+  deselectCountryInSearch(country: string) {
+    return sidebar.deselectCountryInSearch(country);
   }
 
   getBubblesRadius() {
@@ -200,7 +196,15 @@ export class BubbleChart {
   }
 
   getCoordinatesOfLowerOpacityBubblesOnBubblesChart() {
-    // TODO maybe this should be replaced with loop through elements array
-    return browser.executeScript(clientSideScripts.getCoordinatesOfLowerOpacityBubblesOnBubblesChart);
+    // return sorted array with bubbles coordinates
+    return $$(`circle[style*='opacity: 0.3']`)
+      .map(elm => {
+        return {
+          cx: elm.getAttribute('cx'),
+          cy: elm.getAttribute('cy')
+        };
+      }).then(obj => {
+        return obj.sort((obj1: any, obj2: any) => obj1.cx - obj2.cx);
+      });
   }
 }

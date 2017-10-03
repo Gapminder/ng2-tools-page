@@ -1,11 +1,11 @@
 import { $, $$, ElementArrayFinder } from 'protractor';
 
 import { Helper } from '../helpers/helper';
-import { CommonChartSidebar } from './CommonChartSidebar-page';
-import { CommonChartPage } from './CommonChartPage-page';
+import { Sidebar } from './sidebar.po';
+import { CommonChartPage } from './common-chart.po';
 
-const commonChartSidebar = new CommonChartSidebar();
-const commonChartPage = new CommonChartPage();
+const sidebar: Sidebar = new Sidebar();
+const commonChartPage: CommonChartPage = new CommonChartPage();
 
 
 export class RankingsChart {
@@ -21,7 +21,7 @@ export class RankingsChart {
     return this.sidebar;
   }
 
-  async dragSlider(): Promise<{}> {
+  async dragSliderToMiddle(): Promise<{}> {
     return await commonChartPage.dragSliderToMiddle();
   }
 
@@ -45,7 +45,7 @@ export class RankingsChart {
   }
 
   async searchAndSelectCountry(country: string): Promise<{}> {
-    return await commonChartSidebar.searchAndSelectCountry(country);
+    return await sidebar.searchAndSelectCountry(country);
   }
 
   getSelectedCountries(): ElementArrayFinder {

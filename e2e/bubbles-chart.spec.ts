@@ -1,26 +1,21 @@
 import { browser } from 'protractor';
 
 import { Helper } from './helpers/helper';
-import { CommonChartSidebar } from './pages/CommonChartSidebar-page';
-import { CommonChartPage } from './pages/CommonChartPage-page';
-import { BubbleChart } from './pages/BubbleChart-page';
+import { Sidebar } from './pages/sidebar.po';
+import { CommonChartPage } from './pages/common-chart.po';
+import { BubbleChart } from './pages/bubble-chart.po';
 
-const sidebar = new CommonChartSidebar();
-const commonChartPage = new CommonChartPage();
-const bubbleChart = new BubbleChart();
-
-beforeAll(() => {
-  browser.waitForAngularEnabled(false);
-});
+const sidebar: Sidebar = new Sidebar();
+const commonChartPage: CommonChartPage = new CommonChartPage();
+const bubbleChart: BubbleChart = new BubbleChart();
 
 beforeEach(async() => {
   await browser.get('/');
   await bubbleChart.openChart();
-  expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + bubbleChart.url);
 });
 
 describe('Bubbles chart - Acceptance', () => {
-  it('should check that there is a data warning to the bottom right(TC05)', async() => {
+  it('data warning to the bottom right(TC05)', async() => {
     await Helper.safeClick(bubbleChart.dataDoubtsLink);
     await Helper.safeExpectIsDispayed(bubbleChart.dataDoubtsWindow);
   });
@@ -66,7 +61,7 @@ describe('Bubbles chart - Acceptance', () => {
     expect(await bubbleChart.axisXValue.getText()).toEqual('53.4k');
   });
 
-  fit('only selected bubble get full opacity', async() => {
+  it('only selected bubble get full opacity', async() => {
     /**
      * should check that clicking the bubble of the United States should select it. The bubble gets full opacity,
      * while the other bubbles get lower opacity(TC08)
@@ -110,7 +105,7 @@ describe('Bubbles chart - Acceptance', () => {
     expect(await bubbleChart.tooltipOnClick.isPresent()).toBe(false, 'tooltip should be hidden');
 
     await bubbleChart.clickOnCountryBubble('India');
-    await bubbleChart.diselectBubble('India');
+    await bubbleChart.deselectBubble('India');
 
     expect(await bubbleChart.tooltipOnClick.isPresent()).toBe(false, 'tooltip should be hidden');
   });
@@ -133,13 +128,13 @@ describe('Bubbles chart - Acceptance', () => {
     expect(browser.getCurrentUrl()).toContain('geo=chn');
     expect(browser.getCurrentUrl()).toContain('geo=bra');
 
-    await bubbleChart.diselectCountryInSearch('India');
+    await bubbleChart.deselectCountryInSearch('India');
     expect(await bubbleChart.selectedCountries.count()).toEqual(2);
 
-    await bubbleChart.diselectCountryInSearch('China');
+    await bubbleChart.deselectCountryInSearch('China');
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
 
-    await bubbleChart.diselectCountryInSearch('Brazil');
+    await bubbleChart.deselectCountryInSearch('Brazil');
     expect(await bubbleChart.selectedCountries.count()).toEqual(0);
 
     expect(browser.getCurrentUrl()).not.toContain('geo=ind');
@@ -155,16 +150,12 @@ describe('Bubbles chart - Acceptance', () => {
     await bubbleChart.searchAndSelectCountry('China');
     await bubbleChart.searchAndSelectCountry('United States');
 
-    await Helper.safeClick(CommonChartPage.buttonPlay);
-    await browser.sleep(5000);
-    await Helper.safeClick(CommonChartPage.buttonPause);
+    await commonChartPage.playTimesliderSeconds(5);
 
     expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(20);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(20);
 
-    await Helper.safeClick(CommonChartPage.buttonPlay);
-    await browser.sleep(5000);
-    await Helper.safeClick(CommonChartPage.buttonPause);
+    await commonChartPage.playTimesliderSeconds(5);
 
     expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(50);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(50);
@@ -205,9 +196,7 @@ describe('Bubbles chart - Acceptance', () => {
 
     await expect(coordinatesOfUnselectedBubbles).toEqual(coordinatesOfUnselectedBubbles2);
 
-    await Helper.safeClick(CommonChartPage.buttonPlay);
-    browser.sleep(3000);
-    await Helper.safeClick(CommonChartPage.buttonPause);
+    await commonChartPage.playTimesliderSeconds(3);
 
     const coordinatesOfUnselectedBubbles3 = await bubbleChart.getCoordinatesOfLowerOpacityBubblesOnBubblesChart();
 

@@ -1,16 +1,16 @@
 import { browser, protractor } from 'protractor';
 
 import { Helper } from './helpers/helper';
-import { CommonChartSidebar } from './pages/CommonChartSidebar-page';
-import { BubbleChart } from './pages/BubbleChart-page';
-import { RankingsChart } from './pages/RankingsChart-page';
-import { LineChart } from './pages/LineChart-page';
-import { MapChart } from './pages/MapChart-page';
-import { MountainChart } from './pages/MountainChart-page';
+import { Sidebar } from './pages/sidebar.po';
+import { BubbleChart } from './pages/bubble-chart.po';
+import { RankingsChart } from './pages/rankings-chart.po';
+import { LineChart } from './pages/line-chart.po';
+import { MapChart } from './pages/map-chart.po';
+import { MountainChart } from './pages/mountain-chart.po';
 
 import using = require('jasmine-data-provider');
 
-const commonChartSidebar = new CommonChartSidebar();
+const sidebar: Sidebar = new Sidebar();
 
 const DATA_PROVIDER = {
   'Bubbles Chart': {chart: new BubbleChart()},
@@ -19,10 +19,6 @@ const DATA_PROVIDER = {
   'Line Chart': {chart: new LineChart()},
   'Rankings Chart': {chart: new RankingsChart()}
 };
-
-beforeAll(() => {
-  browser.waitForAngularEnabled(false);
-});
 
 describe('No additional data in URL when chart opens', () => {
   /**
@@ -52,7 +48,7 @@ describe('All charts - Acceptance', () => {
         const chart = data.chart;
         await chart.openChart();
 
-        const commonSidebar = await commonChartSidebar.sidebar;
+        const commonSidebar = await sidebar.sidebar;
         Object.keys(commonSidebar).forEach(element => {
           expect(commonSidebar[element].isPresent()).toBe(true, `${element} not found`);
         });
@@ -96,7 +92,7 @@ describe('All charts - Acceptance', () => {
   });
 
   using(DATA_PROVIDER, (data, description) => {
-    it(`Entities should be selected after page reload on ${description} page`, async() => {
+    it(`Entities are selected after page reload on ${description} page`, async() => {
       const chart = data.chart;
 
       await chart.openChart();

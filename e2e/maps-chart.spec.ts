@@ -1,26 +1,21 @@
 import { browser } from 'protractor';
 
 import { Helper } from './helpers/helper';
-import { CommonChartPage } from './pages/CommonChartPage-page';
-import { CommonChartSidebar } from './pages/CommonChartSidebar-page';
-import { MapChart } from './pages/MapChart-page';
+import { CommonChartPage } from './pages/common-chart.po';
+import { Sidebar } from './pages/sidebar.po';
+import { MapChart } from './pages/map-chart.po';
 
-const mapChart = new MapChart();
-const commonChartPage = new CommonChartPage();
-const sidebar = new CommonChartSidebar();
-
-beforeAll(() => {
-  browser.waitForAngularEnabled(false);
-});
+const mapChart: MapChart = new MapChart();
+const commonChartPage: CommonChartPage = new CommonChartPage();
+const sidebar: Sidebar = new Sidebar();
 
 beforeEach(async() => {
   await browser.get('/');
   await mapChart.openChart();
-  expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + mapChart.url);
 });
 
 describe('Maps chart - Acceptance', () => {
-  it('should check the bubbles change size with timeslider drag and play(TC25)', async() => {
+  it('bubbles change size with timeslider drag and play(TC25)', async() => {
     const initialSelectedYear = await commonChartPage.sliderSelectedYear.getAttribute('textContent');
     await mapChart.searchAndSelectCountry('China');
     const initialBubbleSize = await mapChart.selectedCountries.getAttribute('r');
@@ -39,9 +34,13 @@ describe('Maps chart - Acceptance', () => {
     await expect(finalBubbleSize).not.toEqual(draggedBubbleSize);
   });
 
-  it('should check bubbles react to hovering and a tooltip appears, and contains the country name.' +
-    'In 2015 the biggest red bubbles: "China", "India"; the biggest green - "United states", ' +
-    'the biggest yellow is "Russia" and the biggest blue is "Nigeria"(TC27)', async() => {
+  it('bubble tooltip on hover contains country name', async() => {
+    /**
+     * should check bubbles react to hovering and a tooltip appears, and contains the country name.
+     * In 2015 the biggest red bubbles: "China", "India"; the biggest green - "United states",
+     * the biggest yellow is "Russia" and the biggest blue is "Nigeria"(TC27)
+     */
+
     await mapChart.hoverMouseOverBubble('red');
     expect(await mapChart.bubbleLabelOnMouseHover.getText()).toContain('China');
 
@@ -58,8 +57,12 @@ describe('Maps chart - Acceptance', () => {
     expect(await mapChart.bubbleLabelOnMouseHover.getText()).toContain('United States');
   });
 
-  it('should check that clicking the bubble of the United States should select it. The bubble gets full opacity, ' +
-    'while the other bubbles get lower opacity(TC28)', async() => {
+  it('Bubbles selected by click', async() => {
+    /**
+     * should check that clicking the bubble of the United States should select it. The bubble gets full opacity,
+     * while the other bubbles get lower opacity(TC28)
+     */
+
     const nonSelectedBubblesCount = await mapChart.allBubbles.count();
     await mapChart.clickOnBubble('green');
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('United States');
@@ -69,7 +72,7 @@ describe('Maps chart - Acceptance', () => {
     expect(await mapChart.getOpacityOfNonSelectedBubblesMapsChart()).not.toEqual('opacity: 1;');
   });
 
-  it('should check that label "United States" can be dragged and dropped anywhere in the chart area(TC29)', async() => {
+  it('Bubble label can be dragged and dropped(TC29)', async() => {
     await mapChart.clickOnBubble('green');
     const initialLabelPosition = await mapChart.selectedCountryLabel.getAttribute('transform');
 
@@ -84,8 +87,7 @@ describe('Maps chart - Acceptance', () => {
     await expect(newLabelPosition).not.toEqual(finalLabelPosition);
   });
 
-  it('should check that the bubble can be deselected by clicking on the "x" of the label "United States",' +
-    ' or by clicking on the bubble(TC30)', async() => {
+  it('Deselect bubble by click on "X", or on the bubble(TC30)', async() => {
     await mapChart.clickOnBubble('green');
     await mapChart.clickXiconOnBubble('USA');
 
@@ -95,12 +97,12 @@ describe('Maps chart - Acceptance', () => {
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('United States');
     expect(await mapChart.selectedCountries.get(0).getAttribute('style')).toContain('opacity: 1;');
 
-    await mapChart.diselectBubble('green');
+    await mapChart.deselectBubble('green');
 
     expect(await browser.isElementPresent(mapChart.selectedCountryLabel)).toBeFalsy();
   });
 
-  it('should check that countries could be selected/deselected using the button "Find" to the right(TC31)', async() => {
+  it('Countries could be selected/deselected using the button "Find"(TC31)', async() => {
     await sidebar.searchAndSelectCountry('China');
     expect(await mapChart.selectedCountries.count()).toEqual(1);
 
@@ -117,13 +119,13 @@ describe('Maps chart - Acceptance', () => {
     expect(browser.getCurrentUrl()).toContain('geo=chn');
     expect(browser.getCurrentUrl()).toContain('geo=bra');
 
-    await sidebar.diselectCountryInSearch('India');
+    await sidebar.deselectCountryInSearch('India');
     expect(await mapChart.selectedCountries.count()).toEqual(2);
 
-    await sidebar.diselectCountryInSearch('China');
+    await sidebar.deselectCountryInSearch('China');
     expect(await mapChart.selectedCountries.count()).toEqual(1);
 
-    await sidebar.diselectCountryInSearch('Brazil');
+    await sidebar.deselectCountryInSearch('Brazil');
     expect(await mapChart.selectedCountries.count()).toEqual(0);
 
     expect(browser.getCurrentUrl()).not.toContain('geo=ind');
@@ -131,7 +133,7 @@ describe('Maps chart - Acceptance', () => {
     expect(browser.getCurrentUrl()).not.toContain('geo=bra');
   });
 
-  it('should check that while hovering, the chart title changes to show the exact values(TC32)', async() => {
+  it('Chart title show the exact values on hover(TC32)', async() => {
     const axisYInitialText = await mapChart.yAxisTitle.getText();
     await expect(axisYInitialText).toEqual('Size: Population, total');
 

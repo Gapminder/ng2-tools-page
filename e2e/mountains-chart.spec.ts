@@ -1,18 +1,13 @@
 import { browser, protractor } from 'protractor';
 
 import { Helper } from './helpers/helper';
-import { MountainChart } from './pages/MountainChart-page';
+import { MountainChart } from './pages/mountain-chart.po';
 
-const mountainChart = new MountainChart();
-
-beforeAll(() => {
-  browser.waitForAngularEnabled(false);
-});
+const mountainChart: MountainChart = new MountainChart();
 
 beforeEach(async() => {
   await browser.get('/');
   await mountainChart.openChart();
-  expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + mountainChart.url);
 });
 
 describe('Mountains chart - Acceptance', () => {
@@ -30,7 +25,7 @@ describe('Mountains chart - Acceptance', () => {
     expect(await mountainChart.verticalLine.getText()).toEqual('7.33B');
   });
 
-  it('text on vertical at the beginning of the chart', async() => {
+  it('labels on vertical line in 2015 and in 1800 match', async() => {
     /**
      * should check that in 2015 there is roughly the same amount of people living in the extreme poverty
      * as there was in 1800 (830 and 812 Millions)(TC20)
@@ -89,9 +84,7 @@ describe('Mountains chart - Acceptance', () => {
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(2);
 
     await mountainChart.deselectCountryInShowMenu('Ukraine');
-
     await mountainChart.deselectCountryInShowMenu('Austria');
-
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toBeGreaterThan(25);
   });

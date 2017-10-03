@@ -1,12 +1,12 @@
 import { $, element, by, $$, ElementArrayFinder, ElementFinder, protractor, browser } from 'protractor';
 
 import { Helper } from '../helpers/helper';
-import { CommonChartSidebar } from './CommonChartSidebar-page';
-import { CommonChartPage } from './CommonChartPage-page';
+import { Sidebar } from './sidebar.po';
+import { CommonChartPage } from './common-chart.po';
 
 const EC = protractor.ExpectedConditions;
 
-const commonChartSidebar = new CommonChartSidebar();
+const commonChartSidebar = new Sidebar();
 const commonChartPage = new CommonChartPage();
 
 export class MapChart {
@@ -16,11 +16,11 @@ export class MapChart {
   allBubbles: ElementArrayFinder = $$('circle[class="vzb-bmc-bubble"]');
   bubbleLabelOnMouseHover: ElementFinder = $('.vzb-bmc-tooltip');
   tooltipOnClick: ElementFinder = $('.vzb-label-glow');
-  selectedCountriesLabels = $$('text[class="vzb-bmc-label-content stroke"]');
-  selectedCountryLabel = $('g[class="vzb-bmc-labels"] > g');
-  xIconOnBubble = $('.vzb-bmc-label-x');
-  yAxisTitle = $('g[class="vzb-bmc-axis-y-title"] > text');
-  
+  selectedCountriesLabels: ElementArrayFinder = $$('text[class="vzb-bmc-label-content stroke"]');
+  selectedCountryLabel: ElementFinder = $('[class*="vzb-bmc-entity label"]'); // TODO this could be elementArray
+  xIconOnBubble: ElementFinder = $('.vzb-bmc-label-x');
+  yAxisTitle: ElementFinder = $('.vzb-bmc-axis-y-title');
+
   sidebar = {
     bubbleOpacityControl: $('.vzb-dialog-bubbleopacity'),
     resetFiltersBtn: $('.vzb-find-deselect'),
@@ -58,7 +58,7 @@ export class MapChart {
   }
 
   getSelectedCountries(): ElementArrayFinder {
-    return this.selectedCountries;
+    return this.selectedCountriesLabels;
   }
 
   async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {
@@ -69,17 +69,7 @@ export class MapChart {
       'green': '#7feb00'
     };
 
-    // TODO
-    return element.all(by.xpath(`//*[@fill = '${colors[color.toLocaleLowerCase()]}']`)).get(index);
-
-    // return this.allBubbles.filter(elem => {
-    //   return elem.getCssValue('fill').then(fill => {
-    //     // find all bubbles with certain color
-    //     return fill === colors[color.toLowerCase()];
-    //   });
-    // }).then(filteredElements => {
-    //   return filteredElements[index];
-    // });
+    return await $$(`circle[fill = '${colors[color.toLocaleLowerCase()]}']`).get(index);
   }
 
   async hoverMouseOverBubble(color: string, index = 0): Promise<ElementFinder> {
@@ -99,18 +89,18 @@ export class MapChart {
     await browser.wait(EC.visibilityOf(this.tooltipOnClick), 4000);
   }
 
-  async diselectBubble(color: string, index = 0): Promise<void> {
+  async deselectBubble(color: string, index = 0): Promise<void> {
     const bubble = await this.filterBubblesByColor(color, index);
     await Helper.safeClick(bubble);
     await browser.wait(EC.invisibilityOf(this.tooltipOnClick), 2000);
   }
 
   getOpacityOfNonSelectedBubblesMapsChart() {
-    return this.allBubbles.each(function (elem) {
-      return elem.getAttribute('style').then(function (opacity) {
+    return this.allBubbles.each(elem => {
+      return elem.getAttribute('style').then(opacity => {
         return opacity;
       });
-    })
+    });
   }
 
   // TODO make it work with specific country
