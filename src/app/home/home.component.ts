@@ -20,10 +20,10 @@ import { VizabiLocale } from '../core/store/language/language';
 import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/store/tools/tools.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
+import { getTransitionType, TransitionType } from '../core/charts-transition';
 
 const {WsReader} = require('vizabi-ws-reader');
-
-enum ChartSelectionType {Select, Show, Neither}
+const MODEL_CHANGED_DEBOUNCE = 200;
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -33,32 +33,22 @@ enum ChartSelectionType {Select, Show, Neither}
 })
 
 export class HomeComponent implements AfterViewInit, OnDestroy {
-  slugs: any[];
-  currentChartType: string = '';
-  currentHashModel: any;
+  slugs: string[];
+  currentChartType = '';
+  currentHashModel;
 
-  readerModuleObject: any = WsReader;
+  readerModuleObject = WsReader;
   readerParams = [];
-  extResources: any = {
-    host: environment.wsUrl + '/',
+  extResources = {
+    host: `${environment.wsUrl}/`,
     dataPath: '/api/ddf/',
     preloadPath: 'api/vizabi/'
   };
 
   private defaultTool: string;
-  private tools: any;
+  private tools;
   private toolToSlug = {};
-  private vizabiInstances: any = {};
-
-  private chartsRelations = {
-    bubbles: ChartSelectionType.Select,
-    mountain: ChartSelectionType.Select,
-    map: ChartSelectionType.Select,
-    barrank: ChartSelectionType.Select,
-    linechart: ChartSelectionType.Show,
-    popbyage: ChartSelectionType.Neither
-  };
-
+  private vizabiInstances = {};
   private vizabiModelChangesSubscription: Subscription;
   private vizabiCreationSubscription: Subscription;
   private initialToolsSetupSubscription: Subscription;
@@ -70,8 +60,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
               private location: Location,
               private vizabiToolsService: VizabiToolsService,
               private store: Store<State>) {
-
-    this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe((initial) => {
+    this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
       this.tools = initial.tools;
       this.slugs = initial.slugs;
       this.defaultTool = initial.defaultTool;
@@ -82,9 +71,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.store.dispatch(new VizabiModelChanged(model));
     });
 
-    this.vizabiCreationSubscription = this.store.select(getCreatedVizabiInstance).filter(({tool, instance}) => !!tool).subscribe(({tool, instance}) => {
-      this.vizabiInstances[tool] = Object.assign({}, this.vizabiInstances[tool], instance);
-    });
+    this.vizabiCreationSubscription = this.store.select(getCreatedVizabiInstance)
+      .filter(({tool, instance}) => !!tool).subscribe(({tool, instance}) => {
+        this.vizabiInstances[tool] = {...this.vizabiInstances[tool], ...instance};
+      });
 
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
       .filter(hashModel => !this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModel))
@@ -96,8 +86,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         return hashModel;
       })
-      .debounceTime(200)
-      .subscribe((hashModel) => {
+      .debounceTime(MODEL_CHANGED_DEBOUNCE)
+      .subscribe(hashModel => {
         const oldHashModel = this.currentHashModel;
 
         this.currentHashModel = hashModel;
@@ -128,16 +118,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     let modelChanged = false;
 
     if (hashModel.state && oldHashModel && oldHashModel.state) {
-      const oldChartType = this.chartsRelations[oldHashModel['chart-type']];
-      const currentChartType = this.chartsRelations[this.currentHashModel['chart-type']];
-
-      const isFromSelectToShow = oldChartType === ChartSelectionType.Select && currentChartType === ChartSelectionType.Show;
-      const isFromShowToSelect = oldChartType === ChartSelectionType.Show && currentChartType === ChartSelectionType.Select;
-      const isFromNeither = oldChartType === ChartSelectionType.Neither && currentChartType !== ChartSelectionType.Neither;
-      const isToNeither = oldChartType !== ChartSelectionType.Neither && currentChartType === ChartSelectionType.Neither;
+      const chartTransitionType = getTransitionType(oldHashModel['chart-type'], this.currentHashModel['chart-type']);
       const dim = this.vizabiInstances[this.currentChartType].model.state.entities.dim;
 
-      if (isFromSelectToShow) {
+      if (chartTransitionType === TransitionType.FromSelectToShow) {
         const dimToShow = oldHashModel.state.marker.select.map(item => item[dim]);
 
         this.currentHashModel.state = {entities: {show: {[dim]: {$in: dimToShow}}}};
@@ -145,7 +129,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         modelChanged = true;
       }
 
-      if (isFromShowToSelect) {
+      if (chartTransitionType === TransitionType.FromShowToSelect) {
         let dimToSelect = [];
 
         if (oldHashModel.state.entities.show[dim] && !isEmpty(oldHashModel.state.entities.show[dim].$in)) {
@@ -157,7 +141,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         modelChanged = true;
       }
 
-      if (isFromNeither || isToNeither) {
+      if (chartTransitionType === TransitionType.FromNeither || chartTransitionType === TransitionType.ToNeither) {
         this.currentHashModel.state = {};
 
         modelChanged = true;
@@ -172,40 +156,43 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.routesModelChangesSubscription = this.router.events.filter((event: any) => event instanceof NavigationEnd).subscribe(() => {
-      const model = this.vizabiToolsService.getModelFromUrl();
-      this.store.dispatch(new VizabiModelChanged(model));
-    });
+    this.routesModelChangesSubscription = this.router.events.filter(event => event instanceof NavigationEnd)
+      .subscribe(() => {
+        const model = this.vizabiToolsService.getModelFromUrl();
+        this.store.dispatch(new VizabiModelChanged(model));
+      });
 
     this.toolChangesSubscription = this.store.select(getSelectedTool).subscribe(selectedTool => {
       const urlModel = this.vizabiToolsService.getModelFromUrl();
-
       const toolInUrlIsSame = urlModel && urlModel['chart-type'] === selectedTool;
+      const chartTransitionType = getTransitionType(this.currentChartType, selectedTool);
 
       this.store.dispatch(new VizabiModelChanged(
         toolInUrlIsSame
           ? urlModel
-          : Object.assign(this.vizabiToolsService.simplifyModel(urlModel), {'chart-type': selectedTool}))
+          : Object.assign(this.vizabiToolsService.simplifyModel(chartTransitionType), {'chart-type': selectedTool}))
       );
     });
 
     this.localeChangesSubscription = this.store.select(getCurrentLocale).subscribe((locale: VizabiLocale) => {
-      const model = Object.assign({}, this.vizabiToolsService.getModelFromUrl(), locale);
+      const model = {...this.vizabiToolsService.getModelFromUrl(), ...locale};
       this.store.dispatch(new VizabiModelChanged(model));
     });
   }
 
-  getVizabiInitialModel(slug: string): any {
+  getVizabiInitialModel(slug: string) {
     const initialModel = this.vizabiInstances[slug].model;
+
     if (slug === 'mountain') {
       Object.assign(get(initialModel, 'state.marker.group'), {manualSorting: ['asia', 'africa', 'americas', 'europe']});
     }
+
     return initialModel;
   }
 
-  onCreated(changes: any): void {
+  onCreated(changes): void {
     const slug = this.toolToSlug[changes.type];
-    const instance: any = {
+    const instance = {
       'chart-type': slug,
       model: cloneDeep(this.tools[slug].opts),
       instance: changes.component
@@ -214,8 +201,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.store.dispatch(new VizabiInstanceCreated(instance, slug));
   }
 
-  onChanged(changes: any): void {
-    const model = Object.assign({}, changes.modelDiff, {'chart-type': this.toolToSlug[changes.type]});
+  onChanged(changes): void {
+    const model = {...changes.modelDiff, ...{'chart-type': this.toolToSlug[changes.type]}};
 
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
