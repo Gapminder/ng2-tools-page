@@ -1,6 +1,5 @@
 module.exports = {
   staticFileGlobs: [
-    'dist/tools/**.html',
     'dist/tools/assets/images/chart/**.*',
     'dist/tools/assets/images/answers/**.*',
     'dist/tools/assets/images/icons/menu/**.*',

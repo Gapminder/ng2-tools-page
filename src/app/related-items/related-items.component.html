@@ -1,16 +1,21 @@
-<h2 class="heading-2">Related</h2>
-<ul class="related-items">
+<div class="related-block">
+  <h2 class="heading-2 related-heading">Popular</h2>
 
-  <li class="related-item" *ngFor="let relatedItem of relatedItems">
-    <a [href]="relatedItem.link" rel="noopener">
-      <div class="related-item-thumbnail">
-        <img [src]="relatedItem.image">
-      </div>
-      <div class="related-item-info">
-        <span class="title">{{relatedItem.title}}</span>
-        <span class="subtitle">{{relatedItem.subtitle}}</span>
-      </div>
-    </a>
-  </li>
+  <div class="related-container">
+    <ul class="related-items">
 
-</ul>
+      <li class="related-item" *ngFor="let relatedItem of relatedItems">
+        <a [href]="relatedItem.link" rel="noopener">
+          <div class="related-item-thumbnail">
+            <img [src]="relatedItem.image">
+          </div>
+          <div class="related-item-info">
+            <span class="title">{{relatedItem.title}}</span>
+            <span class="subtitle">{{relatedItem.subtitle}}</span>
+          </div>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</div>

@@ -8,3 +8,63 @@
     display block
     float none
     margin 0 auto
+
+.footer-container
+  background-color #939598
+  color: $color-grey-light
+  width 100%
+  height 120px
+  position: relative
+
+.menu-block
+  background-image url(/assets/images/logo-gray.png)
+  background-repeat no-repeat
+  background-position 0 15px
+  get-global-margin-left()
+  height 100%
+
+.menu-content
+  padding-top 50px
+
+.general-menu
+  get-font-size(small)
+  font-family $bariol-regular-font-family
+
+.main-menu
+  get-font-size(small)
+  font-family $bariol-light-font-family
+  margin-top 5px
+  line-height: 1.7em
+
+.service-block
+  min-width 90px
+
+.service-buttons
+  position absolute
+  top: 16px
+  right 17px
+
+.service-buttons span
+  margin-left 10px
+
+.nav
+  font-weight bold
+  list-style none
+  margin 0
+  padding 0
+
+.nav li
+  display inline
+  padding-right 15px
+  +for_breakpoint(small)
+    padding-right 5px
+
+.nav a
+  display inline-block
+  color #d7d8d9
+  text-decoration none
+  text-transform uppercase
+  letter-spacing 0.07em
+
+  &:hover
+    color $color-primary
