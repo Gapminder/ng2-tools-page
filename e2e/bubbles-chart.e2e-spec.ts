@@ -9,12 +9,12 @@ const sidebar: Sidebar = new Sidebar();
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
 
-beforeEach(async() => {
-  await browser.get('/');
-  await bubbleChart.openChart();
-});
-
 describe('Bubbles chart - Acceptance', () => {
+  beforeEach(async() => {
+    await browser.get('/');
+    await bubbleChart.openChart();
+  });
+
   it('data warning to the bottom right(TC05)', async() => {
     await Helper.safeClick(bubbleChart.dataDoubtsLink);
     await Helper.safeExpectIsDispayed(bubbleChart.dataDoubtsWindow);

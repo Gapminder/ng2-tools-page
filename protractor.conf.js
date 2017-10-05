@@ -2,7 +2,7 @@
 
 exports.config = {
   specs: [
-    './e2e/**/*.spec.ts'
+    './e2e/**/*.e2e-spec.ts'
   ],
   exclude: ['./e2e/redirects-spec.js'],
   multiCapabilities: [
