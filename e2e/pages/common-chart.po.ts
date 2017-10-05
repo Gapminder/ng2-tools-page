@@ -36,7 +36,8 @@ export class CommonChartPage {
     'China': 'chn',
     'USA': 'usa',
     'United States': 'usa',
-    'Brazil': 'bra'
+    'Brazil': 'bra',
+    'Argentina': 'arg'
   };
 
   async waitForToolsPageCompletelyLoaded(): Promise<{}> {
@@ -98,14 +99,14 @@ export class CommonChartPage {
     if (state) {
       return () => {
         return browser.getCurrentUrl().then(url => {
-          return url.indexOf(`=${this.countries[country]}`) > -1;
+          return url.includes(`=${this.countries[country]}`);
         });
       };
     } else {
       // otherwise use to wait for string to be removed from URL
       return () => {
         return browser.getCurrentUrl().then(url => {
-          return url.indexOf(`=${this.countries[country]}`) < 0;
+          return !url.includes(`=${this.countries[country]}`);
         });
       };
     }
