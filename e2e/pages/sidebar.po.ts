@@ -1,28 +1,40 @@
-import { $, $$, browser, ElementArrayFinder, ElementFinder } from 'protractor';
+import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, protractor } from 'protractor';
 
 import { Helper } from '../helpers/helper';
 import { CommonChartPage } from './common-chart.po';
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
+const EC = protractor.ExpectedConditions;
 
 export class Sidebar {
-  public colorDropDown: ElementFinder = $$('span[class="vzb-ip-select"]').first();
-
-  public searchInputField: ElementFinder = $('.vzb-find-search');
+  colorDropDown: ElementFinder = $$('span[class="vzb-ip-select"]').first();
+  searchInputField: ElementFinder = $('.vzb-find-search');
   public searchResult: ElementFinder = $('.vzb-find-item.vzb-dialog-checkbox label'); // TODO
 
-  public optionsButton: ElementFinder = $$('[data-btn="moreoptions"]').last();
-  public optionsMenuSizeButton: ElementFinder = $$('span[data-vzb-translate="buttons/size"]').last();
-  public optionsMenuBubblesResizeToddler: ElementFinder = $$('.vzb-slider.vzb-slider-bubblesize .w').last();
-  public colorIndicatorDropdown: ElementFinder = $$('span[class="vzb-ip-holder"] > span').get(8); // TODO
-  public sizeListBabiesPerWomanColorIndicator: ElementFinder = $$('span[class="vzb-treemenu-list-item-label"]').first();
-  public sizeDropDown: ElementFinder = $$('span[class="vzb-ip-select"]').get(1);
-  public optionsModalDialogue: ElementArrayFinder = $$('div[data-dlg="moreoptions"]');
-  public optionsMenuHandIcon: ElementFinder = $('.thumb-tack-class-ico-drag[data-dialogtype="moreoptions"]');
+  optionsButton: ElementFinder = $$('[data-btn="moreoptions"]').last();
+  optionsMenuSizeButton: ElementFinder = $$('span[data-vzb-translate="buttons/size"]').last();
+  optionsMenuBubblesResizeToddler: ElementFinder = $$('.vzb-slider.vzb-slider-bubblesize .w').last();
+  optionsXandY = {
+    openBtn: $('[data-vzb-translate="buttons/axes"]'),
+    xMin: $$('.vzb-mmi-zoomedmin').first(),
+    xMax: $$('.vzb-mmi-zoomedmax').first(),
+    yMin: $$('.vzb-mmi-zoomedmin').last(),
+    yMax: $$('.vzb-mmi-zoomedmax').last()
+  };
+  optionsOkBtn: ElementFinder = $$('.vzb-dialog-button.vzb-label-primary').last();
 
-  public zoomButton: ElementFinder = $$('[data-btn="plus"]').first();
+  colorIndicatorDropdown: ElementFinder = $$('span[class="vzb-ip-holder"] > span').get(8); // TODO
+  sizeListBabiesPerWomanColorIndicator: ElementFinder = $$('span[class="vzb-treemenu-list-item-label"]').first();
+  sizeDropDown: ElementFinder = $$('span[class="vzb-ip-select"]').get(1);
+  optionsModalDialogue: ElementArrayFinder = $$('div[data-dlg="moreoptions"]');
+  optionsMenuHandIcon: ElementFinder = $('.thumb-tack-class-ico-drag[data-dialogtype="moreoptions"]');
+  zoomButton: ElementFinder = $$('[data-btn="plus"]').first();
 
-  public sidebar = {
+  advancedSection: ElementArrayFinder = $$('.vzb-tool-buttonlist');
+  findButton: ElementFinder = this.advancedSection.$$('[data-btn="find"]').last();
+  countriesInFindModal: ElementArrayFinder = $$('.vzb-find-item.vzb-dialog-checkbox');
+
+  sidebar = {
     colorsSection: $('[data-dlg="colors"]'),
     miniMap: $('.vzb-cl-minimap'),
     searchSection: $('.vzb-find-filter'),
@@ -30,9 +42,13 @@ export class Sidebar {
     advancedButtons: $('.vzb-tool-buttonlist')
   };
 
-  public color = {
+  minimapAsiaRegion = this.sidebar.miniMap.$$('path').first(); // TODO maybe add selector to vizabi
+
+  color = {
     childMortalityRate: $$('span[class="vzb-treemenu-list-item-label"]').get(3), // TODO add test class to vizabi
-    incomePerPerson: $$('span[class="vzb-treemenu-list-item-label"]').get(4) // TODO add test class to vizabi
+    incomePerPerson: $$('span[class="vzb-treemenu-list-item-label"]').get(4), // TODO add test class to vizabi
+    mainReligion: element(by.cssContainingText('.vzb-treemenu-list-item-label', 'Main religion')),
+    firstColor: $$('.vzb-cl-color-sample').first()
   };
 
   async searchAndSelectCountry(country: string,
@@ -58,10 +74,34 @@ export class Sidebar {
     return await this.searchAndSelectCountry(country, inputSelector, resultSelector, false);
   }
 
+  async clickOnCountryFromList(country: string, resultSelector = this.searchResult): Promise<void> {
+    const countryFromList = await Helper.findElementByExactText(resultSelector, country);
+    await Helper.safeClick(countryFromList);
+
+    await browser.wait(commonChartPage.isCountryAddedInUrl(country));
+    await commonChartPage.waitForSliderToBeReady();
+  }
+
   async selectInColorDropdown(element: ElementFinder): Promise<{}> {
     await Helper.safeClick(this.colorDropDown);
     await Helper.safeClick(element);
 
     return await Helper.waitForSpinner();
+  }
+
+  async getColorFromColorSection(): Promise<string> {
+    return await this.color.firstColor.getCssValue('background-color');
+  }
+
+  async clickOnFindButton(): Promise<void> {
+    await Helper.safeClick(this.findButton);
+    await browser.wait(EC.visibilityOf(this.countriesInFindModal.first()));
+  }
+
+  async hoverMinimapRegion(region: string): Promise<void> {
+    // TODO make this work for specific region
+    // const elem = await this.sidebar.miniMap.$$('path').first();
+
+    return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).perform();
   }
 }
