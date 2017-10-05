@@ -9,12 +9,12 @@ const mapChart: MapChart = new MapChart();
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const sidebar: Sidebar = new Sidebar();
 
-beforeEach(async() => {
-  await browser.get('/');
-  await mapChart.openChart();
-});
-
 describe('Maps chart - Acceptance', () => {
+  beforeEach(async() => {
+    await browser.get('/');
+    await mapChart.openChart();
+  });
+
   it('bubbles change size with timeslider drag and play(TC25)', async() => {
     const initialSelectedYear = await commonChartPage.sliderSelectedYear.getAttribute('textContent');
     await mapChart.searchAndSelectCountry('China');

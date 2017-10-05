@@ -9,12 +9,12 @@ const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar();
 const commonChartPage: CommonChartPage = new CommonChartPage();
 
-beforeEach(async() => {
-  await browser.get('/');
-  await commonChartPage.openChart(lineChart.url);
-});
-
 describe('Line chart', () => {
+  beforeEach(async() => {
+    await browser.get('/');
+    await commonChartPage.openChart(lineChart.url);
+  });
+
   it('Add country from country list in sidebar', async() => {
     await lineChart.clickOnCountryFromList('Argentina');
     await expect(lineChart.getSelectedCountries().getText()).toMatch('Argentina');

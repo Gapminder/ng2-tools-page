@@ -5,12 +5,12 @@ import { MountainChart } from './pages/mountain-chart.po';
 
 const mountainChart: MountainChart = new MountainChart();
 
-beforeEach(async() => {
-  await browser.get('/');
-  await mountainChart.openChart();
-});
-
 describe('Mountains chart - Acceptance', () => {
+  beforeEach(async() => {
+    await browser.get('/');
+    await mountainChart.openChart();
+  });
+
   it('text on vertical line at the end of the chart', async() => {
     /**
      * should check that in 2015, the percentage of people living in the extreme poverty should be 11.5 ± 0.3%,
