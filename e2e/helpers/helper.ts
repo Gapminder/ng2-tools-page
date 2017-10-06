@@ -1,65 +1,78 @@
-import { browser, by, element, ElementFinder, protractor } from 'protractor';
+import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 import { CommonChartPage } from '../pages/common-chart.po';
 
-const EC = protractor.ExpectedConditions;
+const MAX_TIMEOUT = 30000;
+const TIMEOUT = 15000;
 
-export class Helper {
+export function safeOpen(url: string) {
+  return browser.get(url).then(() => {
+    return waitForPageLoaded();
+  });
+}
 
-  static safeOpen(url: string) {
-    return browser.get(url).then(() => {
-      return Helper.waitForPageLoaded();
+export function waitForPageLoaded() {
+  return browser.wait(EC.visibilityOf(CommonChartPage.sideBar), MAX_TIMEOUT).then(() => {
+    // return browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay), MAX_TIMEOUT).then(() => {
+    return browser.wait(EC.visibilityOf(CommonChartPage.mainChart), MAX_TIMEOUT);
+  });
+  // });
+}
+
+export function waitForSpinner() {
+  // return browser.wait(EC.visibilityOf(CommonChartPage.spinner), 3000, 'spinner to be visible').then(() => {
+  return browser.wait(EC.stalenessOf(CommonChartPage.spinner), TIMEOUT, 'stalenessOf of spinner');
+  // });
+}
+
+export function safeDragAndDrop(from: ElementFinder, to: any) {
+  return browser.wait(EC.visibilityOf(from), TIMEOUT, `element ${from.locator().value} not visible`).then(() => {
+    return browser.actions().dragAndDrop(from, to).perform();
+  });
+}
+
+export function safeExpectIsDispayed(element: ElementFinder, interval?: number) {
+  const timeout = interval || TIMEOUT;
+
+  return browser.wait(EC.visibilityOf(element), timeout, `element ${element.locator().value} is not visible in ${timeout} ms`);
+}
+
+export function findElementByExactText(cssSelector: ElementFinder | ElementArrayFinder, searchText: string): ElementFinder {
+
+  return element.all(by.cssContainingText(cssSelector.locator().value, searchText)).filter(element => {
+    return element.getText().then(text => {
+      return text === searchText;
     });
-  }
+  }).first();
+}
 
-  static waitForPageLoaded() {
-    return browser.wait(EC.visibilityOf(CommonChartPage.sideBar), 30000).then(() => {
-      return browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay), 30000).then(() => {
-        return browser.wait(EC.visibilityOf(CommonChartPage.mainChart), 30000);
+export function waitForSliderToBeReady() {
+  return browser.wait(EC.visibilityOf(CommonChartPage.sliderReady), MAX_TIMEOUT);
+}
+
+export async function waitForUrlToChange() {
+  const currentUrl = await browser.getCurrentUrl();
+
+  return browser.wait(() => {
+    return browser.getCurrentUrl().then(url => {
+      return url !== currentUrl;
+    });
+  });
+}
+
+export function isCountryAddedInUrl(country: string, state = true): Function {
+  // if state = true use it to wait for presence string in url
+  if (state) {
+    return () => {
+      return browser.getCurrentUrl().then(url => {
+        return url.includes(`=${CommonChartPage.countries[country]}`);
       });
-    });
-  }
-
-  static waitForSpinner() {
-    // return browser.wait(EC.visibilityOf(CommonChartPage.spinner), 3000, 'spinner to be visible').then(() => {
-      return browser.wait(EC.stalenessOf(CommonChartPage.spinner), 15000, 'stalenessOf of spinner');
-    // });
-  }
-
-  static safeClick(element: ElementFinder) {
-    return browser.wait(EC.visibilityOf(element), 15000, `element ${element.locator().value} not visible`).then(() => {
-      return browser.wait(EC.elementToBeClickable(element), 15000, `element ${element.locator().value} not clickable`).then(() => {
-        return element.click();
+    };
+  } else {
+    // otherwise use to wait for string to be removed from URL
+    return () => {
+      return browser.getCurrentUrl().then(url => {
+        return !url.includes(`=${CommonChartPage.countries[country]}`);
       });
-    });
+    };
   }
-
-  static safeDragAndDrop(from: ElementFinder, to: any) {
-    return browser.wait(EC.visibilityOf(from), 15000, `element ${from.locator().value} not visible`).then(() => {
-      return browser.actions().dragAndDrop(from, to).perform();
-    });
-  }
-
-  static safeSendKeys(element: ElementFinder, text: string) {
-    return browser.wait(EC.visibilityOf(element), 15000).then(() => {
-      return element.clear().then(() => {
-        return element.sendKeys(text);
-      });
-    });
-  }
-
-  static safeExpectIsDispayed(element: ElementFinder, interval?: number) {
-    const timeout = interval || 10000;
-
-    return browser.wait(EC.visibilityOf(element), timeout, `element ${element.locator().value} is not visible in ${timeout} ms`);
-  }
-
-  static findElementByExactText(cssSelector: ElementFinder, searchText: string): ElementFinder {
-
-    return element.all(by.cssContainingText(cssSelector.locator().value, searchText)).filter(element => {
-      return element.getText().then(text => {
-        return text === searchText;
-      });
-    }).first();
-  }
-
 }

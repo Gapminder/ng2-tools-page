@@ -1,16 +1,15 @@
 import { browser, protractor } from 'protractor';
 
-import { Helper } from './helpers/helper';
-import { Sidebar } from './pages/sidebar.po';
+import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { BubbleChart } from './pages/bubble-chart.po';
 import { RankingsChart } from './pages/rankings-chart.po';
 import { LineChart } from './pages/line-chart.po';
 import { MapChart } from './pages/map-chart.po';
 import { MountainChart } from './pages/mountain-chart.po';
+import { Slider } from './pages/components/slider.e2e-component';
 
 import using = require('jasmine-data-provider');
-
-const sidebar: Sidebar = new Sidebar();
+import { safeOpen } from './helpers/helper';
 
 const DATA_PROVIDER = {
   'Bubbles Chart': {chart: new BubbleChart()},
@@ -19,7 +18,6 @@ const DATA_PROVIDER = {
   'Line Chart': {chart: new LineChart()},
   'Rankings Chart': {chart: new RankingsChart()}
 };
-
 describe('No additional data in URL when chart opens', () => {
   /**
    * Tests which check URL's correctness when switching between charts. Browser has to be restarted before each test!
@@ -27,7 +25,7 @@ describe('No additional data in URL when chart opens', () => {
 
   using(DATA_PROVIDER, (data, description) => {
     it(`URL on ${description} page`, async() => {
-      await Helper.safeOpen('/');
+      await safeOpen('/');
       const chart = data.chart;
       await chart.openByClick();
 
@@ -47,6 +45,9 @@ describe('All charts - Acceptance', () => {
       it(`Side panel on ${description} page`, async() => {
         const chart = data.chart;
         await chart.openChart();
+
+        const sidebar: Sidebar = await new Sidebar(chart);
+        await sidebar.waitForVisible();
 
         const commonSidebar = await sidebar.sidebar;
         Object.keys(commonSidebar).forEach(element => {
@@ -71,18 +72,19 @@ describe('All charts - Acceptance', () => {
       it(`Timeslider hold the value after reload ${description} page`, async() => {
         const EC = protractor.ExpectedConditions;
         const chart = data.chart;
+        const slider: Slider = new Slider();
 
         await chart.openChart();
-        const initialSelectedYear = await chart.getSliderPosition();
-        await chart.dragSliderToMiddle();
-        const finalSelectedYear = await chart.getSliderPosition();
+        const initialSelectedYear = await slider.getPosition();
+        await slider.dragToMiddle();
+        const finalSelectedYear = await slider.getPosition();
 
         await expect(initialSelectedYear).not.toEqual(finalSelectedYear);
         await browser.wait(EC.urlContains(finalSelectedYear), 5000);
 
         await chart.refreshPage();
 
-        const sliderAfterPageReload = await chart.getSliderPosition();
+        const sliderAfterPageReload = await slider.getPosition();
 
         await expect(sliderAfterPageReload).not.toEqual(initialSelectedYear);
         await expect(sliderAfterPageReload).toEqual(finalSelectedYear);
@@ -94,26 +96,23 @@ describe('All charts - Acceptance', () => {
   using(DATA_PROVIDER, (data, description) => {
     it(`Entities are selected after page reload on ${description} page`, async() => {
       const chart = data.chart;
+      const sidebar: Sidebar = new Sidebar(chart);
 
       await chart.openChart();
       expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + chart.url);
 
-      await chart.searchAndSelectCountry('Australia');
-      await chart.searchAndSelectCountry('Bangladesh');
-      await chart.searchAndSelectCountry('India');
+      await sidebar.searchAndSelectCountry('Australia');
+      await sidebar.searchAndSelectCountry('Bangladesh');
 
-      await expect(chart.getSelectedCountries().getText()).toMatch('Australia');
-      await expect(chart.getSelectedCountries().getText()).toMatch('India');
-      await expect(chart.getSelectedCountries().getText()).toMatch('Bangladesh');
+      expect(await chart.getSelectedCountriesNames()).toMatch('Australia');
+      expect(await chart.getSelectedCountriesNames()).toMatch('Bangladesh');
 
       await chart.refreshPage();
 
-      await expect(chart.getSelectedCountries().getText()).toMatch('Australia');
-      await expect(chart.getSelectedCountries().getText()).toMatch('India');
-      await expect(chart.getSelectedCountries().getText()).toMatch('Bangladesh');
+      expect(await chart.getSelectedCountriesNames()).toMatch('Australia');
+      expect(await chart.getSelectedCountriesNames()).toMatch('Bangladesh');
       await expect(browser.getCurrentUrl()).toContain('=aus');
       await expect(browser.getCurrentUrl()).toContain('=bgd');
-      await expect(browser.getCurrentUrl()).toContain('=ind');
     });
   });
 });

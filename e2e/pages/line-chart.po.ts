@@ -1,31 +1,35 @@
-import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, protractor } from 'protractor';
+import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
-import { Helper } from '../helpers/helper';
 import { CommonChartPage } from './common-chart.po';
-import { Sidebar } from './sidebar.po';
+import {
+  findElementByExactText, isCountryAddedInUrl, waitForSliderToBeReady,
+  waitForSpinner
+} from '../helpers/helper';
+import { Slider } from './components/slider.e2e-component';
+import { ExtendedElementFinder, _$, _$$, ExtendedArrayFinder } from '../helpers/ExtendedElementFinder';
 
-const EC = protractor.ExpectedConditions;
+export class LineChart extends CommonChartPage {
+  type = 'lineChart';
+  url = '#_chart-type=linechart';
+  chartLink: ExtendedElementFinder = _$('a[href*="linechart"]');
 
-const commonChartPage = new CommonChartPage();
-const sidebar = new Sidebar();
-
-export class LineChart {
-  public url = '#_chart-type=linechart';
   opacity = {
     highlighted: 1,
     dimmed: 0.3
   };
 
-  dataDoubtsLink: ElementFinder = $('.vzb-data-warning');
+  dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
+
+  // dataDoubtsLink: ElementFinder = $('.vzb-data-warning');
   dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-box');
 
   /**
    * specific Line chart selectors
    */
   latestPointOnChart: ElementFinder = $('[class="vzb-axis-value"]');
-  public selectedCountries: ElementArrayFinder = $$('.vzb-lc-labelname.vzb-lc-labelfill');
-  yAsixDropdownOptions: ElementArrayFinder = $$('.vzb-treemenu-list-item-label');
-  yAxisBtn: ElementFinder = $('.vzb-lc-axis-y-title');
+  selectedCountries: ExtendedArrayFinder = _$$('.vzb-lc-labelname.vzb-lc-labelfill');
+  yAsixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
+  yAxisBtn: ExtendedElementFinder = _$('.vzb-lc-axis-y-title');
   axisValues: ElementArrayFinder = $$('.vzb-lc-axis-x .tick text');
   countriesLines: ElementArrayFinder = $$('.vzb-lc-line');
 
@@ -37,7 +41,7 @@ export class LineChart {
 
   // TODO maybe it should be moved to sidebar po
   countryList: ElementFinder = $$('[class="vzb-show-item vzb-dialog-checkbox"]').first();
-  resetBtn: ElementFinder = $('.vzb-show-deselect');
+  resetBtn: ExtendedElementFinder = _$('.vzb-show-deselect');
 
   /**
    * default sidebar elements
@@ -52,53 +56,36 @@ export class LineChart {
   /**
    * specific sidebar elements, unique for Lines chart
    */
-  public searchInputField: ElementFinder = $('.vzb-show-search');
-  public searchResult: ElementFinder = $('div[class="vzb-show-item vzb-dialog-checkbox"] label'); // TODO maybe add test class to vizabi
+  public searchInputField: ExtendedElementFinder = _$('.vzb-show-search');
+  public searchResult: ExtendedArrayFinder = _$$('div[class="vzb-show-item vzb-dialog-checkbox"] label'); // TODO maybe add test class to vizabi
 
   getSidebarElements() {
     return this.sidebar;
   }
 
-  async dragSliderToMiddle(): Promise<{}> {
-    return await commonChartPage.dragSliderToMiddle();
+  async openChart(): Promise<void> {
+    await super.openChart();
+
+    await new Slider().waitForSliderToBeReady();
   }
 
-  getSliderPosition(): Promise<{}> {
-    return commonChartPage.getSliderPosition();
+  async refreshPage(): Promise<void> {
+    await super.refreshPage();
+    await browser.wait(EC.visibilityOf(this.countriesLines.first()));
   }
 
-  searchAndSelectCountry(country: string): Promise<{}> {
-    return sidebar.searchAndSelectCountry(country, this.searchInputField, this.searchResult);
-  }
-
-  clickOnCountryFromList(country: string): Promise<void> {
-    return sidebar.clickOnCountryFromList(country, this.searchResult);
-  }
-
-  async refreshPage(): Promise<{}> {
-    await commonChartPage.refreshPage();
-    await commonChartPage.waitForToolsPageCompletelyLoaded();
-
-    return await browser.wait(EC.visibilityOf(this.selectedCountries.first()), 6000);
-  }
-
-  async openByClick(): Promise<{}> {
-    await Helper.safeClick(commonChartPage.linesChart);
-
-    return await commonChartPage.waitForToolsPageCompletelyLoaded();
-  }
-
-  getSelectedCountries(): ElementArrayFinder {
+  getSelectedCountries() {
     return this.selectedCountries;
   }
 
   async selectLine(country: string): Promise<void> {
-    await Helper.safeClick(Helper.findElementByExactText(this.selectedCountries.first(), country));
-    await browser.wait(commonChartPage.isCountryAddedInUrl(country));
+    await new ExtendedElementFinder(findElementByExactText(this.selectedCountries, country)).safeClick();
+    await browser.wait(isCountryAddedInUrl(country));
   }
 
   async getLineOpacity(country: string): Promise<number> {
-    return Number(await Helper.findElementByExactText(this.selectedCountries.first(), country).getCssValue('opacity'));
+    this.selectedCountries.findElementByExactText(country).safeGetCssValue('opacity');
+    return Number(await findElementByExactText(this.selectedCountries, country).getCssValue('opacity'));
   }
 
   async countHighlightedLines(): Promise<number> {
@@ -114,32 +101,32 @@ export class LineChart {
   }
 
   async hoverLine(country: string): Promise<void> {
-    const element = await Helper.findElementByExactText(this.selectedCountries.first(), country);
-    await browser.wait(EC.visibilityOf(element));
-    await browser.actions().mouseMove(element).perform();
+    await this.selectedCountries
+      .findElementByExactText(country)
+      .hover();
   }
 
   async changeYaxisValue(): Promise<string> {
-    await Helper.safeClick(this.yAxisBtn);
-    const newOption = this.yAsixDropdownOptions.first();
+    await this.yAxisBtn.safeClick();
+    const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
 
     await browser.wait(EC.visibilityOf(newOption));
     const newOptionValue = newOption.getText();
-    await Helper.safeClick(newOption);
+    await newOption.click();
 
-    await Helper.waitForSpinner();
-    await commonChartPage.waitForSliderToBeReady();
+    await waitForSpinner();
+    await waitForSliderToBeReady();
 
     return newOptionValue;
   }
 
   async clickResetButton(): Promise<void> {
-    await Helper.safeClick(this.resetBtn);
-    await Helper.waitForSpinner();
-    await commonChartPage.waitForSliderToBeReady();
+    await this.resetBtn.safeClick();
+    await waitForSpinner();
+    await waitForSliderToBeReady();
   }
 
   async getLineLabelColor(country: string) {
-    return await Helper.findElementByExactText(this.selectedCountries.first(), country).getCssValue('fill');
+    return await findElementByExactText(this.selectedCountries, country).getCssValue('fill');
   }
 }

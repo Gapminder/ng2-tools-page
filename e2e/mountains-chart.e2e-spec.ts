@@ -1,9 +1,13 @@
 import { browser, protractor } from 'protractor';
 
-import { Helper } from './helpers/helper';
+import { safeExpectIsDispayed } from './helpers/helper';
 import { MountainChart } from './pages/mountain-chart.po';
+import { Sidebar } from './pages/components/sidebar.e2e-component';
+import { Slider } from './pages/components/slider.e2e-component';
 
 const mountainChart: MountainChart = new MountainChart();
+const sidebar: Sidebar = new Sidebar(mountainChart);
+const slider: Slider = new Slider();
 
 describe('Mountains chart - Acceptance', () => {
   beforeEach(async() => {
@@ -34,7 +38,7 @@ describe('Mountains chart - Acceptance', () => {
 
     expect(await mountainChart.verticalLine.getText()).toEqual('833M');
 
-    await mountainChart.dragSliderToBeginning();
+    await slider.dragToStart();
     await mountainChart.hoverMouserOverExtremePovertyTitle();
 
     expect(await mountainChart.verticalLine.getText()).toEqual('812M');
@@ -46,7 +50,7 @@ describe('Mountains chart - Acceptance', () => {
      */
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
 
-    await Helper.safeClick(mountainChart.advancedControlsShowButtons);
+    await mountainChart.advancedControlsShowButtons.safeClick();
 
     await mountainChart.searchAndSelectCountryInShowMenu('Ukraine');
 
@@ -69,16 +73,16 @@ describe('Mountains chart - Acceptance', () => {
      * should check that uncheck the countries from "show", when the last one is unchecked,
      * the picture should return to a default view = stacked shapes of all countries(TC22)
      */
-    await Helper.safeClick(mountainChart.advancedControlsShowButtons);
+    await mountainChart.advancedControlsShowButtons.safeClick();
 
     await mountainChart.searchAndSelectCountryInShowMenu('Ukraine');
-    await Helper.safeExpectIsDispayed(mountainChart.allCountriesOnChart.first(), 5000);
+    await safeExpectIsDispayed(mountainChart.allCountriesOnChart.first(), 5000);
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(1);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(1);
 
     await mountainChart.searchAndSelectCountryInShowMenu('Austria');
-    await Helper.safeExpectIsDispayed(mountainChart.allCountriesOnChart.get(1), 5000);
+    await safeExpectIsDispayed(mountainChart.allCountriesOnChart.get(1), 5000);
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(2);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(2);
@@ -100,7 +104,7 @@ describe('Mountains chart - Acceptance', () => {
     await browser.wait(EC.presenceOf(mountainChart.allCountriesOnChart.first()));
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
-    await mountainChart.searchAndSelectCountry('China');
+    await sidebar.searchAndSelectCountry('China');
     await browser.wait(EC.presenceOf(mountainChart.selectedCountries.first()));
 
     expect(await mountainChart.selectedCountries.getText()).toMatch('China: 1.4B people');
@@ -108,13 +112,13 @@ describe('Mountains chart - Acceptance', () => {
     expect(await mountainChart.visualizationSelectedCountries.count()).toEqual(1);
     expect(await mountainChart.visualizationSelectedCountries.get(0).getAttribute('style')).toContain('opacity: 1;');
 
-    await mountainChart.searchAndSelectCountry('India');
+    await sidebar.searchAndSelectCountry('India');
     await browser.wait(EC.presenceOf(mountainChart.visualizationSelectedCountries.first()));
     expect(await mountainChart.selectedCountries.getText()).toMatch('India: 1.31B');
     expect(await mountainChart.visualizationSelectedCountries.count()).toEqual(2);
     expect(await mountainChart.visualizationSelectedCountries.get(1).getAttribute('style')).toContain('opacity: 1;');
 
-    await mountainChart.searchAndSelectCountry('Brazil');
+    await sidebar.searchAndSelectCountry('Brazil');
     await browser.wait(EC.presenceOf(mountainChart.visualizationSelectedCountries.first()));
     expect(await mountainChart.selectedCountries.getText()).toMatch('Brazil: 206M');
     expect(await mountainChart.visualizationSelectedCountries.count()).toEqual(3);
