@@ -197,3 +197,21 @@
                 color $color-grey-medium
                 get-font-size(medium)
 
+.how-to-content
+  +for_breakpoint(not-small)
+    position fixed !important
+    left 20px !important
+    width 90% !important
+
+  +for_breakpoint(small)
+    position absolute
+    left 0
+    width 400px
+
+.how-to-frame
+  +for_breakpoint(not-small)
+    width 80%
+    height 480px
+  +for_breakpoint(small)
+    width 95%
+    height 380px

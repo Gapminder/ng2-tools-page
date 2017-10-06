@@ -92,20 +92,6 @@ a
     min-width 320px
     +for_breakpoint(small)
       display: none
-    .how-to-use-video
-      margin-left 250px
-      +for_breakpoint(medium)
-        margin-left 195px
-      +for_breakpoint(small)
-        margin-left 0
-      font-size: $font-size-header-regular
-      position relative
-      top 0px
-      span
-        yellow-box()
-        display inline-block
-        width: 26px
-        padding-left 3px
 
   .social
     flex 1 0 0;
@@ -183,3 +169,32 @@ $menu-bar
   width 25px
   height 3px
   display block
+
+.how-to-use-video
+  +for_breakpoint(small)
+    position relative
+    span
+      display none
+  +for_breakpoint(not-small)
+    position relative
+    top 0
+    span
+      display inline-block
+      width: 26px
+      color #fff
+      background $color-primary
+      border none
+      font-size 15px
+      border-radius (4px)
+      outline none
+      height 22px
+      line-height 22px
+      padding 0
+      text-align center
+      margin-top -22px
+      margin-right 10px
+      margin-bottom -2px
+      padding-left 5px
+      path
+        fill white
+

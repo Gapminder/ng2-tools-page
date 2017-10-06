@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, ViewEncapsulation } from '@angular/core';
 import { Store } from '@ngrx/store';
 import {
   getAllLanguages,
@@ -34,6 +34,7 @@ export class HeaderComponent {
 
   menuItems$: Observable<any[]>;
   isMobileMenuHidden$: Observable<boolean>;
+  isMobileMenuHidden: boolean;
   selectedMenuItem$: Observable<any>;
 
   constructor(private store: Store<State>) {
@@ -43,6 +44,10 @@ export class HeaderComponent {
     this.allLanguages$ = this.store.select(getAllLanguages);
     this.selectedLanguage$ = this.store.select(getSelectedLanguage);
     this.isLanguageSwitcherVisible$ = this.store.select(isLanguageSwitcherVisible);
+
+    this.isMobileMenuHidden$.subscribe(value => {
+      this.isMobileMenuHidden = value;
+    });
   }
 
   selectMenuItem(item: any): void {
@@ -71,5 +76,12 @@ export class HeaderComponent {
 
   shareLink(): void {
     this.store.dispatch(new PromptForShortUrl());
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    if (!this.isMobileMenuHidden) {
+      this.switchMobileMenuVisibility();
+    }
   }
 }
