@@ -10,8 +10,9 @@
     cursor default !important
 
 
-.nav-expandable
+li.nav-expandable
   position relative
+  padding-right 0px
 
   /*&, *
     box-sizing(border-box)*/
@@ -198,6 +199,18 @@
                 get-font-size(medium)
 
 .how-to-content
+  .nav-faq-help-links
+    a
+      white-space nowrap
+      font-size $font-size-header-regular
+      text-transform none
+      letter-spacing unset
+      margin-right 15px
+      color $color-blue-darker
+      font-family $bariol-light-font-family
+      &:hover
+        color $brand-primary
+    
   +for_breakpoint(not-small)
     position fixed !important
     left 20px !important
@@ -209,9 +222,10 @@
     width 400px
 
 .how-to-frame
+  border 1px solid grey
   +for_breakpoint(not-small)
-    width 80%
-    height 480px
+    width 80vw
+    height 45vw
   +for_breakpoint(small)
-    width 95%
-    height 380px
+    width 96vw
+    height 54vw
