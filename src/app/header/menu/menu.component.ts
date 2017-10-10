@@ -13,6 +13,8 @@ export class MenuComponent {
 
   @Output() selectMenuItem: EventEmitter<any> = new EventEmitter();
 
+  isHowToVisible = false;
+
   getIconUrl(item: any): string {
     return `assets${item.icon_url}`;
   }
