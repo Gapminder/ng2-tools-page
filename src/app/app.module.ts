@@ -11,6 +11,7 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuComponent } from './header/menu/menu.component';
 import { SocialButtonsComponent } from './header/social-buttons/social-buttons.component';
+import { ChartSwitcherComponent } from './header/chart-switcher/chart-switcher.component';
 import { LanguageSwitcherComponent } from './header/language-switcher/language-switcher.component';
 import { PageComponent } from './page/page.component';
 
@@ -59,6 +60,7 @@ const modules = [
     FooterComponent,
     MenuComponent,
     SocialButtonsComponent,
+    ChartSwitcherComponent,
     LanguageSwitcherComponent,
     PageComponent
   ],
