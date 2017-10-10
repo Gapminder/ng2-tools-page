@@ -200,17 +200,8 @@ li.nav-expandable
 
 .how-to-content
   .nav-faq-help-links
-    a
-      white-space nowrap
-      font-size $font-size-header-regular
-      text-transform none
-      letter-spacing unset
-      margin-right 15px
-      color $color-blue-darker
-      font-family $bariol-light-font-family
-      &:hover
-        color $brand-primary
-    
+    nav-faq-help-links()
+
   +for_breakpoint(not-small)
     position fixed !important
     left 20px !important
@@ -224,8 +215,9 @@ li.nav-expandable
 .how-to-frame
   border 1px solid grey
   +for_breakpoint(not-small)
-    width 80vw
-    height 45vw
+    width 100%
+    height 100%
+    min-height 480px
   +for_breakpoint(small)
     width 96vw
     height 54vw
