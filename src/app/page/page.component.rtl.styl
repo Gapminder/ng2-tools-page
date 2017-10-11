@@ -32,10 +32,10 @@ body
 
     .lang-wrapper
       float left
-      margin 14px -180px 0 140px
+      margin 7px -280px 0 5px
 
-      +for_breakpoint(medium)
-        margin-left 100px
+      +for_breakpoint(not-small)
+        margin-left 10px
 
       +for_breakpoint(small)
 
@@ -50,8 +50,8 @@ body
           display inline-block
 
     .social-list
-      float left
-      margin 5px 0 0 200px
+      float right
+      margin 5px 0 0 100px
 
       li
         float right
@@ -79,12 +79,6 @@ body
     .more
       direction rtl
 
-    .about
-      float left
-
-    .related
-      float right
-
     .see-also-heading
       margin-left 0
       width 100%
@@ -93,3 +87,20 @@ body
       +for_breakpoint(small,medium)
         left 45px
         right initial
+
+    .nav li
+      padding-right 0
+      padding-left 15px
+      +for_breakpoint(small)
+         padding-right 0
+         padding-left 5px
+
+    .how-to-use-video
+      +for_breakpoint(not-small)
+        span
+          margin-right 0!important
+          margin-left 10px!important
+
+    .chart-switcher-options
+      min-width 100px
+      right 30px
