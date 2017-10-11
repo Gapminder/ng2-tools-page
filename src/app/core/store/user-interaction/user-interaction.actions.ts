@@ -5,8 +5,8 @@ export class PromptForSharingLink implements Action {
   type: string = PromptForSharingLink.TYPE;
 }
 
-export class PromptForShortUrl implements Action {
-  static TYPE = 'PromptForShortUrl';
-  type: string = PromptForShortUrl.TYPE;
+export class PromptForEmbeddedUrl implements Action {
+  static TYPE = 'PromptForEmbeddedUrl';
+  type: string = PromptForEmbeddedUrl.TYPE;
 }
 
