@@ -19,7 +19,7 @@ import {
 import { Language } from '../core/store/language/language';
 import { ChangeLanguage } from '../core/store/language/language.actions';
 
-import { PromptForSharingLink, PromptForShortUrl } from '../core/store/user-interaction/user-interaction.actions';
+import { PromptForSharingLink, PromptForEmbeddedUrl } from '../core/store/user-interaction/user-interaction.actions';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -71,11 +71,11 @@ export class HeaderComponent {
   }
 
   getEmbeddedUrl(): void {
-    this.store.dispatch(new PromptForSharingLink());
+    this.store.dispatch(new PromptForEmbeddedUrl());
   }
 
   shareLink(): void {
-    this.store.dispatch(new PromptForShortUrl());
+    this.store.dispatch(new PromptForSharingLink());
   }
 
   @HostListener('window:resize', ['$event'])

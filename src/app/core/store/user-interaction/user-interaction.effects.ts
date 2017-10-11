@@ -8,18 +8,20 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/do';
 
 import { of } from 'rxjs/observable/of';
-import { PromptForSharingLink, PromptForShortUrl, } from './user-interaction.actions';
+import { PromptForSharingLink, PromptForEmbeddedUrl, } from './user-interaction.actions';
 import { LocationService } from '../../location.service';
 import { BitlyService } from '../../bitly.service';
 
 @Injectable()
 export class UserInteractionEffects {
   @Effect({ dispatch: false })
-  shortUrl$: Observable<Action> = this.actions$
-    .ofType(PromptForShortUrl.TYPE)
+  embeddedUrl$: Observable<Action> = this.actions$
+    .ofType(PromptForEmbeddedUrl.TYPE)
     .switchMap(() => {
       const message = 'Copy this fragment and paste it in your website or blog:\n(more instructions on vizabi.org/tutorials)';
+
       prompt(message, wrapInIFrame(this.locationService.getUrlReadyForEmbedding()));
+
       return of({} as Action);
     });
 
@@ -39,5 +41,5 @@ export class UserInteractionEffects {
 }
 
 function wrapInIFrame(content: string): string {
-  return `<iframe src="${content}" style="width: 100%; height: 500px; margin: 0 0 0 0; border: 1px solid grey;"></iframe>`
+  return `<iframe src="${content}" style="width: 100%; height: 500px; margin: 0 0 0 0; border: 1px solid grey;"></iframe>`;
 }
