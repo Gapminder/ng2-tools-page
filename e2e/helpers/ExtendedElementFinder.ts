@@ -63,6 +63,10 @@ export class ExtendedElementFinder extends ElementFinder {
     });
   }
 
+  _$$(cssSelector: string) {
+    return new ExtendedArrayFinder(this.$$(cssSelector));
+  }
+
   // TODO think about this, because for now it looks weird
   dragAndDrop(to: any): promise.Promise<void> {
     return browser.wait(EC.visibilityOf($(this.locator().value)), TIMEOUT, this.errorMessage).then(() => {

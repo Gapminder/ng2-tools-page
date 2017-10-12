@@ -14,7 +14,6 @@ describe('Bubbles chart - Acceptance', () => {
   const sidebar: Sidebar = new Sidebar(bubbleChart);
 
   beforeEach(async() => {
-    await browser.get('/');
     await bubbleChart.openChart();
   });
 
