@@ -4,7 +4,7 @@ import {
   getAllLanguages,
   getAllMenuItems,
   getSelectedLanguage,
-  getSelectedMenuItem,
+  getSelectedMenuItem, getSelectedTool,
   isLanguageSwitcherVisible,
   isMobileMenuHidden,
   State
@@ -20,6 +20,7 @@ import { Language } from '../core/store/language/language';
 import { ChangeLanguage } from '../core/store/language/language.actions';
 
 import { PromptForSharingLink, PromptForEmbeddedUrl } from '../core/store/user-interaction/user-interaction.actions';
+import { SelectTool } from '../core/store/tools/tools.actions';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -30,6 +31,7 @@ import { PromptForSharingLink, PromptForEmbeddedUrl } from '../core/store/user-i
 export class HeaderComponent {
   allLanguages$: Observable<ReadonlyArray<Language>>;
   selectedLanguage$: Observable<Language>;
+  selectedTool$: Observable<string>;
   isLanguageSwitcherVisible$: Observable<boolean>;
 
   menuItems$: Observable<any[]>;
@@ -42,6 +44,7 @@ export class HeaderComponent {
     this.selectedMenuItem$ = this.store.select(getSelectedMenuItem);
     this.isMobileMenuHidden$ = this.store.select(isMobileMenuHidden);
     this.allLanguages$ = this.store.select(getAllLanguages);
+    this.selectedTool$ = this.store.select(getSelectedTool);
     this.selectedLanguage$ = this.store.select(getSelectedLanguage);
     this.isLanguageSwitcherVisible$ = this.store.select(isLanguageSwitcherVisible);
 
@@ -76,6 +79,10 @@ export class HeaderComponent {
 
   shareLink(): void {
     this.store.dispatch(new PromptForSharingLink());
+  }
+
+  selectTool(selectedTool: string) {
+    this.store.dispatch(new SelectTool(selectedTool));
   }
 
   @HostListener('window:resize', ['$event'])

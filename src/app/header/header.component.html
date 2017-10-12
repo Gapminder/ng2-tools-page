@@ -1,6 +1,6 @@
 <div class="header">
 
-  <app-chart-switcher></app-chart-switcher>
+  <app-chart-switcher [selectedTool]="selectedTool$ | async" (selectTool)="selectTool($event)"></app-chart-switcher>
 
   <div class="how-to-use desktop">
     <div class="flow-container">
