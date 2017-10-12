@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, Output,
+  ViewEncapsulation
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 const options = [
@@ -24,11 +27,15 @@ const getOptionBySlug = (slug: string) => {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChartSwitcherComponent {
-  public options: { title: string, slug: string }[] = options;
-  public currentChart = options[0];
-  public areOptionsVisible = false;
+  @Input() selectedTool: string;
+  @Output() selectTool: EventEmitter<string> = new EventEmitter();
+
+  options: { title: string; slug: string }[] = options;
+  currentChart: { title: string; slug: string };
+  areOptionsVisible = false;
 
   constructor(private route: ActivatedRoute, private cd: ChangeDetectorRef) {
+    this.currentChart = getOptionBySlug(this.selectedTool);
     this.route.fragment.subscribe(params => {
       const match = /chart-type=([a-z]+)/.exec(params);
 
@@ -49,6 +56,16 @@ export class ChartSwitcherComponent {
 
   public getLink(toolKey: string): string {
     return `${window.location.pathname}#_chart-type=${toolKey}`;
+  }
+
+  public onToolChanged($event, selectedTool: string) {
+    if ($event.ctrlKey) {
+      return;
+    }
+
+    this.selectTool.emit(selectedTool);
+
+    $event.preventDefault();
   }
 
   @HostListener('window:click', ['$event'])

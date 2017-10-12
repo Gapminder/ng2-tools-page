@@ -104,12 +104,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         this.store.dispatch(new TrackGaPageEvent(currentPathWithHash));
         this.store.dispatch(new TrackGaVizabiModelChangeEvent(currentPathWithHash));
-
-        const vizabiInstance = this.vizabiInstances[this.currentChartType].instance;
-
-        if (vizabiInstance.setModel && vizabiInstance._ready) {
-          vizabiInstance.setModel(this.currentHashModel);
-        }
       });
   }
 

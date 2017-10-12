@@ -5,5 +5,5 @@
     </div>
 </div>
 <div id="chart-switcher-options" *ngIf="options" class="chart-switcher-options" [hidden]="!areOptionsVisible">
-    <div *ngFor="let option of options" [hidden]="option === currentChart"><a [href]="getLink(option.slug)" rel="noopener">{{option.title}}</a></div>
+    <div *ngFor="let option of options" [hidden]="option === currentChart"><a [href]="getLink(option.slug)" (click)="onToolChanged($event, option.slug)" rel="noopener">{{option.title}}</a></div>
 </div>
