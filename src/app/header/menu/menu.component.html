@@ -52,7 +52,7 @@
   </ul>
 </div>
 
-<div id="how-to-modal" class="how-to-modal desktop" [hidden]="!isHowToVisible">
+<div id="how-to-modal" class="how-to-modal desktop" [hidden]="!isHowToVisible" *ngIf="menuItems">
   <div class="how-to-modal-content">
     <span (click)="switchHowTo()" class="how-to-modal-close">&times;</span>
 
