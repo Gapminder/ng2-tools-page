@@ -1,4 +1,5 @@
 import { $, browser, ElementFinder, ExpectedConditions as EC } from 'protractor';
+
 import { CommonChartPage } from '../common-chart.po';
 import { _$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 

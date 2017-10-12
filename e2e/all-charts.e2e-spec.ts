@@ -1,14 +1,15 @@
 import { browser, protractor } from 'protractor';
 
-import { Sidebar } from './pages/components/sidebar.e2e-component';
+import using = require('jasmine-data-provider');
+
 import { BubbleChart } from './pages/bubble-chart.po';
 import { RankingsChart } from './pages/rankings-chart.po';
 import { LineChart } from './pages/line-chart.po';
 import { MapChart } from './pages/map-chart.po';
 import { MountainChart } from './pages/mountain-chart.po';
+import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { Slider } from './pages/components/slider.e2e-component';
 
-import using = require('jasmine-data-provider');
 import { safeOpen } from './helpers/helper';
 
 const DATA_PROVIDER = {

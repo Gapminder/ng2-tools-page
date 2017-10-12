@@ -19,8 +19,6 @@ export class LineChart extends CommonChartPage {
   };
 
   dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
-
-  // dataDoubtsLink: ElementFinder = $('.vzb-data-warning');
   dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-box');
 
   /**
@@ -84,8 +82,7 @@ export class LineChart extends CommonChartPage {
   }
 
   async getLineOpacity(country: string): Promise<number> {
-    this.selectedCountries.findElementByExactText(country).safeGetCssValue('opacity');
-    return Number(await findElementByExactText(this.selectedCountries, country).getCssValue('opacity'));
+    return Number(await this.selectedCountries.findElementByExactText(country).safeGetCssValue('opacity'));
   }
 
   async countHighlightedLines(): Promise<number> {

@@ -4,6 +4,8 @@ import {
   findElementByExactText, isCountryAddedInUrl, waitForSpinner
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
+import { CommonChartPage } from '../common-chart.po';
+import { LineChart } from '../line-chart.po';
 
 export class Sidebar {
   /**
@@ -41,8 +43,6 @@ export class Sidebar {
   /**
    * Search select
    */
-    // searchInputField: ElementFinder = $('.vzb-find-search');
-    // public searchResult: ElementFinder = $('.vzb-find-item.vzb-dialog-checkbox label'); // TODO
   searchInputField: ExtendedElementFinder;
   searchResult: ExtendedArrayFinder;
 
@@ -50,7 +50,10 @@ export class Sidebar {
    * Advanced buttons section
    */
   advancedSection: ExtendedArrayFinder = _$$('.vzb-tool-buttonlist');
-  // Options
+
+  /**
+   * Options
+   */
   optionsButton: ExtendedElementFinder = _$$('[data-btn="moreoptions"]').last();
   optionsMenuSizeButton: ExtendedElementFinder = _$$('span[data-vzb-translate="buttons/size"]').last();
   optionsMenuBubblesResizeToddler: ExtendedElementFinder = _$$('.vzb-slider.vzb-slider-bubblesize .w').last();
@@ -64,13 +67,21 @@ export class Sidebar {
   optionsMenuHandIcon: ElementFinder = $('.thumb-tack-class-ico-drag[data-dialogtype="moreoptions"]');
   optionsModalDialogue: ElementArrayFinder = $$('div[data-dlg="moreoptions"]');
   optionsOkBtn: ElementFinder = $$('.vzb-dialog-button.vzb-label-primary').last();
-  // Size
+
+  /**
+   * Size
+   */
   sizeDropDown: ElementFinder = $$('span[class="vzb-ip-select"]').get(1);
   sizeListBabiesPerWomanColorIndicator: ExtendedElementFinder = _$$('span[class="vzb-treemenu-list-item-label"]').first();
-  // Zoom
+
+  /**
+   * Zoom
+   */
   zoomButton: ExtendedElementFinder = _$$('[data-btn="plus"]').first();
-  // Find
-  // findButton: ElementFinder = this.advancedSection.$$('[data-btn="find"]').last();
+
+  /**
+   * Find
+   */
   findButton: ExtendedElementFinder = _$$('[data-btn="find"]').last();
   countriesInFindModal: ElementArrayFinder = $$('.vzb-find-item.vzb-dialog-checkbox');
 
@@ -88,37 +99,32 @@ export class Sidebar {
   }
 
   async searchAndSelectCountry(country: string, select = true): Promise<void> {
-    // this will type country name in search and click on it in the results
-    // LineChart-page use it's own selectors
+    /**
+     * this method can be used to both select and deselect country
+     * LineChart-page use it's own selectors
+     */
     await this.searchInputField.typeText(country);
     await this.searchResult.findElementByExactText(country).safeClick();
 
-    // this method can be used to both select and deselect country
     await browser.wait(isCountryAddedInUrl(country, select));
 
     await waitForSpinner();
-
-    // if (this.chartType instanceof LineChart) {
-    //   await new Slider().waitForSliderToBeReady();
-    // }
   }
 
   async deselectCountryInSearch(country: string): Promise<void> {
-    // cilck on country name in search results and wait for it to disappear
-    // LineChart-page use it's own selectors
+    /**
+     * cilck on country name in search results and wait for it to disappear
+     * LineChart-page use it's own selectors
+     */
     await this.searchAndSelectCountry(country, false);
   }
 
   async clickOnCountryFromList(country: string): Promise<void> {
     const countryFromList: ElementFinder = await findElementByExactText(this.searchResult, country);
-    // const countryFromList: Ext;endedElementFinder = await _$$(this.searchResult.locator().value).findElementByExactText(country);
+
     await new ExtendedElementFinder(countryFromList).safeClick();
-    // await countryFromList.click();
     await browser.wait(isCountryAddedInUrl(country));
     await waitForSpinner();
-    // if (this.chartType instanceof LineChart) {
-    //   await new Slider().waitForSliderToBeReady();
-    // }
   }
 
   async selectInColorDropdown(element: ExtendedElementFinder): Promise<{}> {

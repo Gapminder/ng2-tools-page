@@ -20,7 +20,6 @@ export class BubbleChart extends CommonChartPage {
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
   public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
-  // public selectedCountries: ElementArrayFinder = $$('text[class="vzb-bc-label-content stroke"]');
   public selectedCountries: ElementArrayFinder = $$('[class*="vzb-bc-entity label"]');
 
   public lockButton: ExtendedElementFinder = _$$('[data-btn="lock"]').last();
@@ -71,11 +70,17 @@ export class BubbleChart extends CommonChartPage {
   }
 
   async hoverMouseOverBubble(color: string, index = 0, x = 0, y = 0): Promise<ElementFinder> {
-    // x and y needs because some bubbles could overlay another
+    /**
+     * x and y needs because some bubbles could overlay another
+     */
+
     const filteredElement = await this.filterBubblesByColor(color, index);
 
-    await browser.actions().mouseMove(filteredElement)
-    // if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
+    /**
+     * if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
+     */
+    await browser.actions()
+      .mouseMove(filteredElement)
       .mouseMove(x && y ? {x: x, y: y} : filteredElement)
       .perform();
 
@@ -85,12 +90,16 @@ export class BubbleChart extends CommonChartPage {
   }
 
   clickOnBubble(color: string, index = 0, x = 0, y = 0): Promise<{}> {
-    // x and y needs because some bubbles could overlay another
+    /**
+     * x and y needs because some bubbles could overlay another
+     */
 
     return this.filterBubblesByColor(color, index).then(filteredElement => {
+      /**
+       * if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
+       */
       browser.actions()
         .mouseMove(filteredElement)
-        // if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
         .mouseMove(x && y ? {x: x, y: y} : filteredElement)
         .click()
         .perform();
@@ -151,7 +160,10 @@ export class BubbleChart extends CommonChartPage {
   }
 
   getCoordinatesOfLowerOpacityBubblesOnBubblesChart() {
-    // return sorted array with bubbles coordinates
+    /**
+     * return sorted array with bubbles coordinates
+     */
+
     return $$(`circle[style*='opacity: 0.3']`)
       .map(elm => {
         return {

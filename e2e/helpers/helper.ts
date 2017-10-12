@@ -1,4 +1,5 @@
 import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
+
 import { CommonChartPage } from '../pages/common-chart.po';
 
 const MAX_TIMEOUT = 30000;
@@ -12,10 +13,8 @@ export function safeOpen(url: string) {
 
 export function waitForPageLoaded() {
   return browser.wait(EC.visibilityOf(CommonChartPage.sideBar), MAX_TIMEOUT).then(() => {
-    // return browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay), MAX_TIMEOUT).then(() => {
     return browser.wait(EC.visibilityOf(CommonChartPage.mainChart), MAX_TIMEOUT);
   });
-  // });
 }
 
 export function waitForSpinner() {
@@ -60,7 +59,11 @@ export async function waitForUrlToChange() {
 }
 
 export function isCountryAddedInUrl(country: string, state = true): Function {
-  // if state = true use it to wait for presence string in url
+  /**
+   * if state = true use it to wait for presence string in url
+   * otherwise, use to wait for string to be removed from URL
+   */
+
   if (state) {
     return () => {
       return browser.getCurrentUrl().then(url => {
@@ -68,7 +71,6 @@ export function isCountryAddedInUrl(country: string, state = true): Function {
       });
     };
   } else {
-    // otherwise use to wait for string to be removed from URL
     return () => {
       return browser.getCurrentUrl().then(url => {
         return !url.includes(`=${CommonChartPage.countries[country]}`);

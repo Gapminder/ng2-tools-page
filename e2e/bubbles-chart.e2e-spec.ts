@@ -10,13 +10,13 @@ const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
 const slider: Slider = new Slider();
 
-beforeEach(async() => {
-  await browser.get('/');
-  await bubbleChart.openChart();
-});
-
 describe('Bubbles chart - Acceptance', () => {
   const sidebar: Sidebar = new Sidebar(bubbleChart);
+
+  beforeEach(async() => {
+    await browser.get('/');
+    await bubbleChart.openChart();
+  });
 
   it('data warning to the bottom right(TC05)', async() => {
     await bubbleChart.dataDoubtsLink.safeClick();

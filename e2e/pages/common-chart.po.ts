@@ -1,5 +1,6 @@
 import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
-import { safeOpen, waitForSpinner, waitForUrlToChange } from '../helpers/helper';
+
+import { safeOpen, waitForPageLoaded, waitForSpinner, waitForUrlToChange } from '../helpers/helper';
 import { _$, _$$, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
 export class CommonChartPage {
@@ -47,12 +48,13 @@ export class CommonChartPage {
 
   async openChart(): Promise<void> {
     await safeOpen(this.url);
-    // await this.waitForToolsPageCompletelyLoaded();
   }
 
   async openByClick(): Promise<{}> {
     const currentUrl = await browser.getCurrentUrl();
-    // if we are already on this page no need to safeClick on the link
+    /**
+     * if we are already on this page no need to click on the link
+     */
     if (!currentUrl.match(this.url)) {
       await this.chartLink.safeClick();
 
@@ -62,7 +64,7 @@ export class CommonChartPage {
 
   async refreshPage(): Promise<void> {
     await browser.refresh();
-    // await this.waitForToolsPageCompletelyLoaded();
+    await waitForPageLoaded();
   }
 
   getSelectedCountriesNames(): PromiseLike<string> {
