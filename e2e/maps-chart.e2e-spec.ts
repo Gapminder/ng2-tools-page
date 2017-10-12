@@ -1,13 +1,13 @@
-import { browser } from 'protractor';
+import { browser, protractor } from 'protractor';
 
-import { Helper } from './helpers/helper';
-import { CommonChartPage } from './pages/common-chart.po';
-import { Sidebar } from './pages/sidebar.po';
+import { safeDragAndDrop, waitForPageLoaded } from './helpers/helper';
+import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { MapChart } from './pages/map-chart.po';
+import { Slider } from './pages/components/slider.e2e-component';
 
 const mapChart: MapChart = new MapChart();
-const commonChartPage: CommonChartPage = new CommonChartPage();
-const sidebar: Sidebar = new Sidebar();
+const sidebar: Sidebar = new Sidebar(mapChart);
+const slider: Slider = new Slider();
 
 describe('Maps chart - Acceptance', () => {
   beforeEach(async() => {
@@ -16,21 +16,20 @@ describe('Maps chart - Acceptance', () => {
   });
 
   it('bubbles change size with timeslider drag and play(TC25)', async() => {
-    const initialSelectedYear = await commonChartPage.sliderSelectedYear.getAttribute('textContent');
-    await mapChart.searchAndSelectCountry('China');
-    const initialBubbleSize = await mapChart.selectedCountries.getAttribute('r');
+    const initialSelectedYear = await slider.getPosition();
+    await sidebar.searchAndSelectCountry('China');
+    const initialBubbleSize = await mapChart.selectedBubbles.getAttribute('r');
+    await slider.dragToMiddle();
 
-    await mapChart.dragSliderToMiddle();
-
-    const finalSelectedYear = await commonChartPage.sliderSelectedYear.getAttribute('textContent');
-    const draggedBubbleSize = await mapChart.selectedCountries.getAttribute('r');
+    const finalSelectedYear = await slider.getPosition();
+    const draggedBubbleSize = await mapChart.selectedBubbles.getAttribute('r');
 
     await expect(initialSelectedYear).not.toEqual(finalSelectedYear);
     await expect(initialBubbleSize).not.toEqual(draggedBubbleSize);
 
-    await commonChartPage.playTimesliderSeconds(3);
+    await slider.playTimesliderSeconds(3);
 
-    const finalBubbleSize = await mapChart.selectedCountries.getAttribute('r');
+    const finalBubbleSize = await mapChart.selectedBubbles.getAttribute('r');
     await expect(finalBubbleSize).not.toEqual(draggedBubbleSize);
   });
 
@@ -42,19 +41,19 @@ describe('Maps chart - Acceptance', () => {
      */
 
     await mapChart.hoverMouseOverBubble('red');
-    expect(await mapChart.bubbleLabelOnMouseHover.getText()).toContain('China');
+    expect(await mapChart.bubbleLabelOnMouseHover.safeGetText()).toContain('China');
 
     await mapChart.hoverMouseOverBubble('red', 1); // second biggest bubble
-    expect(await mapChart.bubbleLabelOnMouseHover.getText()).toContain('India');
+    expect(await mapChart.bubbleLabelOnMouseHover.safeGetText()).toContain('India');
 
     await mapChart.hoverMouseOverBubble('yellow');
-    expect(await mapChart.bubbleLabelOnMouseHover.getText()).toContain('Russia');
+    expect(await mapChart.bubbleLabelOnMouseHover.safeGetText()).toContain('Russia');
 
     await mapChart.hoverMouseOverBubble('blue');
-    expect(await mapChart.bubbleLabelOnMouseHover.getText()).toContain('Nigeria');
+    expect(await mapChart.bubbleLabelOnMouseHover.safeGetText()).toContain('Nigeria');
 
     await mapChart.hoverMouseOverBubble('green');
-    expect(await mapChart.bubbleLabelOnMouseHover.getText()).toContain('United States');
+    expect(await mapChart.bubbleLabelOnMouseHover.safeGetText()).toContain('United States');
   });
 
   it('Bubbles selected by click', async() => {
@@ -62,12 +61,13 @@ describe('Maps chart - Acceptance', () => {
      * should check that clicking the bubble of the United States should select it. The bubble gets full opacity,
      * while the other bubbles get lower opacity(TC28)
      */
+    await browser.wait(protractor.ExpectedConditions.visibilityOf(mapChart.allBubbles.first())); // TODO remove this when ready
 
     const nonSelectedBubblesCount = await mapChart.allBubbles.count();
     await mapChart.clickOnBubble('green');
-    expect(await mapChart.selectedCountriesLabels.getText()).toMatch('United States');
-    expect(await mapChart.selectedCountries.get(0).getAttribute('style')).toContain('opacity: 1;');
-    expect(await mapChart.allBubbles.get(0).getAttribute('style')).toContain('opacity: 0.3;');
+    expect(await mapChart.selectedCountriesLabels.safeGetText()).toMatch('United States');
+    expect(await mapChart.selectedBubbles.get(0).safeGetAttribute('style')).toContain('opacity: 1;');
+    expect(await mapChart.allBubbles.get(0).safeGetAttribute('style')).toContain('opacity: 0.3;');
     expect(await mapChart.allBubbles.count()).not.toEqual(nonSelectedBubblesCount);
     expect(await mapChart.getOpacityOfNonSelectedBubblesMapsChart()).not.toEqual('opacity: 1;');
   });
@@ -76,12 +76,12 @@ describe('Maps chart - Acceptance', () => {
     await mapChart.clickOnBubble('green');
     const initialLabelPosition = await mapChart.selectedCountryLabel.getAttribute('transform');
 
-    await Helper.safeDragAndDrop(mapChart.selectedCountryLabel, {x: 200, y: 300});
+    await safeDragAndDrop(mapChart.selectedCountryLabel, {x: 200, y: 300});
 
     const newLabelPosition = await mapChart.selectedCountryLabel.getAttribute('transform');
     await expect(initialLabelPosition).not.toEqual(newLabelPosition);
 
-    await Helper.safeDragAndDrop(mapChart.selectedCountryLabel, {x: 250, y: 100});
+    await safeDragAndDrop(mapChart.selectedCountryLabel, {x: 250, y: 100});
 
     const finalLabelPosition = await mapChart.selectedCountryLabel.getAttribute('transform');
     await expect(newLabelPosition).not.toEqual(finalLabelPosition);
@@ -95,7 +95,7 @@ describe('Maps chart - Acceptance', () => {
 
     await mapChart.clickOnBubble('green');
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('United States');
-    expect(await mapChart.selectedCountries.get(0).getAttribute('style')).toContain('opacity: 1;');
+    expect(await mapChart.selectedBubbles.get(0).getAttribute('style')).toContain('opacity: 1;');
 
     await mapChart.deselectBubble('green');
 
@@ -109,31 +109,23 @@ describe('Maps chart - Acceptance', () => {
     await sidebar.searchAndSelectCountry('India');
     expect(await mapChart.selectedCountries.count()).toEqual(2);
 
-    await sidebar.searchAndSelectCountry('Brazil');
-    expect(await mapChart.selectedCountries.count()).toEqual(3);
-
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('China');
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('India');
-    expect(await mapChart.selectedCountriesLabels.getText()).toMatch('Brazil');
     expect(browser.getCurrentUrl()).toContain('geo=ind');
     expect(browser.getCurrentUrl()).toContain('geo=chn');
-    expect(browser.getCurrentUrl()).toContain('geo=bra');
 
     await sidebar.deselectCountryInSearch('India');
-    expect(await mapChart.selectedCountries.count()).toEqual(2);
-
-    await sidebar.deselectCountryInSearch('China');
     expect(await mapChart.selectedCountries.count()).toEqual(1);
 
-    await sidebar.deselectCountryInSearch('Brazil');
+    await sidebar.deselectCountryInSearch('China');
     expect(await mapChart.selectedCountries.count()).toEqual(0);
 
     expect(browser.getCurrentUrl()).not.toContain('geo=ind');
     expect(browser.getCurrentUrl()).not.toContain('geo=chn');
-    expect(browser.getCurrentUrl()).not.toContain('geo=bra');
   });
 
   it('Chart title show the exact values on hover(TC32)', async() => {
+    waitForPageLoaded();
     const axisYInitialText = await mapChart.yAxisTitle.getText();
     await expect(axisYInitialText).toEqual('Size: Population, total');
 
