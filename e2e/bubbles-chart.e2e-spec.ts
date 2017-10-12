@@ -1,23 +1,26 @@
-import { browser } from 'protractor';
+import { browser, protractor } from 'protractor';
 
-import { Helper } from './helpers/helper';
-import { Sidebar } from './pages/sidebar.po';
+import { safeDragAndDrop, safeExpectIsDispayed, waitForSpinner } from './helpers/helper';
+import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { CommonChartPage } from './pages/common-chart.po';
 import { BubbleChart } from './pages/bubble-chart.po';
+import { Slider } from './pages/components/slider.e2e-component';
 
-const sidebar: Sidebar = new Sidebar();
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
+const slider: Slider = new Slider();
 
 describe('Bubbles chart - Acceptance', () => {
+  const sidebar: Sidebar = new Sidebar(bubbleChart);
+
   beforeEach(async() => {
     await browser.get('/');
     await bubbleChart.openChart();
   });
 
   it('data warning to the bottom right(TC05)', async() => {
-    await Helper.safeClick(bubbleChart.dataDoubtsLink);
-    await Helper.safeExpectIsDispayed(bubbleChart.dataDoubtsWindow);
+    await bubbleChart.dataDoubtsLink.safeClick();
+    await safeExpectIsDispayed(bubbleChart.dataDoubtsWindow);
   });
 
   it('hover biggest bubbles: red, yellow, green and blue', async() => {
@@ -102,44 +105,35 @@ describe('Bubbles chart - Acceptance', () => {
     await bubbleChart.clickOnCountryBubble('India');
     await bubbleChart.clickXiconOnBubble('India');
 
-    expect(await bubbleChart.tooltipOnClick.isPresent()).toBe(false, 'tooltip should be hidden');
+    expect(await bubbleChart.countryTooltip('India').isPresent()).toBe(false, 'tooltip should be hidden');
 
     await bubbleChart.clickOnCountryBubble('India');
     await bubbleChart.deselectBubble('India');
 
-    expect(await bubbleChart.tooltipOnClick.isPresent()).toBe(false, 'tooltip should be hidden');
+    expect(await bubbleChart.countryTooltip('India').isPresent()).toBe(false, 'tooltip should be hidden');
   });
 
   it('deselect country using search field', async() => {
     // should check that countries could be selected/deselected using the button "Find" to the right(TC11)
-    await bubbleChart.searchAndSelectCountry('China');
+    await sidebar.searchAndSelectCountry('China');
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
 
-    await bubbleChart.searchAndSelectCountry('India');
+    await sidebar.searchAndSelectCountry('India');
     expect(await bubbleChart.selectedCountries.count()).toEqual(2);
-
-    await bubbleChart.searchAndSelectCountry('Brazil');
-    expect(await bubbleChart.selectedCountries.count()).toEqual(3);
 
     expect(bubbleChart.selectedCountries.getText()).toMatch('China 2015');
     expect(bubbleChart.selectedCountries.getText()).toMatch('India 2015');
-    expect(bubbleChart.selectedCountries.getText()).toMatch('Brazil 2015');
     expect(browser.getCurrentUrl()).toContain('geo=ind');
     expect(browser.getCurrentUrl()).toContain('geo=chn');
-    expect(browser.getCurrentUrl()).toContain('geo=bra');
 
-    await bubbleChart.deselectCountryInSearch('India');
-    expect(await bubbleChart.selectedCountries.count()).toEqual(2);
-
-    await bubbleChart.deselectCountryInSearch('China');
+    await sidebar.deselectCountryInSearch('India');
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
 
-    await bubbleChart.deselectCountryInSearch('Brazil');
+    await sidebar.deselectCountryInSearch('China');
     expect(await bubbleChart.selectedCountries.count()).toEqual(0);
 
     expect(browser.getCurrentUrl()).not.toContain('geo=ind');
     expect(browser.getCurrentUrl()).not.toContain('geo=chn');
-    expect(browser.getCurrentUrl()).not.toContain('geo=bra');
   });
 
   it('trialsegments for bubbles on play', async() => {
@@ -147,15 +141,15 @@ describe('Bubbles chart - Acceptance', () => {
      * should check that when select China and the United States bubbles and click on play,
      * the trails being left for those two countries(TC13)
      */
-    await bubbleChart.searchAndSelectCountry('China');
-    await bubbleChart.searchAndSelectCountry('United States');
+    await sidebar.searchAndSelectCountry('China');
+    await sidebar.searchAndSelectCountry('United States');
 
-    await commonChartPage.playTimesliderSeconds(5);
+    await slider.playTimesliderSeconds(5);
 
     expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(20);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(20);
 
-    await commonChartPage.playTimesliderSeconds(5);
+    await slider.playTimesliderSeconds(5);
 
     expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(50);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(50);
@@ -169,8 +163,8 @@ describe('Bubbles chart - Acceptance', () => {
     await bubbleChart.clickOnChina();
     await bubbleChart.clickOnUnitedStates();
 
-    await bubbleChart.dragSliderToMiddle();
-    await bubbleChart.dragSliderToRightEdge();
+    await slider.dragToMiddle();
+    await slider.dragToRightEdge();
 
     expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(100);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(100);
@@ -188,15 +182,15 @@ describe('Bubbles chart - Acceptance', () => {
     const xCoord = await bubbleChart.getCountryBubble('China').getAttribute('cx');
     const yCoord = await bubbleChart.getCountryBubble('China').getAttribute('cy');
 
-    await Helper.safeClick(bubbleChart.lockButton);
-    await Helper.safeClick(bubbleChart.trailsButton);
-    await bubbleChart.dragSliderToMiddle();
+    await bubbleChart.lockButton.safeClick();
+    await bubbleChart.trailsButton.safeClick();
+    await slider.dragToMiddle();
 
     const coordinatesOfUnselectedBubbles2 = await bubbleChart.getCoordinatesOfLowerOpacityBubblesOnBubblesChart();
 
     await expect(coordinatesOfUnselectedBubbles).toEqual(coordinatesOfUnselectedBubbles2);
 
-    await commonChartPage.playTimesliderSeconds(3);
+    await slider.playTimesliderSeconds(3);
 
     const coordinatesOfUnselectedBubbles3 = await bubbleChart.getCoordinatesOfLowerOpacityBubblesOnBubblesChart();
 
@@ -215,9 +209,9 @@ describe('Bubbles chart - Acceptance', () => {
      */
     const initialRadius = await bubbleChart.getBubblesRadius();
 
-    Helper.safeClick(sidebar.optionsButton);
-    Helper.safeClick(sidebar.optionsMenuSizeButton);
-    Helper.safeDragAndDrop(sidebar.optionsMenuBubblesResizeToddler, {x: 60, y: 0});
+    sidebar.optionsButton.safeClick();
+    sidebar.optionsMenuSizeButton.safeClick();
+    safeDragAndDrop(sidebar.optionsMenuBubblesResizeToddler, {x: 60, y: 0});
 
     const finalRadius = await bubbleChart.getBubblesRadius();
 
@@ -229,15 +223,15 @@ describe('Bubbles chart - Acceptance', () => {
     /**
      * should check that the indicator represented by the Size can be changed(TC16)
      */
-    await Helper.safeClick(sidebar.optionsButton);
-    await Helper.safeClick(sidebar.optionsMenuSizeButton);
+    await sidebar.optionsButton.safeClick();
+    await sidebar.optionsMenuSizeButton.safeClick();
 
     const initialBubblesCount = await bubbleChart.allBubbles.count();
     const initialIndicator = await sidebar.colorIndicatorDropdown.getText();
 
-    await Helper.safeClick(sidebar.colorIndicatorDropdown);
-    await Helper.safeClick(sidebar.sizeListBabiesPerWomanColorIndicator);
-    await Helper.waitForSpinner();
+    await sidebar.colorIndicatorDropdown.safeClick();
+    await sidebar.sizeListBabiesPerWomanColorIndicator.safeClick();
+    await waitForSpinner();
 
     const finalBubblesCount = await bubbleChart.allBubbles.count();
     const finalIndicator = await sidebar.colorIndicatorDropdown.getText();
@@ -245,7 +239,7 @@ describe('Bubbles chart - Acceptance', () => {
     await expect(initialIndicator).not.toEqual(finalIndicator);
     await expect(initialBubblesCount).not.toEqual(finalBubblesCount);
 
-    await Helper.safeClick(sidebar.optionsButton);
+    await sidebar.optionsButton.safeClick();
     expect(await sidebar.sizeDropDown.getText()).toEqual(finalIndicator);
   });
 
@@ -253,7 +247,6 @@ describe('Bubbles chart - Acceptance', () => {
     const usaBubbleInitialColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleInitialColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
     const chinaBubbleInitialColor = await bubbleChart.getCountryBubble('China').getCssValue('fill');
-
     await sidebar.selectInColorDropdown(sidebar.color.childMortalityRate);
 
     expect(await sidebar.colorDropDown.getText()).toContain('Child mortality');
@@ -283,12 +276,12 @@ describe('Bubbles chart - Acceptance', () => {
     /**
      * should check that on large screen resolutions panel can be dragged using the hand icon(TC18)
      */
-    await Helper.safeClick(sidebar.optionsButton);
+    await sidebar.optionsButton.safeClick();
 
     const optionsDialogueTopInitialPosition = await sidebar.optionsModalDialogue.getCssValue('top');
     const optionsDialogueRightInitialPosition = await sidebar.optionsModalDialogue.getCssValue('right');
 
-    await Helper.safeDragAndDrop(sidebar.optionsMenuHandIcon, {x: -260, y: -100});
+    await safeDragAndDrop(sidebar.optionsMenuHandIcon, {x: -260, y: -100});
 
     const optionsDialogueTopNewPosition = await sidebar.optionsModalDialogue.getCssValue('top');
     const optionsDialogueRightNewPosition = await sidebar.optionsModalDialogue.getCssValue('right');
@@ -296,7 +289,7 @@ describe('Bubbles chart - Acceptance', () => {
     await expect(optionsDialogueTopInitialPosition).not.toEqual(optionsDialogueTopNewPosition);
     await expect(optionsDialogueRightInitialPosition).not.toEqual(optionsDialogueRightNewPosition);
 
-    await Helper.safeDragAndDrop(sidebar.optionsMenuHandIcon, {x: -350, y: -200});
+    await safeDragAndDrop(sidebar.optionsMenuHandIcon, {x: -350, y: -200});
 
     const optionsDialogueTopFinalPosition = await sidebar.optionsModalDialogue.getCssValue('top');
     const optionsDialogueRightFinalPosition = await sidebar.optionsModalDialogue.getCssValue('right');
@@ -339,22 +332,22 @@ describe('Bubbles chart - Acceptance', () => {
      */
     // When X is time and showing a trail, zoom a rectangle on the part of the picture. Note min-max for x and y.
     // Refresh. Min-max for x and y should be the same. Trail should be preserved too
-    await bubbleChart.searchAndSelectCountry('China');
+    await sidebar.searchAndSelectCountry('China');
 
-    await bubbleChart.dragSliderToStart();
-    await bubbleChart.dragSliderToMiddle();
+    await slider.dragToStart();
+    await slider.dragToMiddle();
 
-    await Helper.safeClick(sidebar.zoomButton);
-    await Helper.safeDragAndDrop(bubbleChart.selectedCountryLabel, {x: 250, y: 250});
+    await sidebar.zoomButton.safeClick();
+    await safeDragAndDrop(bubbleChart.selectedCountryLabel, {x: 250, y: 250});
 
-    const axisYMaxValue = commonChartPage.axisYMaxValue.getAttribute('TextContent');
-    const axisXMaxValue = commonChartPage.axisXMaxValue.getAttribute('TextContent');
+    const axisYMaxValue = commonChartPage.axisYMaxValue.safeGetAttribute('TextContent');
+    const axisXMaxValue = commonChartPage.axisXMaxValue.safeGetAttribute('TextContent');
     const trailsCount = bubbleChart.chinaTrails.count();
 
     await bubbleChart.refreshPage();
 
-    const axisYNewMaxValue = commonChartPage.axisYMaxValue.getAttribute('TextContent');
-    const axisXNewMaxValue = commonChartPage.axisXMaxValue.getAttribute('TextContent');
+    const axisYNewMaxValue = commonChartPage.axisYMaxValue.safeGetAttribute('TextContent');
+    const axisXNewMaxValue = commonChartPage.axisXMaxValue.safeGetAttribute('TextContent');
     const trailsCountNew = bubbleChart.chinaTrails.count();
 
     await expect(axisXMaxValue).toEqual(axisXNewMaxValue);

@@ -1,17 +1,13 @@
-import { $, $$, browser, ElementArrayFinder, ElementFinder, protractor } from 'protractor';
+import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
-import { Helper } from '../helpers/helper';
-import { Sidebar } from './sidebar.po';
 import { CommonChartPage } from './common-chart.po';
+import { _$, _$$, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
-const EC = protractor.ExpectedConditions;
-const sidebar: Sidebar = new Sidebar();
-const commonChartPage: CommonChartPage = new CommonChartPage();
+export class BubbleChart extends CommonChartPage {
+  url = '#_chart-type=bubbles';
+  chartLink: ExtendedElementFinder = _$('a[href*="bubbles"]');
 
-export class BubbleChart {
-  public url = '#_chart-type=bubbles';
-
-  public dataDoubtsLink: ElementFinder = $('.vzb-data-warning');
+  public dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
   public dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-body');
   public allBubbles: ElementArrayFinder = $$('circle[class*="vzb-bc-entity"]');
   public bubbleLabelOnMouseHover: ElementFinder = $('g[class="vzb-bc-tooltip"]');
@@ -20,63 +16,28 @@ export class BubbleChart {
   public selectedCountryLabel: ElementFinder = $$('.vzb-label-fill.vzb-tooltip-border').first();
   public countrySelectedBiggerLabel: ElementFinder = $('.vzb-bc-labels .vzb-bc-entity');
   public selectedBubbleLabel: ElementFinder = $('.vzb-label-fill.vzb-tooltip-border');
-  public xIconOnBubble: ElementFinder = $('.vzb-bc-label-x');
+  public xIconOnBubble: ExtendedElementFinder = _$('.vzb-bc-label-x');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
   public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
+  public selectedCountries: ElementArrayFinder = $$('[class*="vzb-bc-entity label"]');
 
-  public selectedCountries: ElementArrayFinder = $$('text[class="vzb-bc-label-content stroke"]');
-  public lockButton: ElementFinder = $$('[data-btn="lock"]').last();
-  public trailsButton: ElementFinder = $$('button[data-btn="trails"]').last();
-
+  public lockButton: ExtendedElementFinder = _$$('[data-btn="lock"]').last();
+  public trailsButton: ExtendedElementFinder = _$$('button[data-btn="trails"]').last();
   public sidebar = {
     bubbleOpacityControl: $('.vzb-dialog-bubbleopacity'),
     resetFiltersBtn: $('.vzb-find-deselect'),
     zoomSection: $('.vzb-dialog-zoom-buttonlist')
   };
 
+  countryTooltip = country => $(`[class*="vzb-bc-entity label-${CommonChartPage.countries[country]}"]`);
+
   getSidebarElements() {
     return this.sidebar;
   }
 
-  getCountryBubble(country: string): ElementFinder {
-    return $(`circle[class*="vzb-bc-entity bubble-${commonChartPage.countries[country]}"]`);
-  }
-
-  async openChart(): Promise<{}> {
-    return await commonChartPage.openChart(this.url);
-  }
-
-  async dragSliderToMiddle(): Promise<{}> {
-    return await commonChartPage.dragSliderToMiddle();
-  }
-
-  async dragSliderToStart(): Promise<{}> {
-    return await commonChartPage.dragSliderToStart();
-  }
-
-  async dragSliderToRightEdge(): Promise<{}> {
-    await commonChartPage.dragSliderToRightEdge();
-
-    return await browser.wait(EC.visibilityOf(this.trials.first()));
-  }
-
-  async openByClick(): Promise<{}> {
-    const currentUrl = await browser.getCurrentUrl();
-    // if we are already on this page no need to safeClick on the link
-    if (!currentUrl.match(this.url)) {
-      await Helper.safeClick(commonChartPage.bubblesChart);
-
-      return await commonChartPage.waitForToolsPageCompletelyLoaded();
-    }
-  }
-
-  async refreshPage(): Promise<{}> {
-    return await commonChartPage.refreshPage();
-  }
-
-  async searchAndSelectCountry(country: string): Promise<{}> {
-    return sidebar.searchAndSelectCountry(country);
+  getCountryBubble(country: string): ExtendedElementFinder {
+    return _$(`circle[class*="vzb-bc-entity bubble-${CommonChartPage.countries[country]}"]`);
   }
 
   getSelectedCountries(): ElementArrayFinder {
@@ -90,9 +51,9 @@ export class BubbleChart {
   }
 
   async clickOnCountryBubble(country: string): Promise<{}> {
-    await Helper.safeClick(this.getCountryBubble(country));
+    await this.getCountryBubble(country).safeClick();
 
-    return await browser.wait(EC.visibilityOf(this.tooltipOnClick.last()), 2000);
+    return await browser.wait(EC.visibilityOf(this.countryTooltip(country)), 2000);
   }
 
   async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {
@@ -103,15 +64,23 @@ export class BubbleChart {
       'green': 'rgb(127, 235, 0)'
     };
 
+    await browser.wait(EC.visibilityOf($$(`circle[style*='fill: ']`).first()));
+
     return $$(`circle[style*='fill: ${colors[color.toLocaleLowerCase()]}']`).get(index);
   }
 
   async hoverMouseOverBubble(color: string, index = 0, x = 0, y = 0): Promise<ElementFinder> {
-    // x and y needs because some bubbles could overlay another
+    /**
+     * x and y needs because some bubbles could overlay another
+     */
+
     const filteredElement = await this.filterBubblesByColor(color, index);
 
-    await browser.actions().mouseMove(filteredElement)
-    // if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
+    /**
+     * if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
+     */
+    await browser.actions()
+      .mouseMove(filteredElement)
       .mouseMove(x && y ? {x: x, y: y} : filteredElement)
       .perform();
 
@@ -121,12 +90,16 @@ export class BubbleChart {
   }
 
   clickOnBubble(color: string, index = 0, x = 0, y = 0): Promise<{}> {
-    // x and y needs because some bubbles could overlay another
+    /**
+     * x and y needs because some bubbles could overlay another
+     */
 
     return this.filterBubblesByColor(color, index).then(filteredElement => {
+      /**
+       * if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
+       */
       browser.actions()
         .mouseMove(filteredElement)
-        // if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
         .mouseMove(x && y ? {x: x, y: y} : filteredElement)
         .click()
         .perform();
@@ -136,9 +109,9 @@ export class BubbleChart {
   }
 
   async deselectBubble(country: string): Promise<{}> {
-    await Helper.safeClick(this.getCountryBubble(country));
+    await this.getCountryBubble(country).safeClick();
 
-    return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 2000);
+    return await browser.wait(EC.invisibilityOf(this.countryTooltip(country)), 2000);
   }
 
   async hoverUnitedStates(): Promise<{}> {
@@ -157,10 +130,6 @@ export class BubbleChart {
     return await browser.wait(EC.visibilityOf(this.getCountryBubble('China')), 4000, `China bubble to appear`);
   }
 
-  getSliderPosition(): Promise<string> {
-    return commonChartPage.getSliderPosition();
-  }
-
   countBubblesByOpacity(opacity?: number) {
     const element = this.allBubbles;
 
@@ -177,14 +146,9 @@ export class BubbleChart {
 
   async clickXiconOnBubble(country: string): Promise<{}> {
     await browser.actions().mouseMove(this.selectedBubbleLabel).perform();
-    await Helper.safeClick(this.xIconOnBubble);
+    await this.xIconOnBubble.safeClick();
 
     return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 5000);
-  }
-
-
-  deselectCountryInSearch(country: string) {
-    return sidebar.deselectCountryInSearch(country);
   }
 
   getBubblesRadius() {
@@ -196,7 +160,10 @@ export class BubbleChart {
   }
 
   getCoordinatesOfLowerOpacityBubblesOnBubblesChart() {
-    // return sorted array with bubbles coordinates
+    /**
+     * return sorted array with bubbles coordinates
+     */
+
     return $$(`circle[style*='opacity: 0.3']`)
       .map(elm => {
         return {

@@ -1,32 +1,34 @@
 import { browser } from 'protractor';
 
-import { Helper } from './helpers/helper';
-import { Sidebar } from './pages/sidebar.po';
+import { safeExpectIsDispayed, waitForSliderToBeReady } from './helpers/helper';
+import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { LineChart } from './pages/line-chart.po';
 import { CommonChartPage } from './pages/common-chart.po';
+import { Slider } from './pages/components/slider.e2e-component';
 
 const lineChart: LineChart = new LineChart();
-const sidebar: Sidebar = new Sidebar();
-const commonChartPage: CommonChartPage = new CommonChartPage();
+const sidebar: Sidebar = new Sidebar(lineChart);
+const slider: Slider = new Slider();
 
 describe('Line chart', () => {
+  const DEFAULT_COUNTRIES_NUMBER = 4;
   beforeEach(async() => {
     await browser.get('/');
-    await commonChartPage.openChart(lineChart.url);
+    await lineChart.openChart();
   });
 
   it('Add country from country list in sidebar', async() => {
-    await lineChart.clickOnCountryFromList('Argentina');
-    await expect(lineChart.getSelectedCountries().getText()).toMatch('Argentina');
-    // asuming that by default 4 countries are chosen
-    expect(await lineChart.countriesLines.count()).toEqual(5);
+    await sidebar.clickOnCountryFromList('Argentina');
+    await expect(lineChart.getSelectedCountriesNames()).toMatch('Argentina');
+
+    expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER + 1);
   });
 
   it('Add country from search in sidebar', async() => {
-    await lineChart.searchAndSelectCountry('Argentina');
-    await expect(lineChart.getSelectedCountries().getText()).toMatch('Argentina');
-    // asuming that by default 4 countries are chosen
-    expect(await lineChart.countriesLines.count()).toEqual(5);
+    await sidebar.searchAndSelectCountry('Argentina');
+    await expect(lineChart.getSelectedCountriesNames()).toMatch('Argentina');
+
+    expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER + 1);
   });
 
   it('Select line by click on label', async() => {
@@ -34,7 +36,7 @@ describe('Line chart', () => {
 
     expect(await lineChart.getLineOpacity('China')).toEqual(lineChart.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(1);
-    expect(await lineChart.countDimmedLines()).toEqual(3);
+    expect(await lineChart.countDimmedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 1);
   });
 
   it('Line became highlighted on hover', async() => {
@@ -42,12 +44,13 @@ describe('Line chart', () => {
     await lineChart.hoverLine('Russia');
 
     expect(await lineChart.getLineOpacity('Russia')).toEqual(lineChart.opacity.highlighted);
-    expect(await lineChart.countHighlightedLines()).toEqual(2);
-    expect(await lineChart.countDimmedLines()).toEqual(2);
+    expect(await lineChart.countHighlightedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 2);
+    expect(await lineChart.countDimmedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 2);
   });
 
   it('Hover the legend colors - will highlight specific lines', async() => {
-    await lineChart.searchAndSelectCountry('Bangladesh');
+    await sidebar.searchAndSelectCountry('Bangladesh');
+    await waitForSliderToBeReady();
     await sidebar.hoverMinimapRegion('Asia');
 
     expect(await lineChart.getLineOpacity('China')).toEqual(lineChart.opacity.highlighted);
@@ -58,6 +61,7 @@ describe('Line chart', () => {
 
   it(`Hover the legend colors - won't dim selected lines`, async() => {
     await lineChart.selectLine('Nigeria');
+    await waitForSliderToBeReady();
     await sidebar.hoverMinimapRegion('Asia');
 
     expect(await lineChart.getLineOpacity('China')).toEqual(lineChart.opacity.highlighted);
@@ -66,26 +70,26 @@ describe('Line chart', () => {
     expect(await lineChart.countDimmedLines()).toEqual(2);
   });
 
-  it('Change Y axis value', async() => {
+  it('change Y axis value', async() => {
     const yAxisValue = await lineChart.changeYaxisValue();
 
     expect(await lineChart.yAxisBtn.getText()).toContain(yAxisValue, 'Y axis button text');
   });
 
   it('Data doubts button', async() => {
-    await Helper.safeClick(lineChart.dataDoubtsLink);
+    await lineChart.dataDoubtsLink.safeClick();
 
-    await Helper.safeExpectIsDispayed(lineChart.dataDoubtsWindow);
+    await safeExpectIsDispayed(lineChart.dataDoubtsWindow);
   });
 
   it('Text on X axis on latest point on chart', async() => {
-    await commonChartPage.dragSliderToMiddle();
+    await slider.dragToMiddle();
 
-    expect(await lineChart.latestPointOnChart.getText()).toEqual(await commonChartPage.getSliderPosition());
+    expect(await lineChart.latestPointOnChart.getText()).toEqual(await slider.getPosition());
   });
 
   it('Reset button drop settings to default', async() => {
-    await lineChart.clickOnCountryFromList('Argentina');
+    await sidebar.clickOnCountryFromList('Argentina');
     await lineChart.clickResetButton();
 
     expect(await lineChart.countriesLines.count()).toEqual(4, 'number of selected countries');
@@ -128,12 +132,12 @@ describe('Line chart', () => {
 
   it('Lines opacity should not get lost when timeslider is playing', async() => {
     await lineChart.selectLine('China');
-    await Helper.safeClick(CommonChartPage.buttonPlay);
+    await CommonChartPage.buttonPlay.safeClick();
     await browser.sleep(2000); // play slider for 2 seconds to get the value in movement
 
     expect(await lineChart.countHighlightedLines()).toEqual(1);
 
-    await Helper.safeClick(CommonChartPage.buttonPause);
+    await CommonChartPage.buttonPause.safeClick();
     expect(await lineChart.countHighlightedLines()).toEqual(1);
   });
 
@@ -141,7 +145,7 @@ describe('Line chart', () => {
     /**
      * don't fixed yet: https://github.com/vizabi/vizabi/issues/2782
      */
-    await lineChart.searchAndSelectCountry('Bangladesh');
+    await sidebar.searchAndSelectCountry('Bangladesh');
     await lineChart.selectLine('China');
     await lineChart.refreshPage();
 

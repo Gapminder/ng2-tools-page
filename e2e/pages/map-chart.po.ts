@@ -1,24 +1,20 @@
-import { $, element, by, $$, ElementArrayFinder, ElementFinder, protractor, browser } from 'protractor';
+import { $, $$, ElementArrayFinder, ElementFinder, browser, ExpectedConditions as EC } from 'protractor';
 
-import { Helper } from '../helpers/helper';
-import { Sidebar } from './sidebar.po';
 import { CommonChartPage } from './common-chart.po';
+import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
-const EC = protractor.ExpectedConditions;
-
-const commonChartSidebar = new Sidebar();
-const commonChartPage = new CommonChartPage();
-
-export class MapChart {
+export class MapChart extends CommonChartPage {
   url = '#_chart-type=map';
+  chartLink: ExtendedElementFinder = _$('a[href*="map"]');
 
-  selectedCountries: ElementArrayFinder = $$('circle[class="vzb-bmc-bubble vzb-selected"]');
-  allBubbles: ElementArrayFinder = $$('circle[class="vzb-bmc-bubble"]');
-  bubbleLabelOnMouseHover: ElementFinder = $('.vzb-bmc-tooltip');
+  selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bmc-entity label"]');
+  selectedBubbles: ExtendedArrayFinder = _$$('.vzb-bmc-bubble.vzb-selected');
+  allBubbles: ExtendedArrayFinder = _$$('circle[class="vzb-bmc-bubble"]');
+  bubbleLabelOnMouseHover: ExtendedElementFinder = _$('.vzb-bmc-tooltip');
   tooltipOnClick: ElementFinder = $('.vzb-label-glow');
-  selectedCountriesLabels: ElementArrayFinder = $$('text[class="vzb-bmc-label-content stroke"]');
+  selectedCountriesLabels: ExtendedArrayFinder = _$$('text[class="vzb-bmc-label-content stroke"]');
   selectedCountryLabel: ElementFinder = $('[class*="vzb-bmc-entity label"]'); // TODO this could be elementArray
-  xIconOnBubble: ElementFinder = $('.vzb-bmc-label-x');
+  xIconOnBubble: ExtendedElementFinder = _$('.vzb-bmc-label-x');
   yAxisTitle: ElementFinder = $('.vzb-bmc-axis-y-title');
 
   sidebar = {
@@ -31,37 +27,11 @@ export class MapChart {
     return this.sidebar;
   }
 
-  async dragSliderToMiddle(): Promise<{}> {
-    return await commonChartPage.dragSliderToMiddle();
-  }
-
-  getSliderPosition(): Promise<{}> {
-    return commonChartPage.getSliderPosition();
-  }
-
-  async refreshPage(): Promise<{}> {
-    return await commonChartPage.refreshPage();
-  }
-
-  async openChart(): Promise<{}> {
-    return await commonChartPage.openChart(this.url);
-  }
-
-  async openByClick(): Promise<{}> {
-    await Helper.safeClick(commonChartPage.mapsChart);
-
-    return await commonChartPage.waitForToolsPageCompletelyLoaded();
-  }
-
-  async searchAndSelectCountry(country: string): Promise<{}> {
-    return commonChartSidebar.searchAndSelectCountry(country);
-  }
-
   getSelectedCountries(): ElementArrayFinder {
     return this.selectedCountriesLabels;
   }
 
-  async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {
+  async filterBubblesByColor(color: string, index = 0): Promise<ExtendedElementFinder> {
     const colors = {
       'red': '#ff5872',
       'yellow': '#ffe700',
@@ -69,7 +39,9 @@ export class MapChart {
       'green': '#7feb00'
     };
 
-    return await $$(`circle[fill = '${colors[color.toLocaleLowerCase()]}']`).get(index);
+    await browser.wait(EC.visibilityOf(this.allBubbles.first()), 5000);
+
+    return await _$$(`circle[fill = '${colors[color.toLocaleLowerCase()]}']`).get(index);
   }
 
   async hoverMouseOverBubble(color: string, index = 0): Promise<ElementFinder> {
@@ -84,14 +56,14 @@ export class MapChart {
   }
 
   async clickOnBubble(color: string, index = 0): Promise<void> {
-    const bubble = await this.filterBubblesByColor(color, index);
-    await Helper.safeClick(bubble);
+    const bubble: ExtendedElementFinder = await this.filterBubblesByColor(color, index);
+    await bubble.safeClick();
     await browser.wait(EC.visibilityOf(this.tooltipOnClick), 4000);
   }
 
   async deselectBubble(color: string, index = 0): Promise<void> {
-    const bubble = await this.filterBubblesByColor(color, index);
-    await Helper.safeClick(bubble);
+    const bubble: ExtendedElementFinder = await this.filterBubblesByColor(color, index);
+    await bubble.safeClick();
     await browser.wait(EC.invisibilityOf(this.tooltipOnClick), 2000);
   }
 
@@ -106,7 +78,7 @@ export class MapChart {
   // TODO make it work with specific country
   async clickXiconOnBubble(country: string): Promise<{}> {
     await browser.actions().mouseMove(this.selectedCountryLabel).perform();
-    await Helper.safeClick(this.xIconOnBubble);
+    await this.xIconOnBubble.safeClick();
 
     return await browser.wait(EC.invisibilityOf(this.tooltipOnClick), 5000);
   }
