@@ -2,6 +2,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpModule } from '@angular/http';
 import { RouterModule } from '@angular/router';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
 import { RelatedItemsComponent } from './related-items/related-items.component';
@@ -28,6 +31,8 @@ import { ToolsEffects } from './core/store/tools/tools.effects';
 import { UserInteractionEffects } from './core/store/user-interaction/user-interaction.effects';
 import { ClientGuard } from './core/client.guard';
 
+export const createTranslateLoader = (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json');
+
 const modules = [
   BrowserModule,
   HttpModule,
@@ -42,10 +47,18 @@ const modules = [
   ]),
   Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
   RouterModule.forRoot([
-    { path: '', component: PageComponent, canActivate: [DeprecatedUrlGuard] },
-    { path: 'for/:client', component: PageComponent, canActivate: [ClientGuard] },
-    { path: '**', redirectTo: '/' }
-  ])
+    {path: '', component: PageComponent, canActivate: [DeprecatedUrlGuard]},
+    {path: 'for/:client', component: PageComponent, canActivate: [ClientGuard]},
+    {path: '**', redirectTo: '/'}
+  ]),
+  HttpClientModule,
+  TranslateModule.forRoot({
+    loader: {
+      provide: TranslateLoader,
+      useFactory: createTranslateLoader,
+      deps: [HttpClient]
+    }
+  })
 ];
 
 @NgModule({
@@ -71,5 +84,6 @@ export class AppModule {
   /* tslint:disable */
   constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
   }
+
   /* tslint:enable */
 }

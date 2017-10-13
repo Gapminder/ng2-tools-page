@@ -1,15 +1,15 @@
 <div class="see-also-block">
-  <h2 class="heading-2 see-also-heading">Other tools</h2>
+  <h2 class="heading-2 see-also-heading" translate>other_tools</h2>
 
   <div class="other-tools-container">
     <div class="other-tools-item" *ngFor="let tool of tools" [hidden]="(selectedTool == tool.slug)">
       <a *ngIf="!!tool.slug" [href]="getLink(tool.slug)" rel="noopener" (click)="onToolChanged($event, tool.slug)">
         <img class="image" [src]="'.' + tool.image"/>
-        <span class="title">{{tool.title}}</span>
+        <span class="title">{{tool.title | translate}}</span>
       </a>
       <a *ngIf="!!tool.url" [href]="tool.url">
         <img class="image" [src]="'.' + tool.image"/>
-        <span class="title">{{tool.title}}</span>
+        <span class="title">{{tool.title | translate}}</span>
       </a>
     </div>
   </div>

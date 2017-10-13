@@ -106,7 +106,7 @@ export default [
     "image": "/assets/images/chart/bubble-chart.png",
     "category": "Tools",
     "title": "Bubbles",
-    "description": "This graph shows how long people live and how much money they earn. Click the play button to see how countries have developed since 1800.",
+    "description": "bubble_chart_desc",
     "__v": 4,
     "opts": {
       "locale": {
@@ -205,7 +205,7 @@ export default [
     "category": "Tools",
     "image": "/assets/images/chart/maps-chart.png",
     "title": "Maps",
-    "description": "This graph shows the population on a map",
+    "description": "bubble_map_desc",
     "opts": {
       "locale": {
         "filePath": "./assets/translation/"
@@ -409,7 +409,7 @@ export default [
     "category": "Tools",
     "image": "/assets/images/chart/trends-chart.png",
     "title": "Trends",
-    "description": "This graph shows how a trend changes across the years",
+    "description": "line_chart_desc",
     "opts": {
       "locale": {
         "filePath": "./assets/translation/"
@@ -507,7 +507,7 @@ export default [
     "category": "Tools",
     "image": "/assets/images/chart/ages-chart.png",
     "title": "Ages",
-    "description": "This graph shows the population by age",
+    "description": "pop_by_age_desc",
     "opts": {
       "locale": {
         "filePath": "./assets/translation/"
@@ -603,8 +603,8 @@ export default [
     "tool": "DollarStreet",
     "url": "http://www.gapminder.org/dollar-street",
     "image": "/assets/images/chart/dollar-street.png",
-    "title": "Dollar Street",
-    "description": "Dollar Street project",
+    "title": "dollar_street",
+    "description": "dollar_street_project",
     "opts": {
       "locale": {
       },
