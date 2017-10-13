@@ -5,37 +5,9 @@ module.exports = {
     'dist/tools/assets/**/**.*',
     'dist/tools/**.ico',
   ],
-  maximumFileSizeToCacheInBytes: 10485760, // set maximum size 10Mb for one file that will be cached
+  maximumFileSizeToCacheInBytes: 10485760, // set maximum size 10Mb for one file that will be cached (for development environment only)
   stripPrefix: 'dist/tools/',
   runtimeCaching: [
-    {
-      urlPattern: /(.*)\.ico/,
-      handler: 'cacheFirst',
-      options: {
-        name: 'favicon'
-      }
-    },
-    {
-      urlPattern: /assets\/(.*)/,
-      handler: 'cacheFirst',
-      options: {
-        name: 'assets'
-      }
-    },
-    {
-      urlPattern: /tools\/(.*)\.html/,
-      handler: 'cacheFirst',
-      options: {
-        name: 'indexhtml'
-      }
-    },
-    {
-      urlPattern: /tools\/(.*)\.js/,
-      handler: 'cacheFirst',
-      options: {
-        name: 'js'
-      }
-    },
     {
       urlPattern: /waffle-server(.*)\.gapminder(.*)\.org\/api\/ddf\/ql(.*)/,
       handler: 'cacheFirst',
@@ -48,10 +20,28 @@ module.exports = {
       }
     },
     {
+      urlPattern: /waffle-server(.*)\.gapminder(.*)\.org\/api\/ddf\/assets(.*)/,
+      handler: 'cacheFirst',
+      options: {
+        cache: {
+          name: 'ddfql-assets',
+          maxEntries: 200,
+          maxAgeSeconds: 60 * 60 * 2
+        }
+      }
+    },
+    {
       urlPattern: /waffle-server(.*)\.gapminder(.*)\.org\/api\/vizabi\/(.*)/,
       handler: 'cacheFirst',
       options: {
         name: 'vizabi statics'
+      }
+    },
+    {
+      urlPattern: /(.*)/,
+      handler: 'networkFirst',
+      options: {
+        name: 'other'
       }
     }
   ]
