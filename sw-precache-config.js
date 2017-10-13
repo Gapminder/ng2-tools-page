@@ -1,14 +1,11 @@
 module.exports = {
   staticFileGlobs: [
-    'dist/tools/assets/images/chart/**.*',
-    'dist/tools/assets/images/answers/**.*',
-    'dist/tools/assets/images/icons/menu/**.*',
-    'dist/tools/assets/images/**.*',
-    'dist/tools/assets/fonts/**.*',
-    'dist/tools/assets/translation/**.json',
-    'dist/tools/assets/**.css',
+    'dist/tools/**.html',
+    'dist/tools/**.js',
+    'dist/tools/assets/**/**.*',
     'dist/tools/**.ico',
   ],
+  maximumFileSizeToCacheInBytes: 10485760, // set maximum size 10Mb for one file that will be cached
   stripPrefix: 'dist/tools/',
   runtimeCaching: [
     {
@@ -23,6 +20,20 @@ module.exports = {
       handler: 'cacheFirst',
       options: {
         name: 'assets'
+      }
+    },
+    {
+      urlPattern: /tools\/(.*)\.html/,
+      handler: 'cacheFirst',
+      options: {
+        name: 'indexhtml'
+      }
+    },
+    {
+      urlPattern: /tools\/(.*)\.js/,
+      handler: 'cacheFirst',
+      options: {
+        name: 'js'
       }
     },
     {
@@ -41,13 +52,6 @@ module.exports = {
       handler: 'cacheFirst',
       options: {
         name: 'vizabi statics'
-      }
-    },
-    {
-      urlPattern: /tools\/(.*)/,
-      handler: 'networkOnly',
-      options: {
-        name: 'index html'
       }
     }
   ]
