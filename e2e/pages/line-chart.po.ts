@@ -11,7 +11,7 @@ import { ExtendedElementFinder, _$, _$$, ExtendedArrayFinder } from '../helpers/
 export class LineChart extends CommonChartPage {
   type = 'lineChart';
   url = '#_chart-type=linechart';
-  chartLink: ExtendedElementFinder = _$('a[href*="linechart"]');
+  chartLink: ExtendedElementFinder = _$('.about a[href*="linechart"]');
 
   opacity = {
     highlighted: 1,

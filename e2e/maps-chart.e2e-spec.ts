@@ -11,7 +11,6 @@ const slider: Slider = new Slider();
 
 describe('Maps chart - Acceptance', () => {
   beforeEach(async() => {
-    await browser.get('/');
     await mapChart.openChart();
   });
 

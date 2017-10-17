@@ -2,14 +2,14 @@ import { $, $$, ElementArrayFinder, ElementFinder, browser, ExpectedConditions a
 
 import { findElementByExactText, waitForSpinner } from '../helpers/helper';
 import { CommonChartPage } from './common-chart.po';
-import { _$, _$$, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
+import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
 export class MountainChart extends CommonChartPage {
   url = '#_chart-type=mountain';
-  chartLink: ExtendedElementFinder = _$('a[href*="mountain"]');
+  chartLink: ExtendedElementFinder = _$('.about a[href*="mountain"]');
 
 
-  public selectedCountries: ElementArrayFinder = $$('text[class="vzb-mc-label-text"]');
+  public selectedCountries: ExtendedArrayFinder = _$$('text[class="vzb-mc-label-text"]');
   // public mountainsChartLeftSidePanelSelectedCountries: ElementArrayFinder = $$('text[class="vzb-mc-label-text"]');
   public extremePovertyPercentage: ElementFinder = $('text[class="vzb-shadow vzb-mc-probe-value-ul"]');
   public axisXLineNumbers: ElementArrayFinder = $$('g[class="tick"]');

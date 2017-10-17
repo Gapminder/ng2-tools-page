@@ -13,7 +13,6 @@ const slider: Slider = new Slider();
 describe('Line chart', () => {
   const DEFAULT_COUNTRIES_NUMBER = 4;
   beforeEach(async() => {
-    await browser.get('/');
     await lineChart.openChart();
   });
 
