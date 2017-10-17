@@ -1,11 +1,11 @@
 import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
 import { CommonChartPage } from './common-chart.po';
-import { _$, _$$, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
+import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
 export class BubbleChart extends CommonChartPage {
   url = '#_chart-type=bubbles';
-  chartLink: ExtendedElementFinder = _$('a[href*="bubbles"]');
+  chartLink: ExtendedElementFinder = _$('.about a[href*="bubbles"]');
 
   public dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
   public dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-body');
@@ -20,7 +20,7 @@ export class BubbleChart extends CommonChartPage {
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
   public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
-  public selectedCountries: ElementArrayFinder = $$('[class*="vzb-bc-entity label"]');
+  public selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bc-entity label"]');
 
   public lockButton: ExtendedElementFinder = _$$('[data-btn="lock"]').last();
   public trailsButton: ExtendedElementFinder = _$$('button[data-btn="trails"]').last();

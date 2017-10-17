@@ -1,7 +1,7 @@
 import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
 import { safeOpen, waitForPageLoaded, waitForSpinner, waitForUrlToChange } from '../helpers/helper';
-import { _$, _$$, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
+import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
 export class CommonChartPage {
   static countries = {
@@ -31,9 +31,9 @@ export class CommonChartPage {
   public rankingsChart: ElementFinder = $('a[href*="barrank"]');
   public pageHeader: ElementFinder = $('.header');
 
-  url;
-  chartLink;
-  selectedCountries;
+  url: string;
+  chartLink: ExtendedElementFinder;
+  selectedCountries: ExtendedArrayFinder;
 
   public axisYMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-y g[class="tick"] text').last();
   public axisXMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-x g[class="tick"] text').last();
@@ -47,6 +47,7 @@ export class CommonChartPage {
   }
 
   async openChart(): Promise<void> {
+    await browser.get('/');
     await safeOpen(this.url);
   }
 

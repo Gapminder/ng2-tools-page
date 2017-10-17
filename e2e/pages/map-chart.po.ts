@@ -5,7 +5,7 @@ import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/
 
 export class MapChart extends CommonChartPage {
   url = '#_chart-type=map';
-  chartLink: ExtendedElementFinder = _$('a[href*="map"]');
+  chartLink: ExtendedElementFinder = _$('.about a[href*="map"]');
 
   selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bmc-entity label"]');
   selectedBubbles: ExtendedArrayFinder = _$$('.vzb-bmc-bubble.vzb-selected');

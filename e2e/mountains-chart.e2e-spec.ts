@@ -11,7 +11,6 @@ const slider: Slider = new Slider();
 
 describe('Mountains chart - Acceptance', () => {
   beforeEach(async() => {
-    await browser.get('/');
     await mountainChart.openChart();
   });
 
