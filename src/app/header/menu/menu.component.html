@@ -33,7 +33,7 @@
     <div class="nav-expanded how-to-content mobile" [hidden]="!isHowToVisible">
       <div class="nav-expanded-columns nav-expanded-columns-2 nav-expanded-columns-icons">
         <div class="nav-expanded-columns-inner expanded-column-item" style="text-align: center; width: 100%">
-            <iframe src="https://player.vimeo.com/video/231885967" class="how-to-frame" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            <div #howToMobileContent></div>
             <p class="nav-faq-help-links">
               <a target="_blank" href="//www.gapminder.org/tools-offline/" translate>can_i_download_Gapminder_Tools</a>
               <a target="_blank" href="//vizabi.org/tutorials/2017/04/03/show-your-data/" translate>can_i_add_my_own_data</a>
@@ -48,15 +48,14 @@
 
 <div class="nav-expandable-item mobile-share-menu-item">
   <ul class="social-list mobile">
-    <app-social-buttons></app-social-buttons>
+    <app-social-buttons (getEmbeddedUrl)="getEmbeddedUrl()" (shareLink)="shareLink()"></app-social-buttons>
   </ul>
 </div>
 
 <div id="how-to-modal" class="how-to-modal desktop" [hidden]="!isHowToVisible" *ngIf="menuItems">
   <div class="how-to-modal-content">
     <span (click)="switchHowTo()" class="how-to-modal-close">&times;</span>
-
-    <iframe src="https://player.vimeo.com/video/231885967" class="how-to-frame" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    <div #howToContent></div>
     <p class="nav-faq-help-links">
       <a target="_blank" href="//www.gapminder.org/tools-offline/" translate>can_i_download_Gapminder_Tools</a>
       <a target="_blank" href="//vizabi.org/tutorials/2017/04/03/show-your-data/" translate>can_i_add_my_own_data</a>
