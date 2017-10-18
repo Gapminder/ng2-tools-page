@@ -21,6 +21,7 @@ import { ChangeLanguage } from '../core/store/language/language.actions';
 
 import { PromptForSharingLink, PromptForEmbeddedUrl } from '../core/store/user-interaction/user-interaction.actions';
 import { SelectTool } from '../core/store/tools/tools.actions';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -39,7 +40,7 @@ export class HeaderComponent {
   isMobileMenuHidden: boolean;
   selectedMenuItem$: Observable<any>;
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<State>, private translate: TranslateService) {
     this.menuItems$ = this.store.select(getAllMenuItems);
     this.selectedMenuItem$ = this.store.select(getSelectedMenuItem);
     this.isMobileMenuHidden$ = this.store.select(isMobileMenuHidden);
@@ -63,6 +64,7 @@ export class HeaderComponent {
 
   changeLanguage(language: Language): void {
     this.store.dispatch(new ChangeLanguage(language));
+    this.translate.use(language.key);
   }
 
   hideLanguageChooser() {

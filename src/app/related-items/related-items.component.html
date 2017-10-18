@@ -1,5 +1,5 @@
 <div class="related-block">
-  <h2 class="heading-2 related-heading">Popular</h2>
+  <h2 class="heading-2 related-heading" translate>popular</h2>
 
   <div class="related-container">
     <ul class="related-items">
@@ -10,8 +10,8 @@
             <img [src]="relatedItem.image">
           </div>
           <div class="related-item-info">
-            <span class="title">{{relatedItem.title}}</span>
-            <span class="subtitle">{{relatedItem.subtitle}}</span>
+            <span class="title" translate>{{'related-' + relatedItem._id + '-title'}}</span>
+            <span class="subtitle" translate>{{'related-' + relatedItem._id + '-subtitle'}}</span>
           </div>
         </a>
       </li>

@@ -1,16 +1,17 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  AfterContentInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 const options = [
-  {title: 'Bubbles', slug: 'bubbles'},
-  {title: 'Income', slug: 'mountain'},
-  {title: 'Maps', slug: 'map'},
-  {title: 'Ranks', slug: 'barrank'},
-  {title: 'Trends', slug: 'linechart'},
-  {title: 'Ages', slug: 'popbyage'}];
+  {title: 'bubbles', slug: 'bubbles'},
+  {title: 'income', slug: 'mountain'},
+  {title: 'maps', slug: 'map'},
+  {title: 'ranks', slug: 'barrank'},
+  {title: 'trends', slug: 'linechart'},
+  {title: 'ages', slug: 'popbyage'}];
 const getOptionBySlug = (slug: string) => {
   for (const option of options) {
     if (option.slug === slug) {
@@ -26,7 +27,7 @@ const getOptionBySlug = (slug: string) => {
   styleUrls: ['./chart-switcher.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChartSwitcherComponent {
+export class ChartSwitcherComponent implements AfterContentInit {
   @Input() selectedTool: string;
   @Output() selectTool: EventEmitter<string> = new EventEmitter();
 
@@ -35,7 +36,6 @@ export class ChartSwitcherComponent {
   areOptionsVisible = false;
 
   constructor(private route: ActivatedRoute, private cd: ChangeDetectorRef) {
-    this.currentChart = getOptionBySlug(this.selectedTool);
     this.route.fragment.subscribe(params => {
       const match = /chart-type=([a-z]+)/.exec(params);
 
@@ -48,6 +48,10 @@ export class ChartSwitcherComponent {
         }
       }
     });
+  }
+
+  ngAfterContentInit() {
+    this.currentChart = getOptionBySlug(this.selectedTool);
   }
 
   public switchChartsOptions() {
