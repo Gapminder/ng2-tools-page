@@ -13,11 +13,6 @@ export class LineChart extends CommonChartPage {
   url = '#_chart-type=linechart';
   chartLink: ExtendedElementFinder = _$('.about a[href*="linechart"]');
 
-  opacity = {
-    highlighted: 1,
-    dimmed: 0.3
-  };
-
   dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
   dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-box');
 
@@ -86,11 +81,11 @@ export class LineChart extends CommonChartPage {
   }
 
   async countHighlightedLines(): Promise<number> {
-    return this.countLinesByOpacity(this.opacity.highlighted);
+    return this.countLinesByOpacity(CommonChartPage.opacity.highlighted);
   }
 
   async countDimmedLines(): Promise<number> {
-    return this.countLinesByOpacity(this.opacity.dimmed);
+    return this.countLinesByOpacity(CommonChartPage.opacity.dimmed);
   }
 
   async countLinesByOpacity(opacity: number): Promise<number> {

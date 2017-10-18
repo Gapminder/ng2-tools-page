@@ -33,7 +33,7 @@ describe('Line chart', () => {
   it('Select line by click on label', async() => {
     await lineChart.selectLine('China');
 
-    expect(await lineChart.getLineOpacity('China')).toEqual(lineChart.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(1);
     expect(await lineChart.countDimmedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 1);
   });
@@ -42,7 +42,7 @@ describe('Line chart', () => {
     await lineChart.selectLine('China');
     await lineChart.hoverLine('Russia');
 
-    expect(await lineChart.getLineOpacity('Russia')).toEqual(lineChart.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('Russia')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 2);
     expect(await lineChart.countDimmedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 2);
   });
@@ -52,8 +52,8 @@ describe('Line chart', () => {
     await waitForSliderToBeReady();
     await sidebar.hoverMinimapRegion('Asia');
 
-    expect(await lineChart.getLineOpacity('China')).toEqual(lineChart.opacity.highlighted);
-    expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(lineChart.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(2);
     expect(await lineChart.countDimmedLines()).toEqual(3);
   });
@@ -63,8 +63,8 @@ describe('Line chart', () => {
     await waitForSliderToBeReady();
     await sidebar.hoverMinimapRegion('Asia');
 
-    expect(await lineChart.getLineOpacity('China')).toEqual(lineChart.opacity.highlighted);
-    expect(await lineChart.getLineOpacity('Nigeria')).toEqual(lineChart.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('Nigeria')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(2);
     expect(await lineChart.countDimmedLines()).toEqual(2);
   });
@@ -148,8 +148,8 @@ describe('Line chart', () => {
     await lineChart.selectLine('China');
     await lineChart.refreshPage();
 
-    expect(await lineChart.getLineOpacity('China')).toEqual(lineChart.opacity.highlighted);
-    expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(lineChart.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(2);
     expect(await lineChart.countDimmedLines()).toEqual(2);
   });
@@ -158,7 +158,7 @@ describe('Line chart', () => {
     await lineChart.hoverLine('China');
 
     expect(await sidebar.colorDropDown.getText()).toEqual('Asia');
-    expect(Number(await sidebar.minimapAsiaRegion.getCssValue('opacity'))).toEqual(lineChart.opacity.highlighted);
+    expect(Number(await sidebar.minimapAsiaRegion.getCssValue('opacity'))).toEqual(CommonChartPage.opacity.highlighted);
   });
 
   // xit(`Change Options X and Y values`, async() => {

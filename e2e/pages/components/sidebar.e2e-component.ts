@@ -127,9 +127,14 @@ export class Sidebar {
     await waitForSpinner();
   }
 
-  async selectInColorDropdown(element: ExtendedElementFinder): Promise<{}> {
+  async selectInColorDropdown(element: ExtendedElementFinder | ElementFinder): Promise<{}> {
     await this.colorDropDown.safeClick();
-    await element.safeClick();
+
+    if (element instanceof ExtendedElementFinder) {
+      await element.safeClick();
+    } else {
+      await new ExtendedElementFinder(element).safeClick();
+    }
 
     return await waitForSpinner();
   }
