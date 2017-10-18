@@ -9,8 +9,6 @@ import { enableProdMode } from '@angular/core';
 import { environment } from './environments/environment';
 import { AppModule } from './app/';
 
-console.log("test safari bundle files")
-
 if (environment.production) {
   enableProdMode();
 }
