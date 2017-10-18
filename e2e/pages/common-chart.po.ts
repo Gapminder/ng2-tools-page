@@ -17,6 +17,11 @@ export class CommonChartPage {
     'Argentina': 'arg'
   };
 
+  static opacity = {
+    highlighted: 1,
+    dimmed: 0.3
+  };
+
   public static sideBar: ElementFinder = $('.vzb-tool-dialogs');
   public static buttonPlay: ExtendedElementFinder = _$('.vzb-ts-btn-play');
   public static buttonPause: ExtendedElementFinder = _$('.vzb-ts-btn-pause.vzb-ts-btn');

@@ -1,7 +1,7 @@
 <li class="nav-expandable">
   <div *ngFor="let item of menuItems" class="nav-expandable-item">
 
-    <a class="menu-item nav-toggle-expanded" (click)="selectMenuItem.emit(item)">{{ item.menu_label }}</a>
+    <a class="menu-item nav-toggle-expanded" (click)="selectMenuItem.emit(item)">{{ item.menu_label | translate }}</a>
 
     <div class="nav-expanded" [hidden]="item !== selectedMenuItem">
       <div class="nav-expanded-columns nav-expanded-columns-2 nav-expanded-columns-icons">
@@ -13,8 +13,8 @@
                   <img *ngIf="hasIcon(child)" [src]="getIconUrl(child)">
                 </div>
                 <div class="column-item-info">
-                  <div class="column-item-heading">{{ child.menu_label }}</div>
-                  <div class="column-item-description">{{ child.caption }}</div>
+                  <div class="column-item-heading">{{ child.menu_label | translate }}</div>
+                  <div class="column-item-description">{{ child.caption | translate }}</div>
                 </div>
               </a>
             </li>
@@ -28,16 +28,17 @@
 <li class="nav-expandable">
   <div class="nav-expandable-item">
 
-    <a id="how-to-button" class="menu-item how-to-use-video" (click)="switchHowTo()"><span>►</span>How to use</a>
+    <a id="how-to-button" class="menu-item how-to-use-video" (click)="switchHowTo()" translate><span>►</span>how_to_use</a>
 
     <div class="nav-expanded how-to-content mobile" [hidden]="!isHowToVisible">
       <div class="nav-expanded-columns nav-expanded-columns-2 nav-expanded-columns-icons">
         <div class="nav-expanded-columns-inner expanded-column-item" style="text-align: center; width: 100%">
-            <iframe src="https://player.vimeo.com/video/231885967" class="how-to-frame" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            <div #howToMobileContent></div>
             <p class="nav-faq-help-links">
-              <a target="_blank" href="//www.gapminder.org/tools-offline/">⧉ Can i download Gapminder Tools?</a>
-              <a target="_blank" href="//vizabi.org/tutorials/2017/04/03/show-your-data/">⧉ Can i add my own data?</a>
-              <a target="_blank" href="//www.gapminder.org/faq_frequently_asked_questions/">⧉ More help and FAQ</a>
+              <a target="_blank" href="//www.gapminder.org/GapminderMedia/wp-uploads/Gapminder-Tools-Guide.pdf" translate>pdf_guide</a>
+              <a target="_blank" href="//www.gapminder.org/tools-offline/" translate>can_i_download_Gapminder_Tools</a>
+              <a target="_blank" href="//vizabi.org/tutorials/2017/04/03/show-your-data/" translate>can_i_show_my_own_data</a>
+              <a target="_blank" href="//www.gapminder.org/faq_frequently_asked_questions/" translate>more_help_and_faq</a>
             </p>
         </div>
       </div>
@@ -48,19 +49,19 @@
 
 <div class="nav-expandable-item mobile-share-menu-item">
   <ul class="social-list mobile">
-    <app-social-buttons></app-social-buttons>
+    <app-social-buttons (getEmbeddedUrl)="getEmbeddedUrl()" (shareLink)="shareLink()"></app-social-buttons>
   </ul>
 </div>
 
 <div id="how-to-modal" class="how-to-modal desktop" [hidden]="!isHowToVisible" *ngIf="menuItems">
   <div class="how-to-modal-content">
     <span (click)="switchHowTo()" class="how-to-modal-close">&times;</span>
-
-    <iframe src="https://player.vimeo.com/video/231885967" class="how-to-frame" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+    <div #howToContent></div>
     <p class="nav-faq-help-links">
-      <a target="_blank" href="//www.gapminder.org/tools-offline/">⧉ Can i download Gapminder Tools?</a>
-      <a target="_blank" href="//vizabi.org/tutorials/2017/04/03/show-your-data/">⧉ Can i add my own data?</a>
-      <a target="_blank" href="//www.gapminder.org/faq_frequently_asked_questions/">⧉ More help and FAQ</a>
+      <a target="_blank" href="//www.gapminder.org/GapminderMedia/wp-uploads/Gapminder-Tools-Guide.pdf" translate>pdf_guide</a>
+      <a target="_blank" href="//www.gapminder.org/tools-offline/" translate>can_i_download_Gapminder_Tools</a>
+      <a target="_blank" href="//vizabi.org/tutorials/2017/04/03/show-your-data/" translate>can_i_show_my_own_data</a>
+      <a target="_blank" href="//www.gapminder.org/faq_frequently_asked_questions/" translate>more_help_and_faq</a>
     </p>
 
   </div>

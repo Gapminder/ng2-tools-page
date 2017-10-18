@@ -104,6 +104,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         this.store.dispatch(new TrackGaPageEvent(currentPathWithHash));
         this.store.dispatch(new TrackGaVizabiModelChangeEvent(currentPathWithHash));
+
+        if (this.isLocaleNotSame(oldHashModel)) {
+          const vizabiInstance = this.vizabiInstances[this.currentChartType].instance;
+
+          if (vizabiInstance.setModel && vizabiInstance._ready) {
+            vizabiInstance.setModel(this.currentHashModel);
+          }
+        }
       });
   }
 
@@ -213,5 +221,11 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     ];
 
     subscriptions.forEach((subscription: Subscription) => subscription && subscription.unsubscribe());
+  }
+
+  private isLocaleNotSame(model): boolean {
+    const isCurrentLocale = this.currentHashModel && this.currentHashModel.locale;
+
+    return isCurrentLocale && (!(model && model.locale) || this.currentHashModel.locale.id !== model.locale.id);
   }
 }

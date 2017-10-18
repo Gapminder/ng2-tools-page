@@ -16,11 +16,11 @@ export interface State {
   allLangs: ReadonlyArray<Language>;
 }
 
-export const DEFAULT_LANGUAGE: Language = { key: 'en', text: 'English' };
+export const DEFAULT_LANGUAGE: Language = {key: 'en', text: 'English'};
 
 export const AVAILABLE_LANGUAGES: Language[] = [
   DEFAULT_LANGUAGE,
-  { key: 'ar-SA', text: 'العربية' }
+  {key: 'ar-SA', text: 'العربية'}
 ];
 
 const initialState: State = {
@@ -37,8 +37,9 @@ export function reducer(state: State = initialState, action: LanguageActions): S
       const currentLanguage = state.lang;
 
       if (urlLanguageKey && currentLanguage && currentLanguage.key !== urlLanguageKey) {
-        return Object.assign({}, state, { lang: act.lang, locale: toLocale(act.lang) });
+        return {...state, ...{lang: act.lang, locale: toLocale(act.lang)}};
       }
+
       return state;
     }
     default: {
@@ -48,5 +49,5 @@ export function reducer(state: State = initialState, action: LanguageActions): S
 }
 
 function toLocale(language: Language): VizabiLocale {
-  return { locale: { id: language.key } };
+  return {locale: {id: language.key}};
 }
