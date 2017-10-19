@@ -74,8 +74,7 @@ export class ChartSwitcherComponent implements AfterContentInit {
 
   @HostListener('window:click', ['$event'])
   onClick(event) {
-    const isOwnClicked = event.srcElement.parentElement &&
-      event.srcElement.parentElement.id === 'chart-switcher-options';
+    const isOwnClicked = event.target.parentElement && event.target.parentElement.id === 'chart-switcher-options';
 
     if (!isOwnClicked && event.target.id !== 'chart-switcher-button') {
       this.areOptionsVisible = false;
