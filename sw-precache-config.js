@@ -38,7 +38,7 @@ module.exports = {
       }
     },
     {
-      urlPattern: /^(?!(chrome-extension|data):)(.*)/,
+      urlPattern: /^(http(s)?)\:\/\/(.*)/,
       handler: 'networkFirst',
       options: {
         name: 'other'
