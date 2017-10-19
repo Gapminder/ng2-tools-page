@@ -6,8 +6,8 @@ export default [
     "slug": "mountain",
     "category": "Tools",
     "image": "/assets/images/chart/income-chart.png",
-    "title": "Income",
-    "description": "This graph shows the amount of people in the world across each income level.",
+    "title": "income",
+    "description": "graph_shows_amount_people_across_income",
     "__v": 5,
     "opts": {
       "locale": {
@@ -105,7 +105,7 @@ export default [
     "slug": "bubbles",
     "image": "/assets/images/chart/bubble-chart.png",
     "category": "Tools",
-    "title": "Bubbles",
+    "title": "bubbles",
     "description": "bubble_chart_desc",
     "__v": 4,
     "opts": {
@@ -204,7 +204,7 @@ export default [
     "slug": "map",
     "category": "Tools",
     "image": "/assets/images/chart/maps-chart.png",
-    "title": "Maps",
+    "title": "maps",
     "description": "bubble_map_desc",
     "opts": {
       "locale": {
@@ -310,7 +310,7 @@ export default [
     "slug": "barrank",
     "category": "Tools",
     "image": "/assets/images/chart/ranks-chart.png",
-    "title": "Ranks",
+    "title": "ranks",
     "description": "This graph shows the population on a map",
     "opts": {
       "locale": {
@@ -408,7 +408,7 @@ export default [
     "slug": "linechart",
     "category": "Tools",
     "image": "/assets/images/chart/trends-chart.png",
-    "title": "Trends",
+    "title": "trends",
     "description": "line_chart_desc",
     "opts": {
       "locale": {
@@ -506,7 +506,7 @@ export default [
     "slug": "popbyage",
     "category": "Tools",
     "image": "/assets/images/chart/ages-chart.png",
-    "title": "Ages",
+    "title": "ages",
     "description": "pop_by_age_desc",
     "opts": {
       "locale": {
