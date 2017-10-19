@@ -1,9 +1,9 @@
 <div class="navigation">
     <div class="flow-container">
         <a href="//gapminder.org"><img src="assets/images/logo-small.png" height="30"></a>
-        <div class="chart-switcher"><a (click)="switchChartsOptions()" id="chart-switcher-button">{{currentChart.title | translate}}</a></div>
+        <div class="chart-switcher" *ngIf="currentChart"><a (click)="switchChartsOptions()" id="chart-switcher-button">{{currentChart.title | translate}}</a></div>
     </div>
 </div>
-<div id="chart-switcher-options" *ngIf="options" class="chart-switcher-options" [hidden]="!areOptionsVisible">
+<div id="chart-switcher-options" *ngIf="options && currentChart" class="chart-switcher-options" [hidden]="!areOptionsVisible">
     <div *ngFor="let option of options" [hidden]="option === currentChart"><a [href]="getLink(option.slug)" (click)="onToolChanged($event, option.slug)" rel="noopener">{{option.title | translate}}</a></div>
 </div>
