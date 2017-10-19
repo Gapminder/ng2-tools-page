@@ -20,13 +20,14 @@ export const DEFAULT_LANGUAGE: Language = {key: 'en', text: 'English'};
 
 export const AVAILABLE_LANGUAGES: Language[] = [
   DEFAULT_LANGUAGE,
-  {key: 'ar-SA', text: 'العربية'}
+  {key: 'ar-SA', text: 'العربية'},
+  {key: 'ru-RU', text: 'Русский'}
 ];
 
 const initialState: State = {
   lang: DEFAULT_LANGUAGE,
   locale: null,
-  allLangs: AVAILABLE_LANGUAGES,
+  allLangs: AVAILABLE_LANGUAGES
 };
 
 export function reducer(state: State = initialState, action: LanguageActions): State {
