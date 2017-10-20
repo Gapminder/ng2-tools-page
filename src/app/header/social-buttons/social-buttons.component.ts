@@ -1,13 +1,8 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Output,
+  ChangeDetectionStrategy, Component, EventEmitter, Output, ViewChild,
   ViewEncapsulation
 } from '@angular/core';
-import { Subscription } from 'rxjs/Subscription';
-import { Store } from '@ngrx/store';
-import { getCurrentVizabiModelHash, State } from '../../core/store';
 import { BitlyService } from '../../core/bitly.service';
-
-const MODEL_CHANGED_DEBOUNCE = 200;
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -19,20 +14,36 @@ const MODEL_CHANGED_DEBOUNCE = 200;
 export class SocialButtonsComponent {
   @Output() shareLink: EventEmitter<any> = new EventEmitter();
   @Output() getEmbeddedUrl: EventEmitter<any> = new EventEmitter();
+  @ViewChild('mailLink') mailLink;
+  mailUrl: string;
 
-  currentUrl: string;
+  constructor(private bitlyService: BitlyService) {
+  }
 
-  private vizabiModelChangesSubscription: Subscription;
+  twitter() {
+    this.openWindow(`https://twitter.com/intent/tweet?original_referer=#{url}&amp;related=Gapminder&amp;text=Gapminder&amp;tw_p=tweetbutton&amp;url=#{url}`);
+  }
 
-  constructor(store: Store<State>, bitlyService: BitlyService, cd: ChangeDetectorRef) {
-    this.vizabiModelChangesSubscription = store.select(getCurrentVizabiModelHash)
-      .debounceTime(MODEL_CHANGED_DEBOUNCE)
-      .subscribe(() => {
-        bitlyService.shortenUrl().subscribe(currentUrl => {
-          this.currentUrl = currentUrl;
+  facebook() {
+    this.openWindow(`http://www.addtoany.com/add_to/facebook?linkurl=#{url}&amp;`);
+  }
 
-          cd.markForCheck();
-        });
-      });
+  mail() {
+    this.bitlyService.shortenUrl().subscribe(url => {
+      this.mailUrl = url;
+      this.mailLink.nativeElement.click();
+    });
+  }
+
+  private openWindow(urlTemplate) {
+    const half = 2;
+    const windowWidth = 490;
+    const left: number = (window.innerWidth - windowWidth) / half;
+    const newWindow = window.open('', '_blank', `width=${windowWidth}, height=368, top=100, left=${left}`);
+
+    this.bitlyService.shortenUrl().subscribe(url => {
+      newWindow.location.href = urlTemplate.replace(/#{url}/g, url);
+      newWindow.focus();
+    });
   }
 }
