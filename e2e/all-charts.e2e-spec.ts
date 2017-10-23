@@ -26,7 +26,7 @@ describe('No additional data in URL when chart opens', () => {
 
   using(DATA_PROVIDER, (data, description) => {
     it(`URL on ${description} page`, async() => {
-      await safeOpen('/');
+      await safeOpen(protractor.browser.baseUrl);
       const chart = data.chart;
       await chart.openByClick();
 

@@ -73,7 +73,7 @@ describe('Ranks chart', () => {
   });
 
   it('Change color at the top of sidebar', async() => {
-    await sidebar.selectInColorDropdown(sidebar.color.mainReligion);
+    await sidebar.searchAndSelectInColorDropdown('Main religion');
     await waitForSpinner();
 
     const colorFromColorSection = await sidebar.color.firstColor.getAttribute('style');

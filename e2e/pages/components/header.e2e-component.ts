@@ -8,6 +8,7 @@ export class Header {
    */
   socialDesktop: ExtendedElementFinder = _$('.social.desktop');
   mailButtonDesktop: ExtendedElementFinder = this.socialDesktop._$$('.mail.button').first();
+  mailLinkDesktop: ExtendedElementFinder = this.socialDesktop._$$('app-social-buttons > a').first();
   twitterSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.twitter.button').first();
   facebookSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.facebook.button').first();
   icoplaneSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.button.ico-plane').first();
