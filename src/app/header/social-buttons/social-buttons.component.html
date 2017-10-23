@@ -2,7 +2,7 @@
   <div class="share-text-box" translate>share</div>
 </li>
 <li>
-  <a class="mail button" (click)="mail()">
+  <a class="mail button" href="mailto:?subject=Gapminder&amp;body={{getMailUrl()}}">
     <i class="fa fa-envelope-o"></i>
   </a>
 </li>
@@ -29,4 +29,3 @@
     <i class="fa fa-code"></i>
   </a>
 </li>
-<a #mailLink href="mailto:?subject=Gapminder&amp;body={{mailUrl}}"></a>
