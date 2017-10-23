@@ -17,7 +17,7 @@ import {
   getToolItemsAsArray,
   isEmbeddedMode,
   isFlashAvailable,
-  isRtl,
+  isRtl, isVizabiReady,
   State
 } from '../core/store';
 import { Store } from '@ngrx/store';
@@ -44,6 +44,7 @@ export class PageComponent implements AfterContentInit, OnDestroy {
   relatedItems$: Observable<any[]>;
   isFlashAvailable$: Observable<boolean>;
   tools$: Observable<any[]>;
+  isVizabiReady$: Observable<boolean>;
 
   private configChangedSubscription: Subscription;
 
@@ -57,6 +58,7 @@ export class PageComponent implements AfterContentInit, OnDestroy {
     this.tools$ = this.store.select(getToolItemsAsArray);
     this.selectedTool$ = this.store.select(getSelectedTool);
     this.client$ = this.store.select(getClient);
+    this.isVizabiReady$ = store.select(isVizabiReady);
   }
 
   trackGaToolChangeEvent(transition: { fromTool: string, toTool: string }) {
