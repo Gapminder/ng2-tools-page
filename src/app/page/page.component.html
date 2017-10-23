@@ -1,10 +1,10 @@
 <div class="wrapper" [ngClass]="{'embedded-view': (isEmbeddedMode$ | async), 'page-lang-rtl': (isRtl$ | async)}"
      (click)="baseElementClickHandler($event)">
-  <app-header></app-header>
+  <app-header *ngIf="isVizabiReady$ | async"></app-header>
 
   <ng-template #homeContainer></ng-template>
 
-  <div>
+  <div *ngIf="isVizabiReady$ | async">
     <app-see-also
             [tools]="tools$ | async"
             [selectedTool]="selectedTool$ | async"
@@ -14,5 +14,5 @@
     <app-related-items *ngIf="!(client$ | async)" [relatedItems]="relatedItems$ | async" class="related"></app-related-items>
   </div>
 
-  <app-footer></app-footer>
+  <app-footer *ngIf="isVizabiReady$ | async"></app-footer>
 </div>
