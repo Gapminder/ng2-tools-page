@@ -17,6 +17,7 @@ export interface State {
   currentHashModel: any;
   initialVizabiInstances: any;
   configChangeUID: number;
+  isVizabiReady: boolean;
 }
 
 const { tools, slugs } = setupItems(RelatedItems, DEFAULT_STATE);
@@ -35,7 +36,8 @@ const initialState: State = {
   currentHashModel: {},
   vizabiInstances,
   initialVizabiInstances: cloneDeep(vizabiInstances),
-  configChangeUID: Date.now()
+  configChangeUID: Date.now(),
+  isVizabiReady: false
 };
 
 function setupVizabiDataCharts({ tools, slugs }): any {
@@ -46,7 +48,7 @@ function setupVizabiDataCharts({ tools, slugs }): any {
 
     result.vizabiInstances[slug] = {
       modelHash: '',
-      chartType: chartType,
+      chartType,
       model: cloneDeep(tools[slug].opts),
       instance: {}
     };
@@ -106,7 +108,7 @@ export function reducer(state: State = initialState, action: ToolsActions): Stat
     }
     case VizabiInstanceCreated.TYPE: {
       const act = action as VizabiInstanceCreated;
-      return Object.assign({}, state, { createdTool: act.tool }, {
+      return Object.assign({}, state, { createdTool: act.tool, isVizabiReady: true }, {
         vizabiInstances: {
           ...state.vizabiInstances,
           [act.tool]: act.vizabiInstance

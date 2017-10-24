@@ -54,14 +54,14 @@
     a.async = 1;
     a.src = g;
     m.parentNode.insertBefore(a, m)
-  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'tools_ga');
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
   var gaEnabled = ['dev', 'stage', 'localhost'].every(function (env) {
     return location.hostname.indexOf(env) === -1;
   });
   if (gaEnabled) {
-    tools_ga('create', 'UA-67908993-1', 'auto');
-    tools_ga('send', 'pageview');
+    ga('create', 'UA-67908993-1', 'auto', 'toolsPageTracker');
+    ga('toolsPageTracker.send', 'pageview');
   }
 </script>
 </body>

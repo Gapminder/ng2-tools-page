@@ -12,7 +12,7 @@ import {
   getCurrentLocale,
   getCurrentVizabiModelHash,
   getInitialToolsSetup,
-  getSelectedTool,
+  getSelectedTool, isVizabiReady,
   State
 } from '../core/store';
 import { TrackGaPageEvent, TrackGaVizabiModelChangeEvent } from '../core/store/google/google.actions';

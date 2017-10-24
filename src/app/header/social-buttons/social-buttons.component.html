@@ -2,24 +2,22 @@
   <div class="share-text-box" translate>share</div>
 </li>
 <li>
-  <a class="mail button" *ngIf="currentUrl" href="mailto:?subject=Gapminder&amp;body={{currentUrl}}">
+  <a class="mail button" href="mailto:?subject=Gapminder&amp;body={{getMailUrl()}}">
     <i class="fa fa-envelope-o"></i>
   </a>
 </li>
 <li>
-  <a class="twitter button" target="_blank" *ngIf="currentUrl"
-     href="https://twitter.com/intent/tweet?original_referer={{currentUrl}}&amp;related=Gapminder&amp;text=Gapminder&amp;tw_p=tweetbutton&amp;url={{currentUrl}}">
+  <a class="twitter button" (click)="twitter()">
     <i class="fa fa-twitter"></i>
   </a>
 </li>
 <li>
-  <a class="facebook button" target="_blank" *ngIf="currentUrl"
-     href="http://www.addtoany.com/add_to/facebook?linkurl={{currentUrl}}&amp;">
+  <a class="facebook button" (click)="facebook()">
     <i class="fa fa-facebook"></i>
   </a>
 </li>
 <li>
-  <button (click)="shareLink.emit()" *ngIf="currentUrl" class="button ico-plane">
+  <button (click)="shareLink.emit()" class="button ico-plane">
     <svg width="13" height="13" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M1764 11q33 24 27 64l-256 1536q-5 29-32 45-14 8-31 8-11 0-24-5l-527-215-298 327q-18 21-47 21-14 0-23-4-19-7-30-23.5t-11-36.5v-452l-472-193q-37-14-40-55-3-39 32-59l1664-960q35-21 68 2zm-342 1499l221-1323-1434 827 336 137 863-639-478 797z"/>
@@ -27,7 +25,7 @@
   </button>
 </li>
 <li>
-  <a (click)="getEmbeddedUrl.emit()" *ngIf="currentUrl" class="button ico-code">
+  <a (click)="getEmbeddedUrl.emit()" class="button ico-code">
     <i class="fa fa-code"></i>
   </a>
 </li>
