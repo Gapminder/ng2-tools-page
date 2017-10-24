@@ -14,6 +14,8 @@ import { BitlyService } from '../../core/bitly.service';
 export class SocialButtonsComponent {
   @Output() shareLink: EventEmitter<any> = new EventEmitter();
   @Output() getEmbeddedUrl: EventEmitter<any> = new EventEmitter();
+  @ViewChild('mailLink') mailLink;
+  mailUrl: string;
 
   constructor(private bitlyService: BitlyService) {
   }
@@ -26,8 +28,9 @@ export class SocialButtonsComponent {
     this.openWindow(`http://www.addtoany.com/add_to/facebook?linkurl=#{url}&amp;`);
   }
 
-  getMailUrl() {
-    return encodeURIComponent(window.location.href);
+  mail() {
+    this.mailUrl = encodeURIComponent(window.location.href);
+    this.mailLink.nativeElement.click();
   }
 
   private openWindow(urlTemplate) {
