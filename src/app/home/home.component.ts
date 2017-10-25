@@ -25,6 +25,10 @@ import { getTransitionType, TransitionType } from '../core/charts-transition';
 const {WsReader} = require('vizabi-ws-reader');
 const MODEL_CHANGED_DEBOUNCE = 200;
 
+const GA_EVENT_ACTION_REQUEST = 'request';
+const GA_EVENT_ACTION_RESPONSE = 'response';
+
+declare const ga: any;
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-home',
@@ -38,7 +42,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   currentHashModel;
 
   readerModuleObject = WsReader;
-  readerParams = [];
+  readerPlugins = [{onReadHook: this.setAnalyticsData.bind(this)}];
   extResources = {
     host: `${environment.wsUrl}/`,
     dataPath: '/api/ddf/',
@@ -206,6 +210,31 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
+  }
+
+  setAnalyticsData(data, type) {
+    if (!ga) {
+      return;
+    }
+
+    this._setAnalyticsData(data, type);
+  }
+
+  _setAnalyticsData(data, type) {
+    const {from, select, responseLength} = data;
+    const analyticsTypeOptions = {
+      request:  {
+        'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+        'eventAction': GA_EVENT_ACTION_REQUEST
+      },
+      response: {
+        'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+        'eventAction': GA_EVENT_ACTION_RESPONSE,
+        'eventLabel': `rows: ${responseLength}`
+      }
+    };
+
+    ga('toolsPageTracker.send', 'event', analyticsTypeOptions[type]);
   }
 
   ngOnDestroy(): void {
