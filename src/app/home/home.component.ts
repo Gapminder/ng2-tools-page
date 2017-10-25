@@ -25,6 +25,7 @@ import { getTransitionType, TransitionType } from '../core/charts-transition';
 const {WsReader} = require('vizabi-ws-reader');
 const MODEL_CHANGED_DEBOUNCE = 200;
 
+declare const ga: any;
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-home',
@@ -38,7 +39,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   currentHashModel;
 
   readerModuleObject = WsReader;
-  readerParams = [];
+  readerPlugins = [{onReadHook: this.setAnalyticsData.bind(this)}];
   extResources = {
     host: `${environment.wsUrl}/`,
     dataPath: '/api/ddf/',
@@ -206,6 +207,30 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
+  }
+
+  setAnalyticsData(data, type) {
+    if (ga) {
+      type === 'request' ? this._setRequestAnalyticsData(data) : this._setResponseAnalyticsData(data);
+    }
+  }
+
+  _setRequestAnalyticsData(query) {
+    const {from, select} = query;
+    ga('toolsPageTracker.send', 'event', {
+      'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+      'eventAction': 'request',
+    });
+  }
+
+  _setResponseAnalyticsData(responseData) {
+    const {from, select, responseLength} = responseData;
+
+    ga('toolsPageTracker.send', 'event', {
+      'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+      'eventAction': 'response',
+      'eventLabel': `rows: ${responseLength}`
+    });
   }
 
   ngOnDestroy(): void {
