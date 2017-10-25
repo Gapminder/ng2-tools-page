@@ -25,6 +25,9 @@ import { getTransitionType, TransitionType } from '../core/charts-transition';
 const {WsReader} = require('vizabi-ws-reader');
 const MODEL_CHANGED_DEBOUNCE = 200;
 
+const GA_EVENT_ACTION_REQUEST = 'request';
+const GA_EVENT_ACTION_RESPONSE = 'response';
+
 declare const ga: any;
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -210,27 +213,28 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   setAnalyticsData(data, type) {
-    if (ga) {
-      type === 'request' ? this._setRequestAnalyticsData(data) : this._setResponseAnalyticsData(data);
+    if (!ga) {
+      return;
     }
+
+    this._setAnalyticsData(data, type);
   }
 
-  _setRequestAnalyticsData(query) {
-    const {from, select} = query;
-    ga('toolsPageTracker.send', 'event', {
-      'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
-      'eventAction': 'request',
-    });
-  }
+  _setAnalyticsData(data, type) {
+    const {from, select, responseLength} = data;
+    const analyticsTypeOptions = {
+      request:  {
+        'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+        'eventAction': GA_EVENT_ACTION_REQUEST
+      },
+      response: {
+        'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+        'eventAction': GA_EVENT_ACTION_RESPONSE,
+        'eventLabel': `rows: ${responseLength}`
+      }
+    };
 
-  _setResponseAnalyticsData(responseData) {
-    const {from, select, responseLength} = responseData;
-
-    ga('toolsPageTracker.send', 'event', {
-      'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
-      'eventAction': 'response',
-      'eventLabel': `rows: ${responseLength}`
-    });
+    ga('toolsPageTracker.send', 'event', analyticsTypeOptions[type]);
   }
 
   ngOnDestroy(): void {
