@@ -29,10 +29,8 @@ export class SocialButtonsComponent {
   }
 
   mail() {
-    this.bitlyService.shortenUrl().subscribe(url => {
-      this.mailUrl = url;
-      this.mailLink.nativeElement.click();
-    });
+    this.mailUrl = encodeURIComponent(window.location.href);
+    this.mailLink.nativeElement.click();
   }
 
   private openWindow(urlTemplate) {

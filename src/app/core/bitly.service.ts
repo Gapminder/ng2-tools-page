@@ -18,7 +18,7 @@ export class BitlyService {
 
     const serviceUrl = `${this.bitlyUrl}?access_token=${'c5c5bdef4905a307a3a64664b1d06add09c48eb8'}&longUrl=${encodeURIComponent(url)}`;
 
-    this.http.get(serviceUrl).map(response => {
+    return this.http.get(serviceUrl).map(response => {
       const bitlyResponse = response.json();
 
       return bitlyResponse.status_code === 200 ? bitlyResponse.data.url : window.location;
