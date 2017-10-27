@@ -1,23 +1,26 @@
-import { browser } from 'protractor';
+import { browser, ExpectedConditions as EC } from 'protractor';
 
 import { Header } from './pages/components/header.e2e-component';
+import { LineChart } from './pages/line-chart.po';
 import { _$, ExtendedElementFinder } from './helpers/ExtendedElementFinder';
 
+const lineChart: LineChart = new LineChart();
 const header: Header = new Header();
 
 describe('Social media buttons', () => {
-  const mailToLink = 'mailto:?subject=Gapminder&body=http%3A%2F%2Fwww.gapminder.org%2Ftools%2F';
+  const mailBasic = 'mailto:?subject=Gapminder';
+  const mailState = '';
 
   const tweetStatus: ExtendedElementFinder = _$('#status');
-  const twitterUrl = 'https://twitter.com/intent/tweet?original_referer=http%3A%2F%2Fwww.gapminder.org&related=Gapminder&text=Gapminder&tw_p=tweetbutton&url=http%3A%2F%2Fwww.gapminder.org%2Ftools%2F';
-  const twitterContent = 'Gapminder http://www.gapminder.org/tools/';
+  const twitterUrl = 'https://twitter.com/intent/tweet?original_referer=';
+  const twitterContent = 'Gapminder ';
 
   const faceBookForm: ExtendedElementFinder = _$('#login_form');
-  const facebookUrl = 'https://www.facebook.com/login.php?skip_api_login=1&api_key=966242223397117&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fsharer%2Fsharer.php%3Fu%3Dhttp%253A%252F%252Fwww.gapminder.org%252Ftools%252F%26t&cancel_url=https%3A%2F%2Fwww.facebook.com%2Fdialog%2Freturn%2Fclose%3Ferror_code%3D4201%26error_message%3DUser%2Bcanceled%2Bthe%2BDialog%2Bflow%23_%3D_&display=popup&locale=';
-  const facebookFormAction = 'login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fsharer%2Fsharer.php%3Fu%3Dhttp%253A%252F%252Fwww.gapminder.org%252Ftools%252F%26t';
+  const facebookUrl = 'https://www.facebook.com/login.php?skip_api_login=1&api_key=966242223397117&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fsharer%2Fsharer.php';
+  const facebookFormAction = '/login.php?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fsharer%2Fsharer.php';
 
   beforeAll(async() => {
-    await browser.get('/');
+    await browser.get('./');
   });
 
   beforeEach(async() => {
@@ -25,7 +28,19 @@ describe('Social media buttons', () => {
   });
 
   it('mail-to', async() => {
-    expect(await header.mailButtonDesktop.safeGetAttribute('href')).toEqual(mailToLink);
+    await browser.wait(EC.visibilityOf(header.mailButtonDesktop));
+
+    expect(await header.mailLinkDesktop.getAttribute('href')).toContain(mailBasic);
+  });
+
+  xit('Mail-to include state in subject', async() => {
+    // there will be hidden button to activate url changing
+    await lineChart.openChart();
+    await lineChart.selectLine('China');
+    await header.mailButtonDesktop.click();
+
+    expect(await header.mailLinkDesktop.safeGetAttribute('href')).toContain(mailBasic);
+    expect(await header.mailLinkDesktop.safeGetAttribute('href')).toContain(mailState);
   });
 
   it('twitter', async() => {
@@ -33,8 +48,9 @@ describe('Social media buttons', () => {
     const handles = await browser.getAllWindowHandles();
     await browser.switchTo().window(handles[1]);
 
-    expect(await tweetStatus.safeGetText()).toEqual(twitterContent);
-    expect(await browser.getCurrentUrl()).toEqual(twitterUrl);
+    expect(await tweetStatus.safeGetText()).toContain('Gapminder ');
+    expect(await browser.getCurrentUrl()).toContain(twitterUrl);
+    expect(await browser.getCurrentUrl()).toContain('Gapminder');
   });
 
   it('facebook', async() => {

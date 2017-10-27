@@ -72,7 +72,8 @@ export class LineChart extends CommonChartPage {
   }
 
   async selectLine(country: string): Promise<void> {
-    await new ExtendedElementFinder(findElementByExactText(this.selectedCountries, country)).safeClick();
+    await browser.wait(EC.visibilityOf(this.selectedCountries.first()));
+    await new ExtendedArrayFinder(this.selectedCountries).findElementByExactText(country).safeClick();
     await browser.wait(isCountryAddedInUrl(country));
   }
 

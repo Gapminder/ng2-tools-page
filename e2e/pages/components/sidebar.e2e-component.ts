@@ -31,6 +31,8 @@ export class Sidebar {
    * Color section
    */
   colorDropDown: ExtendedElementFinder = _$$('span[class="vzb-ip-select"]').first();
+  colorSearch: ExtendedElementFinder = _$('#vzb-treemenu-search');
+  colorSearchResults: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
   colorIndicatorDropdown: ExtendedElementFinder = _$$('span[class="vzb-ip-holder"] > span').get(8); // TODO
   color = {
     childMortalityRate: _$$('span[class="vzb-treemenu-list-item-label"]').get(3), // TODO add test class to vizabi
@@ -153,5 +155,11 @@ export class Sidebar {
     // const elem = await this.sidebar.miniMap.$$('path').first();
 
     return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).perform();
+  }
+
+  async searchAndSelectInColorDropdown(colorOption: string) {
+    await this.colorDropDown.safeClick();
+    await this.colorSearch.typeText(colorOption);
+    await this.colorSearchResults.first().safeClick();
   }
 }
