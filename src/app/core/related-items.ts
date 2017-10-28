@@ -92,10 +92,10 @@ export default [
           "55f71e8ccdedc1ff074e9f6d",
           "55f70fd5dbbfabe3d6a2753f"
         ],
-        "link": "//www.gapminder.org/posters/gapminder-world-2013/",
+        "link": "//www.gapminder.org/downloads/updated-gapminder-world-poster-2015/",
         "image": "assets/images/answers/gapminder_world_2013_v5.jpg",
-        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
-        "title": "Gapminder World Poster 2013",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations",
+        "title": "Gapminder World Poster 2015",
         "__v": 0
       }
     ]
@@ -133,10 +133,10 @@ export default [
           "55f71e8ccdedc1ff074e9f6d",
           "55f70fd5dbbfabe3d6a2753f"
         ],
-        "link": "//www.gapminder.org/posters/gapminder-world-2013/",
+        "link": "//www.gapminder.org/downloads/updated-gapminder-world-poster-2015/",
         "image": "assets/images/answers/gapminder_world_2013_v5.jpg",
-        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
-        "title": "Gapminder World Poster 2013",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations",
+        "title": "Gapminder World Poster 2015",
         "__v": 0
       },
       {
@@ -297,10 +297,10 @@ export default [
           "55f71e8ccdedc1ff074e9f6d",
           "55f70fd5dbbfabe3d6a2753f"
         ],
-        "link": "//www.gapminder.org/posters/gapminder-world-2013/",
+        "link": "//www.gapminder.org/downloads/updated-gapminder-world-poster-2015/",
         "image": "assets/images/answers/gapminder_world_2013_v5.jpg",
-        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
-        "title": "Gapminder World Poster 2013",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations",
+        "title": "Gapminder World Poster 2015",
         "__v": 0
       }
     ]
@@ -395,10 +395,10 @@ export default [
           "55f71e8ccdedc1ff074e9f6d",
           "55f70fd5dbbfabe3d6a2753f"
         ],
-        "link": "//www.gapminder.org/posters/gapminder-world-2013/",
+        "link": "//www.gapminder.org/downloads/updated-gapminder-world-poster-2015/",
         "image": "assets/images/answers/gapminder_world_2013_v5.jpg",
-        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
-        "title": "Gapminder World Poster 2013",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations",
+        "title": "Gapminder World Poster 2015",
         "__v": 0
       }
     ]
@@ -493,10 +493,10 @@ export default [
           "55f71e8ccdedc1ff074e9f6d",
           "55f70fd5dbbfabe3d6a2753f"
         ],
-        "link": "//www.gapminder.org/posters/gapminder-world-2013/",
+        "link": "//www.gapminder.org/downloads/updated-gapminder-world-poster-2015/",
         "image": "assets/images/answers/gapminder_world_2013_v5.jpg",
-        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
-        "title": "Gapminder World Poster 2013",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations",
+        "title": "Gapminder World Poster 2015",
         "__v": 0
       }
     ]
@@ -591,10 +591,10 @@ export default [
           "55f71e8ccdedc1ff074e9f6d",
           "55f70fd5dbbfabe3d6a2753f"
         ],
-        "link": "//www.gapminder.org/posters/gapminder-world-2013/",
+        "link": "//www.gapminder.org/downloads/updated-gapminder-world-poster-2015/",
         "image": "assets/images/answers/gapminder_world_2013_v5.jpg",
-        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations in 2013.",
-        "title": "Gapminder World Poster 2013",
+        "subtitle": "This chart compares Life Expectancy & GDP per capita of 182 nations",
+        "title": "Gapminder World Poster 2015",
         "__v": 0
       }
     ]
