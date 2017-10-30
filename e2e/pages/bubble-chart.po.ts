@@ -16,7 +16,7 @@ export class BubbleChart extends CommonChartPage {
   public selectedCountryLabel: ElementFinder = $$('.vzb-label-fill.vzb-tooltip-border').first();
   public countrySelectedBiggerLabel: ElementFinder = $('.vzb-bc-labels .vzb-bc-entity');
   public selectedBubbleLabel: ElementFinder = $('.vzb-label-fill.vzb-tooltip-border');
-  public xIconOnBubble: ExtendedElementFinder = _$('.vzb-bc-label-x');
+  public xIconOnBubble: ExtendedElementFinder = _$('[class="vzb-bc-label-x"]');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
   public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
@@ -146,6 +146,7 @@ export class BubbleChart extends CommonChartPage {
 
   async clickXiconOnBubble(country: string): Promise<{}> {
     await browser.actions().mouseMove(this.selectedBubbleLabel).perform();
+    await browser.sleep(1000); // wait for css animation
     await this.xIconOnBubble.safeClick();
 
     return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 5000);
