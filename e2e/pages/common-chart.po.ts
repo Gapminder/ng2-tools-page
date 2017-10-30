@@ -2,6 +2,7 @@ import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions a
 
 import { safeOpen, waitForPageLoaded, waitForSpinner, waitForUrlToChange } from '../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
+import { promise } from 'selenium-webdriver';
 
 export class CommonChartPage {
   static countries = {
@@ -22,7 +23,7 @@ export class CommonChartPage {
     dimmed: 0.3
   };
 
-  public static sideBar: ElementFinder = $('.vzb-tool-dialogs');
+  public static sideBar: ElementFinder = $('.vzb-tool-sidebar');
   public static buttonPlay: ExtendedElementFinder = _$('.vzb-ts-btn-play');
   public static buttonPause: ExtendedElementFinder = _$('.vzb-ts-btn-pause.vzb-ts-btn');
   public static mainChart: ElementFinder = $('.vzb-tool');
@@ -73,7 +74,7 @@ export class CommonChartPage {
     await waitForPageLoaded();
   }
 
-  getSelectedCountriesNames(): PromiseLike<string> {
+  getSelectedCountriesNames(): promise.Promise<string> {
     return browser.wait(EC.visibilityOf(this.selectedCountries.first()))
       .then(() => {
         return this.selectedCountries.getText(); // TODO css animation can fail the test
