@@ -1,6 +1,6 @@
 import { browser, protractor } from 'protractor';
 
-import { safeExpectIsDispayed } from './helpers/helper';
+import { safeExpectIsDispayed, waitForSliderToBeReady } from './helpers/helper';
 import { MountainChart } from './pages/mountain-chart.po';
 import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { Slider } from './pages/components/slider.e2e-component';
@@ -19,6 +19,7 @@ describe('Mountains chart - Acceptance', () => {
      * should check that in 2015, the percentage of people living in the extreme poverty should be 11.5 ± 0.3%,
      * and the world population should be 7.33B(TC19)
      */
+    await waitForSliderToBeReady();
     const extremePovertyPercentage = await mountainChart.extremePovertyPercentage.getText();
 
     await expect(Number(extremePovertyPercentage.replace('%', ''))).toBeGreaterThan(11.2);

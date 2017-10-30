@@ -4,8 +4,6 @@ import {
   findElementByExactText, isCountryAddedInUrl, waitForSpinner
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
-import { CommonChartPage } from '../common-chart.po';
-import { LineChart } from '../line-chart.po';
 
 export class Sidebar {
   /**
@@ -106,6 +104,7 @@ export class Sidebar {
      * LineChart-page use it's own selectors
      */
     await this.searchInputField.typeText(country);
+    await browser.wait(EC.presenceOf(this.searchResult.first()), 5000, 'search results not present');
     await this.searchResult.findElementByExactText(country).safeClick();
 
     await browser.wait(isCountryAddedInUrl(country, select));
@@ -160,6 +159,7 @@ export class Sidebar {
   async searchAndSelectInColorDropdown(colorOption: string) {
     await this.colorDropDown.safeClick();
     await this.colorSearch.typeText(colorOption);
+    await browser.wait(EC.presenceOf(element(by.cssContainingText(this.colorSearchResults.first().locator().value, colorOption))));
     await this.colorSearchResults.first().safeClick();
   }
 }

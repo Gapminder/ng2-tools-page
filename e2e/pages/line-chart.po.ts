@@ -78,6 +78,8 @@ export class LineChart extends CommonChartPage {
   }
 
   async getLineOpacity(country: string): Promise<number> {
+    await browser.wait(EC.visibilityOf(this.selectedCountries.first()));
+
     return Number(await this.selectedCountries.findElementByExactText(country).safeGetCssValue('opacity'));
   }
 
@@ -94,6 +96,7 @@ export class LineChart extends CommonChartPage {
   }
 
   async hoverLine(country: string): Promise<void> {
+    await browser.wait(EC.visibilityOf(this.selectedCountries.first()));
     await this.selectedCountries
       .findElementByExactText(country)
       .hover();

@@ -140,7 +140,7 @@ describe('Line chart', () => {
     expect(await lineChart.countHighlightedLines()).toEqual(1);
   });
 
-  it('Settings should be stored in URL', async() => {
+  xit('Settings should be stored in URL', async() => {
     /**
      * don't fixed yet: https://github.com/vizabi/vizabi/issues/2782
      */
