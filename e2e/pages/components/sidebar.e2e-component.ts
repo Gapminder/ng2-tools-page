@@ -159,6 +159,7 @@ export class Sidebar {
   async searchAndSelectInColorDropdown(colorOption: string) {
     await this.colorDropDown.safeClick();
     await this.colorSearch.typeText(colorOption);
+    await browser.sleep(1000); // css animation
     await browser.wait(EC.presenceOf(element(by.cssContainingText(this.colorSearchResults.first().locator().value, colorOption))));
     await this.colorSearchResults.first().safeClick();
   }

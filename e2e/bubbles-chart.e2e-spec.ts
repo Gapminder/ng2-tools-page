@@ -96,16 +96,22 @@ describe('Bubbles chart - Acceptance', () => {
     await expect(newLabelPosition).not.toEqual(finalLabelPosition);
   });
 
-  it('deselect bubble on click', async() => {
+  it('deselect bubble by "X" on tooltip', async() => {
     /**
      * should check that the bubble can be deselected by clicking on the "x" of the label "United States",
      * or by clicking on the bubble(TC10)
      */
-    await bubbleChart.clickOnCountryBubble('India');
-    await bubbleChart.clickXiconOnBubble('India');
+    await bubbleChart.clickOnCountryBubble('Bangladesh');
+    await bubbleChart.clickXiconOnBubble('Bangladesh');
 
-    expect(await bubbleChart.countryTooltip('India').isPresent()).toBe(false, 'tooltip should be hidden');
+    expect(await bubbleChart.countryTooltip('Bangladesh').isPresent()).toBe(false, 'tooltip should be hidden');
+  });
 
+  it('deselect bubble by click on that bubble', async() => {
+    /**
+     * should check that the bubble can be deselected by clicking on the "x" of the label "United States",
+     * or by clicking on the bubble(TC10)
+     */
     await bubbleChart.clickOnCountryBubble('India');
     await bubbleChart.deselectBubble('India');
 
