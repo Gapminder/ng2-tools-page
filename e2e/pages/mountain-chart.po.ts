@@ -45,16 +45,4 @@ export class MountainChart extends CommonChartPage {
     await browser.actions().mouseMove(this.extremePovertyTitle).mouseMove({x: 10, y: 90}).perform();
     await browser.wait(EC.visibilityOf(this.verticalLine));
   }
-
-  async searchAndSelectCountryInShowMenu(country: string): Promise<void> {
-    await this.showButtonSearchInputField.typeText(country);
-    await new ExtendedElementFinder(findElementByExactText(this.linesChartSearchResult, country)).safeClick();
-    await waitForSpinner();
-  }
-
-  async deselectCountryInShowMenu(country: string): Promise<void> {
-    await this.showButtonSearchInputField.typeText(country);
-    await new ExtendedElementFinder(findElementByExactText(this.linesChartSearchResult, country)).safeClick();
-    await waitForSpinner();
-  }
 }

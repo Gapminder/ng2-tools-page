@@ -102,18 +102,8 @@ export class LineChart extends CommonChartPage {
       .hover();
   }
 
-  async changeYaxisValue(): Promise<string> {
-    await this.yAxisBtn.safeClick();
-    const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
-
-    await browser.wait(EC.visibilityOf(newOption));
-    const newOptionValue = newOption.getText();
-    await newOption.click();
-
-    await waitForSpinner();
-    await waitForSliderToBeReady();
-
-    return newOptionValue;
+  changeYaxisValue(): Promise<string> {
+    return super.changeYaxisValue(this.yAxisBtn);
   }
 
   async clickResetButton(): Promise<void> {

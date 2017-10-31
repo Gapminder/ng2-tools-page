@@ -1,6 +1,9 @@
 import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
-import { safeOpen, waitForPageLoaded, waitForSpinner, waitForUrlToChange } from '../helpers/helper';
+import {
+  safeOpen, waitForPageLoaded, waitForSliderToBeReady, waitForSpinner,
+  waitForUrlToChange
+} from '../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 import { promise } from 'selenium-webdriver';
 
@@ -43,6 +46,7 @@ export class CommonChartPage {
 
   public axisYMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-y g[class="tick"] text').last();
   public axisXMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-x g[class="tick"] text').last();
+  yAsixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
 
   async waitForToolsPageCompletelyLoaded(): Promise<{}> {
     await browser.wait(EC.visibilityOf(CommonChartPage.sideBar));
@@ -79,6 +83,20 @@ export class CommonChartPage {
       .then(() => {
         return this.selectedCountries.getText(); // TODO css animation can fail the test
       });
+  }
+
+  async changeYaxisValue(yAxisBtn: ExtendedElementFinder): Promise<string> {
+    await yAxisBtn.safeClick();
+    const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
+
+    await browser.wait(EC.visibilityOf(newOption));
+    const newOptionValue = newOption.getText();
+    await newOption.click();
+
+    await waitForSpinner();
+    await waitForSliderToBeReady();
+
+    return newOptionValue;
   }
 
 }

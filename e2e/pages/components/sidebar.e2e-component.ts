@@ -24,6 +24,7 @@ export class Sidebar {
     countriesList: $('.vzb-find-list'),
     advancedButtons: $('.vzb-tool-buttonlist')
   };
+  yearAtTop: ExtendedElementFinder = _$('.vzb-timedisplay');
 
   /**
    * Color section
@@ -45,6 +46,7 @@ export class Sidebar {
    */
   searchInputField: ExtendedElementFinder;
   searchResult: ExtendedArrayFinder;
+  countriesList: ElementArrayFinder = $$('.vzb-find-list > div'); // TODO
 
   /**
    * Advanced buttons section
@@ -85,6 +87,13 @@ export class Sidebar {
   findButton: ExtendedElementFinder = _$$('[data-btn="find"]').last();
   countriesInFindModal: ElementArrayFinder = $$('.vzb-find-item.vzb-dialog-checkbox');
 
+  /**
+   * Show
+   */
+  showButtonSearchInputField: ExtendedElementFinder = _$('input[class="vzb-show-search"]');
+  showSearchResult: ElementFinder = $$('div[class*="vzb-show-item vzb-dialog-checkbox"] label').first(); // TODO
+  showButton: ExtendedElementFinder = _$$('[data-btn="show"]').last();
+  deselectButton: ExtendedElementFinder = _$('.vzb-find-deselect');
 
   constructor(chart: any) {
     this.chartType = chart;
@@ -162,5 +171,17 @@ export class Sidebar {
     await browser.sleep(1000); // css animation
     await browser.wait(EC.presenceOf(element(by.cssContainingText(this.colorSearchResults.first().locator().value, colorOption))));
     await this.colorSearchResults.first().safeClick();
+  }
+
+  async searchAndSelectCountryInShowMenu(country: string): Promise<void> {
+    await this.showButtonSearchInputField.typeText(country);
+    await new ExtendedElementFinder(findElementByExactText(this.showSearchResult, country)).safeClick();
+    await waitForSpinner();
+  }
+
+  async deselectCountryInShowMenu(country: string): Promise<void> {
+    await this.showButtonSearchInputField.typeText(country);
+    await new ExtendedElementFinder(findElementByExactText(this.showSearchResult, country)).safeClick();
+    await waitForSpinner();
   }
 }

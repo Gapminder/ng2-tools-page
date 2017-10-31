@@ -14,7 +14,8 @@ export function safeOpen(url: string) {
 export function waitForPageLoaded() {
   return browser.wait(EC.visibilityOf(CommonChartPage.sideBar), MAX_TIMEOUT)
     .then(() => browser.wait(EC.visibilityOf(CommonChartPage.mainChart), MAX_TIMEOUT))
-    .then(() => browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay), MAX_TIMEOUT));
+    .then(() => browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay), MAX_TIMEOUT))
+    .then(() => browser.wait(EC.visibilityOf(CommonChartPage.sliderReady), MAX_TIMEOUT));
 }
 
 export function waitForSpinner() {
