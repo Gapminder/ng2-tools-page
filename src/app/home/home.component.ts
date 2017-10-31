@@ -42,7 +42,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   currentHashModel;
 
   readerModuleObject = WsReader;
-  readerPlugins = [{onReadHook: this.setAnalyticsData.bind(this)}];
+  readerPlugins = [{onReadHook: this.setAnalyticsWSQueriesData.bind(this)}];
   extResources = {
     host: `${environment.wsUrl}/`,
     dataPath: '/api/ddf/',
@@ -59,6 +59,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private localeChangesSubscription: Subscription;
   private toolChangesSubscription: Subscription;
   private routesModelChangesSubscription: Subscription;
+  private initialModelIndicators = {axis_x: {}, axis_y: {}, size: {}, select: []};
 
   constructor(private router: Router,
               private location: Location,
@@ -206,21 +207,94 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   onChanged(changes): void {
+    const {type, modelDiff: {state}} = changes;
+
+    if (state && state.marker) {
+      this.sendAnalyticsVizabiState(type, state.marker);
+    }
+
     const model = {...changes.modelDiff, ...{'chart-type': this.toolToSlug[changes.type]}};
 
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
   }
 
-  setAnalyticsData(data, type) {
+  sendAnalyticsVizabiState(chartName, marker) {
+    this.setAnalyticsConceptsData(chartName, marker);
+    this.setAnalyticsEntitiesData(chartName, marker);
+  }
+
+  setAnalyticsConceptsData(chartName, markerData) {
+    const newConceptsIndicators = this.getUniqueConceptsIndicators(markerData);
+    const newConceptsIndicatorsKeys = Object.keys(newConceptsIndicators);
+
+    if (!newConceptsIndicatorsKeys.length) {
+      return;
+    }
+
+    this.setConceptsIndicatorsToState(newConceptsIndicators);
+
+    newConceptsIndicatorsKeys.forEach(indicator => {
+      ga('toolsPageTracker.send', 'event', {
+          'eventCategory': 'concept',
+          'eventAction': `set which: ${chartName} marker ${indicator}`,
+          'eventLabel': newConceptsIndicators[indicator].which
+        });
+    });
+  }
+
+  setAnalyticsEntitiesData(chartName, markerData) {
+    if (!markerData.select) {
+      return;
+    }
+
+    const newUniqueCountries = this.getNewUniqueSelectedCountries(markerData.select);
+    this.setNewCountriesToState(newUniqueCountries);
+
+    newUniqueCountries.forEach(country => {
+      ga('toolsPageTracker.send', 'event', {
+        'eventCategory': 'entity',
+        'eventAction': ` select entity: ${chartName} marker`,
+        'eventLabel': country.geo
+      });
+    });
+  }
+
+  getUniqueConceptsIndicators(markerData) {
+    const markerKeys = Object.keys(markerData);
+    const uniqueConceptsIndicators = {};
+
+    markerKeys.forEach(key => {
+      if (key !== 'select' && markerData[key].which !== this.initialModelIndicators[key].which) {
+        uniqueConceptsIndicators[key] = {};
+        uniqueConceptsIndicators[key].which = markerData[key].which;
+      }
+    });
+
+    return uniqueConceptsIndicators;
+  }
+
+  setConceptsIndicatorsToState(conceptsIndicators) {
+    this.initialModelIndicators = {...this.initialModelIndicators, ...conceptsIndicators};
+  }
+
+  getNewUniqueSelectedCountries(selectedCountries) {
+    return selectedCountries.filter(selectedCountry => {
+      return !this.initialModelIndicators.select.some(existedCountry => {
+        return selectedCountry.geo === existedCountry.geo;
+      });
+    });
+  }
+
+  setNewCountriesToState(newCountries) {
+    this.initialModelIndicators.select = this.initialModelIndicators.select.concat(newCountries);
+  }
+
+  setAnalyticsWSQueriesData(data, type) {
     if (!ga) {
       return;
     }
 
-    this._setAnalyticsData(data, type);
-  }
-
-  _setAnalyticsData(data, type) {
     const {from, select, responseLength} = data;
     const analyticsTypeOptions = {
       request:  {
