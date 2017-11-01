@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular
 import { Location } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { get, cloneDeep, includes, isEmpty, pickBy } from 'lodash-es';
+import { get, cloneDeep, includes, isEmpty, omitBy } from 'lodash-es';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -25,10 +25,14 @@ import { getTransitionType, TransitionType } from '../core/charts-transition';
 const {WsReader} = require('vizabi-ws-reader');
 const MODEL_CHANGED_DEBOUNCE = 200;
 
+const GA_TRACKER_NAME = 'toolsPageTracker';
 const GA_EVENT_ACTION_REQUEST = 'request';
 const GA_EVENT_ACTION_RESPONSE = 'response';
+const INITIAL_VIZABI_MODEL_INDICATORS = Object.freeze({axis_x: {}, axis_y: {}, size: {}});
+const EXCEPTIONAL_VIZABI_CHARTS = ['LineChart', 'PopByAge'];
 
 declare const ga: any;
+
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-home',
@@ -60,8 +64,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private localeChangesSubscription: Subscription;
   private toolChangesSubscription: Subscription;
   private routesModelChangesSubscription: Subscription;
-  private initialVizabiModelIndicators = {axis_x: {}, axis_y: {}, size: {}, select: []};
-  private initialVizabiModelGeoEntities = [];
+  private vizabiModelIndicators = cloneDeep(INITIAL_VIZABI_MODEL_INDICATORS);
+  private vizabiModelGeoEntities = [];
 
   constructor(private router: Router,
               private location: Location,
@@ -126,8 +130,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       })
       .debounceTime(MODEL_CHANGED_DEBOUNCE)
       .subscribe(hashModel => {
-        this.initialVizabiModelIndicators = {axis_x: {}, axis_y: {}, size: {}, select: []};
-        this.initialVizabiModelGeoEntities = [];
+        this.vizabiModelIndicators = cloneDeep(INITIAL_VIZABI_MODEL_INDICATORS);
+        this.vizabiModelGeoEntities = [];
         this.currentChartType = hashModel['chart-type'];
       });
   }
@@ -221,8 +225,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   onChanged(changes): void {
-    const model = {...changes.modelDiff, ...{'chart-type': this.toolToSlug[changes.type]}};
-    const {type, modelDiff: {state}} = changes;
+    const modelDiff = get(changes, 'modelDiff');
+    const type = get(changes, 'type');
+    const state = get(changes, 'modelDiff.state');
+    const model = {...modelDiff, ...{'chart-type': this.toolToSlug[type]}};
 
     if (state && (state.marker || state.entities)) {
       this.sendVizabiStateToGA(type, state);
@@ -250,10 +256,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.initialVizabiModelIndicators = {...this.initialVizabiModelIndicators, ...newConceptsIndicators};
+    this.vizabiModelIndicators = {...this.vizabiModelIndicators, ...newConceptsIndicators};
 
     newConceptsIndicatorsKeys.forEach(indicator => {
-      ga('toolsPageTracker.send', 'event', {
+      this.sendEventToGA({
         'eventCategory': 'concept',
         'eventAction': `set which: ${chartName} marker ${indicator}`,
         'eventLabel': newConceptsIndicators[indicator].which
@@ -268,41 +274,37 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    newUniqueGeoEntities = chartName === 'LineChart' || chartName === 'PopByAge' ?
-      this.getNewUniqueEntitiesShowBased(state.entities.show.geo.$in) :
-      this.getNewUniqueEntitiesSelectBased(state.marker.select);
+    newUniqueGeoEntities = EXCEPTIONAL_VIZABI_CHARTS.some(chart => chart === chartName) ?
+      this.getNewUniqueEntities(state.entities.show.geo.$in) :
+      this.getNewUniqueEntities(state.marker.select, 'geo');
 
-    this.initialVizabiModelGeoEntities = this.initialVizabiModelGeoEntities.concat(newUniqueGeoEntities);
+    this.vizabiModelGeoEntities = this.vizabiModelGeoEntities.concat(newUniqueGeoEntities);
 
-    newUniqueGeoEntities.forEach(country => {
-      ga('toolsPageTracker.send', 'event', {
+    newUniqueGeoEntities.forEach(geo => {
+      this.sendEventToGA({
         'eventCategory': 'entity',
         'eventAction': ` select entity: ${chartName} marker`,
-        'eventLabel': country
+        'eventLabel': geo
       });
     });
   }
 
   getUniqueConceptsIndicators(markerData) {
-    return pickBy(markerData, (val, key) => {
-      return key !== 'select' &&  markerData[key].which !== this.initialVizabiModelIndicators[key].which;
+    return omitBy(markerData, (val, key) => {
+      return !this.vizabiModelIndicators[key] || markerData[key].which === this.vizabiModelIndicators[key].which;
     });
   }
 
-  getNewUniqueEntitiesSelectBased(entities) {
-    return entities.filter(selectedCountry => {
-      return !this.initialVizabiModelGeoEntities.some(existedCountry => {
-        return selectedCountry.geo === existedCountry.geo;
-      });
-    });
-  }
+  getNewUniqueEntities(entities, property = null) {
+    return entities.filter(selectedGeo => {
+      return !this.vizabiModelGeoEntities.some(existedGeo => {
+        if (get(selectedGeo, property)) {
+          return selectedGeo[property] === existedGeo;
+        }
 
-  getNewUniqueEntitiesShowBased(entities) {
-    return entities.filter(selectedCountry => {
-      return !this.initialVizabiModelGeoEntities.some(existedCountry => {
-        return selectedCountry === existedCountry;
+        return selectedGeo === existedGeo;
       });
-    });
+    }).map(uniqueEntity => get(uniqueEntity, property) ? uniqueEntity[property] : uniqueEntity);
   }
 
   sendQueriesStatsToGA(data, type) {
@@ -323,7 +325,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       }
     };
 
-    ga('toolsPageTracker.send', 'event', analyticsTypeOptions[type]);
+    this.sendEventToGA(analyticsTypeOptions[type]);
+  }
+
+  sendEventToGA(analyticsData) {
+    if (!ga) {
+      return;
+    }
+
+    ga(`${GA_TRACKER_NAME}.send`, 'event', analyticsData);
   }
 
   ngOnDestroy(): void {
