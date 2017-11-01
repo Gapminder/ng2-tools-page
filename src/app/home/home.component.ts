@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular
 import { Location } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { get, cloneDeep, includes, isEmpty } from 'lodash-es';
+import { get, cloneDeep, includes, isEmpty, pickBy } from 'lodash-es';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -42,7 +42,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   currentHashModel;
 
   readerModuleObject = WsReader;
-  readerPlugins = [{onReadHook: this.setAnalyticsWSQueriesData.bind(this)}];
+  readerPlugins = [{onReadHook: this.sendQueriesStatsToGA.bind(this)}];
   extResources = {
     host: `${environment.wsUrl}/`,
     dataPath: '/api/ddf/',
@@ -54,12 +54,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private toolToSlug = {};
   private vizabiInstances = {};
   private vizabiModelChangesSubscription: Subscription;
+  private vizabiChartTypeChangesSubscription: Subscription;
   private vizabiCreationSubscription: Subscription;
   private initialToolsSetupSubscription: Subscription;
   private localeChangesSubscription: Subscription;
   private toolChangesSubscription: Subscription;
   private routesModelChangesSubscription: Subscription;
-  private initialModelIndicators = {axis_x: {}, axis_y: {}, size: {}, select: []};
+  private initialVizabiModelIndicators = {axis_x: {}, axis_y: {}, size: {}, select: []};
+  private initialVizabiModelGeoEntities = [];
 
   constructor(private router: Router,
               private location: Location,
@@ -115,6 +117,18 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         if (vizabiInstance.setModel && vizabiInstance._ready) {
           vizabiInstance.setModel(this.currentHashModel);
         }
+      });
+
+    this.vizabiChartTypeChangesSubscription = this.store.select(getCurrentVizabiModelHash)
+      .filter(hashModel => {
+        return hashModel && hashModel['chart-type'] && this.currentHashModel &&
+          this.currentHashModel['chart-type'] !== hashModel['chart-type'];
+      })
+      .debounceTime(MODEL_CHANGED_DEBOUNCE)
+      .subscribe(hashModel => {
+        this.initialVizabiModelIndicators = {axis_x: {}, axis_y: {}, size: {}, select: []};
+        this.initialVizabiModelGeoEntities = [];
+        this.currentChartType = hashModel['chart-type'];
       });
   }
 
@@ -207,90 +221,91 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   onChanged(changes): void {
+    const model = {...changes.modelDiff, ...{'chart-type': this.toolToSlug[changes.type]}};
     const {type, modelDiff: {state}} = changes;
 
-    if (state && state.marker) {
-      this.sendAnalyticsVizabiState(type, state.marker);
+    if (state && (state.marker || state.entities)) {
+      this.sendVizabiStateToGA(type, state);
     }
-
-    const model = {...changes.modelDiff, ...{'chart-type': this.toolToSlug[changes.type]}};
 
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
   }
 
-  sendAnalyticsVizabiState(chartName, marker) {
-    this.setAnalyticsConceptsData(chartName, marker);
-    this.setAnalyticsEntitiesData(chartName, marker);
+  sendVizabiStateToGA(chartName, state) {
+    if (!ga) {
+      return;
+    }
+
+    this.sendConceptsStateToGA(chartName, state);
+    this.sendEntitiesStateToGA(chartName, state);
   }
 
-  setAnalyticsConceptsData(chartName, markerData) {
-    const newConceptsIndicators = this.getUniqueConceptsIndicators(markerData);
+  sendConceptsStateToGA(chartName, state) {
+    const { marker } = state;
+    const newConceptsIndicators = this.getUniqueConceptsIndicators(marker);
     const newConceptsIndicatorsKeys = Object.keys(newConceptsIndicators);
 
     if (!newConceptsIndicatorsKeys.length) {
       return;
     }
 
-    this.setConceptsIndicatorsToState(newConceptsIndicators);
+    this.initialVizabiModelIndicators = {...this.initialVizabiModelIndicators, ...newConceptsIndicators};
 
     newConceptsIndicatorsKeys.forEach(indicator => {
       ga('toolsPageTracker.send', 'event', {
-          'eventCategory': 'concept',
-          'eventAction': `set which: ${chartName} marker ${indicator}`,
-          'eventLabel': newConceptsIndicators[indicator].which
-        });
+        'eventCategory': 'concept',
+        'eventAction': `set which: ${chartName} marker ${indicator}`,
+        'eventLabel': newConceptsIndicators[indicator].which
+      });
     });
   }
 
-  setAnalyticsEntitiesData(chartName, markerData) {
-    if (!markerData.select) {
+  sendEntitiesStateToGA(chartName, state) {
+    let newUniqueGeoEntities;
+
+    if (!(state.marker && state.marker.select || state.entities && state.entities.show.geo)) {
       return;
     }
 
-    const newUniqueCountries = this.getNewUniqueSelectedCountries(markerData.select);
-    this.setNewCountriesToState(newUniqueCountries);
+    newUniqueGeoEntities = chartName === 'LineChart' || chartName === 'PopByAge' ?
+      this.getNewUniqueEntitiesShowBased(state.entities.show.geo.$in) :
+      this.getNewUniqueEntitiesSelectBased(state.marker.select);
 
-    newUniqueCountries.forEach(country => {
+    this.initialVizabiModelGeoEntities = this.initialVizabiModelGeoEntities.concat(newUniqueGeoEntities);
+
+    newUniqueGeoEntities.forEach(country => {
       ga('toolsPageTracker.send', 'event', {
         'eventCategory': 'entity',
         'eventAction': ` select entity: ${chartName} marker`,
-        'eventLabel': country.geo
+        'eventLabel': country
       });
     });
   }
 
   getUniqueConceptsIndicators(markerData) {
-    const markerKeys = Object.keys(markerData);
-    const uniqueConceptsIndicators = {};
-
-    markerKeys.forEach(key => {
-      if (key !== 'select' && markerData[key].which !== this.initialModelIndicators[key].which) {
-        uniqueConceptsIndicators[key] = {};
-        uniqueConceptsIndicators[key].which = markerData[key].which;
-      }
+    return pickBy(markerData, (val, key) => {
+      return key !== 'select' &&  markerData[key].which !== this.initialVizabiModelIndicators[key].which;
     });
-
-    return uniqueConceptsIndicators;
   }
 
-  setConceptsIndicatorsToState(conceptsIndicators) {
-    this.initialModelIndicators = {...this.initialModelIndicators, ...conceptsIndicators};
-  }
-
-  getNewUniqueSelectedCountries(selectedCountries) {
-    return selectedCountries.filter(selectedCountry => {
-      return !this.initialModelIndicators.select.some(existedCountry => {
+  getNewUniqueEntitiesSelectBased(entities) {
+    return entities.filter(selectedCountry => {
+      return !this.initialVizabiModelGeoEntities.some(existedCountry => {
         return selectedCountry.geo === existedCountry.geo;
       });
     });
   }
 
-  setNewCountriesToState(newCountries) {
-    this.initialModelIndicators.select = this.initialModelIndicators.select.concat(newCountries);
+  getNewUniqueEntitiesShowBased(entities) {
+    return entities.filter(selectedCountry => {
+      return !this.initialVizabiModelGeoEntities.some(existedCountry => {
+        return selectedCountry === existedCountry;
+      });
+    });
   }
 
-  setAnalyticsWSQueriesData(data, type) {
+  sendQueriesStatsToGA(data, type) {
     if (!ga) {
       return;
     }
@@ -314,6 +329,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     const subscriptions = [
       this.vizabiModelChangesSubscription,
+      this.vizabiChartTypeChangesSubscription,
       this.vizabiCreationSubscription,
       this.initialToolsSetupSubscription,
       this.localeChangesSubscription,
