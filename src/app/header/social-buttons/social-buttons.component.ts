@@ -15,7 +15,6 @@ export class SocialButtonsComponent {
   @Output() shareLink: EventEmitter<any> = new EventEmitter();
   @Output() getEmbeddedUrl: EventEmitter<any> = new EventEmitter();
   @ViewChild('mailLink') mailLink;
-  mailUrl: string;
 
   constructor(private bitlyService: BitlyService) {
   }
@@ -29,7 +28,9 @@ export class SocialButtonsComponent {
   }
 
   mail() {
-    this.mailUrl = encodeURIComponent(window.location.href);
+    const mailUrl = encodeURIComponent(window.location.href);
+
+    this.mailLink.nativeElement.href = `mailto:?subject=Gapminder&amp;body=${mailUrl}`;
     this.mailLink.nativeElement.click();
   }
 
