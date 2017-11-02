@@ -56,8 +56,16 @@
     m.parentNode.insertBefore(a, m)
   })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-67908993-1', 'auto', 'toolsPageTracker');
-  ga('toolsPageTracker.send', 'pageview');
+  
+  var gaEnabled = ['dev', 'stage', 'localhost'].every(function (env) {
+    return location.hostname.indexOf(env) === -1;
+  });
+  		
+  if (gaEnabled) {
+    ga('create', 'UA-67908993-1', 'auto', 'toolsPageTracker');
+    ga('toolsPageTracker.send', 'pageview');
+  }  
+  
 </script>
 </body>
 </html>
