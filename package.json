@@ -27,7 +27,7 @@
     "start:local-web-server": "ws -d ./dist/ -p 3001 --rewrite '/assets/fonts/* -> /tools/assets/fonts/$1' '/assets/images/* -> /tools/assets/images/$1' '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'",
     "e2e:local": "./node_modules/protractor/bin/webdriver-manager update && ./node_modules/.bin/protractor protractor.conf.js",
     "i18n:update": "ngx-translate-extract -i ./src -o ./src/assets/i18n/{en,ar-SA}.json --clean --format namespaced-json",
-    "ncu-vizabi": "ncu -u vizabi vizabi-barrankchart vizabi-bubblechart vizabi-bubblemap vizabi-config-systema_globalis vizabi-linechart vizabi-mountainchart vizabi-popbyage vizabi-ws-reader && npm i && git add package.json && git commit -m 'chore(package): update vizabis'"    
+    "ncu-vizabi": "ncu -u vizabi vizabi-barrankchart vizabi-bubblechart vizabi-bubblemap vizabi-config-systema_globalis vizabi-linechart vizabi-mountainchart vizabi-popbyage vizabi-ws-reader && npm i && git add package.json && git commit -m 'chore(package): update vizabis'"
   },
   "private": true,
   "dependencies": {
@@ -50,7 +50,7 @@
     "forever": "0.15.3",
     "lodash-es": "4.17.4",
     "mkdirp": "0.5.1",
-    "ng2-vizabi": "2.0.0",
+    "ng2-vizabi": "2.1.1",
     "reselect": "3.0.1",
     "rxjs": "5.4.3",
     "sw-precache": "~5.2.0",
