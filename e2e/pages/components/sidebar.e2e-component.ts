@@ -4,8 +4,6 @@ import {
   findElementByExactText, isCountryAddedInUrl, waitForSpinner
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
-import { CommonChartPage } from '../common-chart.po';
-import { LineChart } from '../line-chart.po';
 
 export class Sidebar {
   /**
@@ -31,6 +29,8 @@ export class Sidebar {
    * Color section
    */
   colorDropDown: ExtendedElementFinder = _$$('span[class="vzb-ip-select"]').first();
+  colorSearch: ExtendedElementFinder = _$('#vzb-treemenu-search');
+  colorSearchResults: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
   colorIndicatorDropdown: ExtendedElementFinder = _$$('span[class="vzb-ip-holder"] > span').get(8); // TODO
   color = {
     childMortalityRate: _$$('span[class="vzb-treemenu-list-item-label"]').get(3), // TODO add test class to vizabi
@@ -104,6 +104,7 @@ export class Sidebar {
      * LineChart-page use it's own selectors
      */
     await this.searchInputField.typeText(country);
+    await browser.wait(EC.presenceOf(this.searchResult.first()), 5000, 'search results not present');
     await this.searchResult.findElementByExactText(country).safeClick();
 
     await browser.wait(isCountryAddedInUrl(country, select));
@@ -153,5 +154,13 @@ export class Sidebar {
     // const elem = await this.sidebar.miniMap.$$('path').first();
 
     return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).perform();
+  }
+
+  async searchAndSelectInColorDropdown(colorOption: string) {
+    await this.colorDropDown.safeClick();
+    await this.colorSearch.typeText(colorOption);
+    await browser.sleep(1000); // css animation
+    await browser.wait(EC.presenceOf(element(by.cssContainingText(this.colorSearchResults.first().locator().value, colorOption))));
+    await this.colorSearchResults.first().safeClick();
   }
 }

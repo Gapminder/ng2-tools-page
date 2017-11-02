@@ -11,7 +11,7 @@ export class Slider {
   public speedStepper: ElementFinder = $('.vzb-tool-stepped-speed-slider');
 
   async waitForSliderToBeReady(): Promise<{}> {
-    return await browser.wait(EC.visibilityOf(this.sliderReady), 30000);
+    return await browser.wait(EC.visibilityOf(this.sliderReady), 30000, 'slider not visible');
   }
 
   async getPosition(): Promise<string> {

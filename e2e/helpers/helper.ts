@@ -12,9 +12,9 @@ export function safeOpen(url: string) {
 }
 
 export function waitForPageLoaded() {
-  return browser.wait(EC.visibilityOf(CommonChartPage.sideBar), MAX_TIMEOUT).then(() => {
-    return browser.wait(EC.visibilityOf(CommonChartPage.mainChart), MAX_TIMEOUT);
-  });
+  return browser.wait(EC.visibilityOf(CommonChartPage.sideBar), MAX_TIMEOUT)
+    .then(() => browser.wait(EC.visibilityOf(CommonChartPage.mainChart), MAX_TIMEOUT))
+    .then(() => browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay), MAX_TIMEOUT));
 }
 
 export function waitForSpinner() {
