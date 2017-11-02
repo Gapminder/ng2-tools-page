@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular
 import { Location } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { get, cloneDeep, includes, isEmpty, omitBy } from 'lodash-es';
+import { get, cloneDeep, includes, isEmpty, omitBy, map, difference } from 'lodash-es';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -25,7 +25,8 @@ import { getTransitionType, TransitionType } from '../core/charts-transition';
 const {WsReader} = require('vizabi-ws-reader');
 const MODEL_CHANGED_DEBOUNCE = 200;
 
-const GA_TRACKER_NAME = 'toolsPageTracker';
+const GA_TRACKER_NAME_AND_METHOD = 'toolsPageTracker.send';
+const GA_TYPE = 'event';
 const GA_EVENT_ACTION_REQUEST = 'request';
 const GA_EVENT_ACTION_RESPONSE = 'response';
 const INITIAL_VIZABI_MODEL_INDICATORS = Object.freeze({axis_x: {}, axis_y: {}, size: {}});
@@ -231,20 +232,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const model = {...modelDiff, ...{'chart-type': this.toolToSlug[type]}};
 
     if (state && (state.marker || state.entities)) {
-      this.sendVizabiStateToGA(type, state);
+      this.sendConceptsStateToGA(type, state);
+      this.sendEntitiesStateToGA(type, state);
     }
 
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
-  }
-
-  sendVizabiStateToGA(chartName, state) {
-    if (!ga) {
-      return;
-    }
-
-    this.sendConceptsStateToGA(chartName, state);
-    this.sendEntitiesStateToGA(chartName, state);
   }
 
   sendConceptsStateToGA(chartName, state) {
@@ -270,20 +263,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   sendEntitiesStateToGA(chartName, state) {
     let newUniqueGeoEntities;
 
-    if (!(state.marker && state.marker.select || state.entities && state.entities.show.geo)) {
+    if (!(get(state, 'marker.select') || get(state, 'entities.show.geo'))) {
       return;
     }
 
     newUniqueGeoEntities = EXCEPTIONAL_VIZABI_CHARTS.some(chart => chart === chartName) ?
-      this.getNewUniqueEntities(state.entities.show.geo.$in) :
-      this.getNewUniqueEntities(state.marker.select, 'geo');
+      this.getNewUniqueEntities(get(state, 'entities.show.geo.$in')) :
+      this.getNewUniqueEntities(get(state, 'marker.select'), 'geo');
 
     this.vizabiModelGeoEntities = this.vizabiModelGeoEntities.concat(newUniqueGeoEntities);
 
     newUniqueGeoEntities.forEach(geo => {
       this.sendEventToGA({
         'eventCategory': 'entity',
-        'eventAction': ` select entity: ${chartName} marker`,
+        'eventAction': `select entity: ${chartName} marker`,
         'eventLabel': geo
       });
     });
@@ -291,27 +284,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   getUniqueConceptsIndicators(markerData) {
     return omitBy(markerData, (val, key) => {
-      return !this.vizabiModelIndicators[key] || markerData[key].which === this.vizabiModelIndicators[key].which;
+      const keyInModelIndicators = get(this.vizabiModelIndicators, key, false);
+
+      return !keyInModelIndicators || get(markerData, `${key}.which`) === get(keyInModelIndicators, 'which');
     });
   }
 
   getNewUniqueEntities(entities, property = null) {
-    return entities.filter(selectedGeo => {
-      return !this.vizabiModelGeoEntities.some(existedGeo => {
-        if (get(selectedGeo, property)) {
-          return selectedGeo[property] === existedGeo;
-        }
+    const parsedEntities = property ? map(entities, property) : entities;
 
-        return selectedGeo === existedGeo;
-      });
-    }).map(uniqueEntity => get(uniqueEntity, property) ? uniqueEntity[property] : uniqueEntity);
+    return difference(parsedEntities, this.vizabiModelGeoEntities);
   }
 
   sendQueriesStatsToGA(data, type) {
-    if (!ga) {
-      return;
-    }
-
     const {from, select, responseLength} = data;
     const analyticsTypeOptions = {
       request:  {
@@ -333,7 +318,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    ga(`${GA_TRACKER_NAME}.send`, 'event', analyticsData);
+    ga(GA_TRACKER_NAME_AND_METHOD, GA_TYPE, analyticsData);
   }
 
   ngOnDestroy(): void {
