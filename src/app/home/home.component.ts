@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { get, cloneDeep, includes, isEmpty } from 'lodash-es';
 
@@ -21,6 +21,7 @@ import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/s
 import { Subscription } from 'rxjs/Subscription';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
 import { getTransitionType, TransitionType } from '../core/charts-transition';
+import { LanguageService } from '../core/language.service';
 
 const {WsReader} = require('vizabi-ws-reader');
 const MODEL_CHANGED_DEBOUNCE = 200;
@@ -29,6 +30,7 @@ const GA_EVENT_ACTION_REQUEST = 'request';
 const GA_EVENT_ACTION_RESPONSE = 'response';
 
 declare const ga: any;
+
 @Component({
   encapsulation: ViewEncapsulation.None,
   selector: 'app-home',
@@ -63,6 +65,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   constructor(private router: Router,
               private location: Location,
               private vizabiToolsService: VizabiToolsService,
+              private langService: LanguageService,
               private store: Store<State>) {
     this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
       this.tools = initial.tools;
@@ -98,7 +101,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.currentChartType = hashModel['chart-type'];
 
         const restoredStringModel = this.restoreState(hashModel, oldHashModel);
-        const stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
+
+        let stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
+
+        if (stringModel.indexOf('&locale_id=') < 0) {
+          stringModel += `&locale_id=${this.langService.detectLanguage().key}`;
+        }
 
         window.location.hash = `#${stringModel}`;
 
@@ -108,12 +116,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         this.store.dispatch(new TrackGaPageEvent(currentPathWithHash));
         this.store.dispatch(new TrackGaVizabiModelChangeEvent(currentPathWithHash));
-
-        const vizabiInstance = this.vizabiInstances[this.currentChartType].instance;
-
-        if (vizabiInstance.setModel && vizabiInstance._ready) {
-          vizabiInstance.setModel(this.currentHashModel);
-        }
       });
   }
 
@@ -223,7 +225,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   _setAnalyticsData(data, type) {
     const {from, select, responseLength} = data;
     const analyticsTypeOptions = {
-      request:  {
+      request: {
         'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
         'eventAction': GA_EVENT_ACTION_REQUEST
       },

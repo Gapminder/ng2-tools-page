@@ -49,6 +49,10 @@ export class AppComponent implements OnDestroy {
         }
       });
 
+    activated.fragment.subscribe(() => {
+      store.dispatch(new DetectLanguage());
+    });
+
     this.clientChangeDetectionSubscription = activated.params
       .subscribe((event: Params) => {
         if (!event.client) {
