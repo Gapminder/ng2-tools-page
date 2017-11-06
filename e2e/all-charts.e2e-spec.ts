@@ -30,7 +30,7 @@ describe('No additional data in URL when chart opens', () => {
       const chart = data.chart;
       await chart.openByClick();
 
-      expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + chart.url);
+      expect(await browser.getCurrentUrl()).toEqual(`${browser.baseUrl}${chart.url}&locale_id=en`);
     });
   });
 });
@@ -100,7 +100,6 @@ describe('All charts - Acceptance', () => {
       const sidebar: Sidebar = new Sidebar(chart);
 
       await chart.openChart();
-      expect(await browser.getCurrentUrl()).toEqual(browser.baseUrl + chart.url);
 
       await sidebar.searchAndSelectCountry('Australia');
       await sidebar.searchAndSelectCountry('Bangladesh');

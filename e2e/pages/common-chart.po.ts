@@ -18,7 +18,8 @@ export class CommonChartPage {
     'USA': 'usa',
     'United States': 'usa',
     'Brazil': 'bra',
-    'Argentina': 'arg'
+    'Argentina': 'arg',
+    'Africa': 'africa'
   };
 
   static opacity = {
