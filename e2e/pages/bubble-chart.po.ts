@@ -146,7 +146,6 @@ export class BubbleChart extends CommonChartPage {
 
   async clickXiconOnBubble(country: string): Promise<{}> {
     await browser.actions().mouseMove(this.selectedBubbleLabel).perform();
-    await browser.sleep(1000); // wait for css animation
     await this.xIconOnBubble.safeClick();
 
     return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 5000);
