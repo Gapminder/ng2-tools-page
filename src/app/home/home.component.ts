@@ -12,7 +12,7 @@ import {
   getCurrentLocale,
   getCurrentVizabiModelHash,
   getInitialToolsSetup,
-  getSelectedTool, isVizabiReady,
+  getSelectedTool,
   State
 } from '../core/store';
 import { TrackGaPageEvent, TrackGaVizabiModelChangeEvent } from '../core/store/google/google.actions';
@@ -24,7 +24,7 @@ import { getTransitionType, TransitionType } from '../core/charts-transition';
 import { LanguageService } from '../core/language.service';
 
 const {WsReader} = require('vizabi-ws-reader');
-const MODEL_CHANGED_DEBOUNCE = 200;
+const MODEL_CHANGED_DEBOUNCE = 500;
 
 const GA_TRACKER_NAME_AND_METHOD = 'toolsPageTracker.send';
 const GA_TYPE = 'event';
@@ -60,6 +60,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private toolToSlug = {};
   private vizabiInstances = {};
   private vizabiModelChangesSubscription: Subscription;
+  private urlFragmentChangesSubscription: Subscription;
   private vizabiChartTypeChangesSubscription: Subscription;
   private vizabiCreationSubscription: Subscription;
   private initialToolsSetupSubscription: Subscription;
@@ -68,10 +69,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private routesModelChangesSubscription: Subscription;
   private vizabiModelIndicators = cloneDeep(INITIAL_VIZABI_MODEL_INDICATORS);
   private vizabiModelGeoEntities = [];
+  private vizabiModelHash: string = '';
+  private isFirstLoading = true;
 
   constructor(private router: Router,
               private location: Location,
               private vizabiToolsService: VizabiToolsService,
+              private activated: ActivatedRoute,
               private langService: LanguageService,
               private store: Store<State>) {
     this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
@@ -82,12 +86,29 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.vizabiInstances = initial.initialVizabiInstances;
 
       const model = this.vizabiToolsService.getModelFromUrl();
-      this.store.dispatch(new VizabiModelChanged(model));
+
+      this.vizabiInstances[this.currentChartType].modelHash = '_state_marker_select@_geo=ind&trailStartTime=2015;&_geo=chn&trailStartTime=2015;;;;&chart-type=bubbles';
+
+
+
+      console.log(111);
+      this.store.dispatch(new VizabiModelChanged(model)); ///////////////////////////////////////////////////
     });
 
     this.vizabiCreationSubscription = this.store.select(getCreatedVizabiInstance)
       .filter(({tool, instance}) => !!tool).subscribe(({tool, instance}) => {
         this.vizabiInstances[tool] = {...this.vizabiInstances[tool], ...instance};
+      });
+
+    this.urlFragmentChangesSubscription = activated.fragment
+      .filter((currentUrlFragment: string) =>
+        currentUrlFragment && this.vizabiInstances[this.currentChartType] && currentUrlFragment !== this.vizabiModelHash)
+      .subscribe((currentUrlFragment: string) => {
+        console.log(2, this.vizabiModelHash, currentUrlFragment);
+
+        this.vizabiModelHash = currentUrlFragment;
+        this.vizabiInstances[this.currentChartType].modelHash = this.vizabiModelHash;
+        window.location.hash = `#${this.vizabiModelHash}`;
       });
 
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
@@ -102,6 +123,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       })
       .debounceTime(MODEL_CHANGED_DEBOUNCE)
       .subscribe(hashModel => {
+        console.log(1, hashModel, this.currentHashModel);
         const oldHashModel = this.currentHashModel;
 
         this.currentHashModel = hashModel;
@@ -109,15 +131,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         const restoredStringModel = this.restoreState(hashModel, oldHashModel);
 
-        let stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
+        /*this.vizabiModelHash = restoredStringModel ||
+          this.vizabiToolsService.convertModelToString(this.currentHashModel);*/
 
-        if (stringModel.indexOf('&locale_id=') < 0) {
+
+        console.log('@@@@@@@@', restoredStringModel, this.vizabiToolsService.convertModelToString(this.currentHashModel));
+
+        /*if (stringModel.indexOf('&locale_id=') < 0) {
           stringModel += `&locale_id=${this.langService.detectLanguage().key}`;
-        }
+        }*/
 
-        window.location.hash = `#${stringModel}`;
+        window.location.hash = `#${this.vizabiToolsService.convertModelToString(this.currentHashModel)}`;
 
-        this.vizabiInstances[this.currentChartType].modelHash = stringModel;
+        // this.vizabiInstances[this.currentChartType].modelHash = this.vizabiModelHash;
 
         const currentPathWithHash = this.location.path(true);
 
@@ -184,13 +210,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.routesModelChangesSubscription = this.router.events.filter(event => event instanceof NavigationEnd)
       .subscribe(() => {
         const model = this.vizabiToolsService.getModelFromUrl();
-        this.store.dispatch(new VizabiModelChanged(model));
+
+        console.log(222, model, window.location.hash);
+        this.store.dispatch(new VizabiModelChanged(model)); //////////////////////////////////////////
       });
 
     this.toolChangesSubscription = this.store.select(getSelectedTool).subscribe(selectedTool => {
       const urlModel = this.vizabiToolsService.getModelFromUrl();
       const toolInUrlIsSame = urlModel && urlModel['chart-type'] === selectedTool;
       const chartTransitionType = getTransitionType(this.currentChartType, selectedTool);
+
+      console.log(555, toolInUrlIsSame
+        ? urlModel
+        : Object.assign(this.vizabiToolsService.simplifyModel(chartTransitionType), {'chart-type': selectedTool}));
 
       this.store.dispatch(new VizabiModelChanged(
         toolInUrlIsSame
@@ -199,10 +231,11 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       );
     });
 
-    this.localeChangesSubscription = this.store.select(getCurrentLocale).subscribe((locale: VizabiLocale) => {
+    /*this.localeChangesSubscription = this.store.select(getCurrentLocale).subscribe((locale: VizabiLocale) => {
       const model = {...this.vizabiToolsService.getModelFromUrl(), ...locale};
-      this.store.dispatch(new VizabiModelChanged(model));
-    });
+      console.log(333);
+      this.store.dispatch(new VizabiModelChanged(model)); ///////////////////////////////////////////////////////////
+    });*/
   }
 
   getVizabiInitialModel(slug: string) {
@@ -237,12 +270,18 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.sendEntitiesStateToGA(type, state);
     }
 
-    this.store.dispatch(new VizabiModelChanged(model));
+    /*if (!this.isFirstLoading) {*/
+      console.log(444, model, this.currentHashModel, changes);
+
+    this.store.dispatch(new VizabiModelChanged(model)); /////////////////////////////////////////////////////
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
+    //}
+
+    this.isFirstLoading = false;
   }
 
   sendConceptsStateToGA(chartName, state) {
-    const { marker } = state;
+    const {marker} = state;
     const newConceptsIndicators = this.getUniqueConceptsIndicators(marker);
     const newConceptsIndicatorsKeys = Object.keys(newConceptsIndicators);
 
@@ -326,6 +365,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const subscriptions = [
       this.vizabiModelChangesSubscription,
       this.vizabiChartTypeChangesSubscription,
+      this.urlFragmentChangesSubscription,
       this.vizabiCreationSubscription,
       this.initialToolsSetupSubscription,
       this.localeChangesSubscription,
