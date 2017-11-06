@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { Location } from '@angular/common';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { get, cloneDeep, includes, isEmpty, omitBy, map, difference } from 'lodash-es';
+import { get, cloneDeep, includes, isEmpty, omitBy, map, difference, isEqual } from 'lodash-es';
 
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -12,11 +12,11 @@ import {
   getCurrentLocale,
   getCurrentVizabiModelHash,
   getInitialToolsSetup,
-  getSelectedTool, isVizabiReady,
+  getSelectedTool,
   State
 } from '../core/store';
 import { TrackGaPageEvent, TrackGaVizabiModelChangeEvent } from '../core/store/google/google.actions';
-import { VizabiLocale } from '../core/store/language/language';
+import { Language, VizabiLocale } from '../core/store/language/language';
 import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/store/tools/tools.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
@@ -69,10 +69,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private vizabiModelIndicators = cloneDeep(INITIAL_VIZABI_MODEL_INDICATORS);
   private vizabiModelGeoEntities = [];
 
-  constructor(private router: Router,
+  private urlFragmentChangesSubscription: Subscription;
+
+  constructor(public langService: LanguageService,
+              private router: Router,
               private location: Location,
               private vizabiToolsService: VizabiToolsService,
-              private langService: LanguageService,
               private store: Store<State>) {
     this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
       this.tools = initial.tools;
@@ -82,12 +84,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.vizabiInstances = initial.initialVizabiInstances;
 
       const model = this.vizabiToolsService.getModelFromUrl();
+
+      // console.log('TOOLS-PAGE INIT', model);
+
       this.store.dispatch(new VizabiModelChanged(model));
     });
 
     this.vizabiCreationSubscription = this.store.select(getCreatedVizabiInstance)
       .filter(({tool, instance}) => !!tool).subscribe(({tool, instance}) => {
-        this.vizabiInstances[tool] = {...this.vizabiInstances[tool], ...instance};
+        this.vizabiInstances[tool] = {
+          ...this.vizabiInstances[tool],
+          ...instance,
+          locale: {id: this.langService.detectLanguage().key}
+        };
       });
 
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
@@ -109,13 +118,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         const restoredStringModel = this.restoreState(hashModel, oldHashModel);
 
-        let stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
-
-        if (stringModel.indexOf('&locale_id=') < 0) {
-          stringModel += `&locale_id=${this.langService.detectLanguage().key}`;
+        if (restoredStringModel) {
+          this.currentHashModel = this.vizabiToolsService.getModelFromString(restoredStringModel);
         }
 
+        const stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
+
         window.location.hash = `#${stringModel}`;
+        // console.log('TOOLS-PAGE HASH CHANGE (source id: vizabi persistent change)', window.location.hash);
 
         this.vizabiInstances[this.currentChartType].modelHash = stringModel;
 
@@ -184,7 +194,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.routesModelChangesSubscription = this.router.events.filter(event => event instanceof NavigationEnd)
       .subscribe(() => {
         const model = this.vizabiToolsService.getModelFromUrl();
-        this.store.dispatch(new VizabiModelChanged(model));
+
+        if (!isEqual(this.currentHashModel, model)) {
+          // console.log('TOOLS-PAGE routesModelChangesSubscription', model);
+
+          this.store.dispatch(new VizabiModelChanged(model));
+        }
       });
 
     this.toolChangesSubscription = this.store.select(getSelectedTool).subscribe(selectedTool => {
@@ -197,10 +212,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           ? urlModel
           : Object.assign(this.vizabiToolsService.simplifyModel(chartTransitionType), {'chart-type': selectedTool}))
       );
+
+      // console.log('TOOLS-PAGE toolChangesSubscription');
     });
 
     this.localeChangesSubscription = this.store.select(getCurrentLocale).subscribe((locale: VizabiLocale) => {
       const model = {...this.vizabiToolsService.getModelFromUrl(), ...locale};
+
+      // console.log('TOOLS-PAGE localeChangesSubscription');
+
       this.store.dispatch(new VizabiModelChanged(model));
     });
   }
@@ -230,19 +250,25 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const modelDiff = get(changes, 'modelDiff');
     const type = get(changes, 'type');
     const state = get(changes, 'modelDiff.state');
-    const model = {...modelDiff, ...{'chart-type': this.toolToSlug[type]}};
+    const model = {
+      ...modelDiff,
+      ...{'chart-type': this.toolToSlug[type]},
+      locale: {id: this.langService.detectLanguage().key}
+    };
 
     if (state && (state.marker || state.entities)) {
       this.sendConceptsStateToGA(type, state);
       this.sendEntitiesStateToGA(type, state);
     }
 
+    // console.log('TOOLS-PAGE from Vizabi - onChanged', model);
+
     this.store.dispatch(new VizabiModelChanged(model));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
   }
 
   sendConceptsStateToGA(chartName, state) {
-    const { marker } = state;
+    const {marker} = state;
     const newConceptsIndicators = this.getUniqueConceptsIndicators(marker);
     const newConceptsIndicatorsKeys = Object.keys(newConceptsIndicators);
 
@@ -326,6 +352,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const subscriptions = [
       this.vizabiModelChangesSubscription,
       this.vizabiChartTypeChangesSubscription,
+      this.urlFragmentChangesSubscription,
       this.vizabiCreationSubscription,
       this.initialToolsSetupSubscription,
       this.localeChangesSubscription,

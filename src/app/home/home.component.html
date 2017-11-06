@@ -11,6 +11,7 @@
           (onChanged)="onChanged($event)"
           [chartType]="vizabiInstances[slug].chartType"
           [model]="getVizabiInitialModel(slug)"
+          [language]="langService.detectLanguage().key"
           [modelHash]="vizabiInstances[slug].modelHash">
   </vizabi>
 </div>
