@@ -48,6 +48,10 @@ export class VizabiToolsService {
     return this.vizabiService.stringToModel(this.locationService.getUrlHash());
   }
 
+  getModelFromString(str: string) {
+    return this.vizabiService.stringToModel(str);
+  }
+
   convertModelToString(model): string {
     return this.vizabiService.modelToString(model);
   }
