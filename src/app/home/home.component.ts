@@ -8,7 +8,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
 import { Store } from '@ngrx/store';
 import {
-  getCreatedVizabiInstance,
   getCurrentLocale,
   getCurrentVizabiModelHash,
   getInitialToolsSetup,
@@ -68,6 +67,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private routesModelChangesSubscription: Subscription;
   private vizabiModelIndicators = cloneDeep(INITIAL_VIZABI_MODEL_INDICATORS);
   private vizabiModelGeoEntities = [];
+  private initialVizabiInstances = {};
 
   private urlFragmentChangesSubscription: Subscription;
 
@@ -81,23 +81,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.slugs = initial.slugs;
       this.defaultTool = initial.defaultTool;
       this.toolToSlug = initial.toolToSlug;
-      this.vizabiInstances = initial.initialVizabiInstances;
-
-      const model = this.vizabiToolsService.getModelFromUrl();
-
-      // console.log('TOOLS-PAGE INIT', model);
-
-      this.store.dispatch(new VizabiModelChanged(model));
+      this.initialVizabiInstances = Object.assign({}, initial.initialVizabiInstances);
+      this.vizabiInstances = Object.assign({}, initial.initialVizabiInstances);
     });
-
-    this.vizabiCreationSubscription = this.store.select(getCreatedVizabiInstance)
-      .filter(({tool, instance}) => !!tool).subscribe(({tool, instance}) => {
-        this.vizabiInstances[tool] = {
-          ...this.vizabiInstances[tool],
-          ...instance,
-          locale: {id: this.langService.detectLanguage().key}
-        };
-      });
 
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
       .filter(hashModel => !this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModel))
@@ -223,16 +209,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
       this.store.dispatch(new VizabiModelChanged(model));
     });
-  }
-
-  getVizabiInitialModel(slug: string) {
-    const initialModel = this.vizabiInstances[slug].model;
-
-    if (slug === 'mountain') {
-      Object.assign(get(initialModel, 'state.marker.group'), {manualSorting: ['asia', 'africa', 'americas', 'europe']});
-    }
-
-    return initialModel;
   }
 
   onCreated(changes): void {
