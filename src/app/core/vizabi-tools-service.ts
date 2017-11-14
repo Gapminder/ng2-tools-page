@@ -51,4 +51,8 @@ export class VizabiToolsService {
   convertModelToString(model): string {
     return this.vizabiService.modelToString(model);
   }
+
+  getModelFromString(fragment: string) {
+    return this.vizabiService.stringToModel(fragment);
+  }
 }
