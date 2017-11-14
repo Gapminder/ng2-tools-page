@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
 import { get, cloneDeep, includes, isEmpty, omitBy, map, difference, isEqual } from 'lodash-es';
-
+import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
 import { Store } from '@ngrx/store';
@@ -16,7 +16,7 @@ import {
   State
 } from '../core/store';
 import { TrackGaPageEvent, TrackGaVizabiModelChangeEvent } from '../core/store/google/google.actions';
-import { Language, VizabiLocale } from '../core/store/language/language';
+import { VizabiLocale } from '../core/store/language/language';
 import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/store/tools/tools.actions';
 import { Subscription } from 'rxjs/Subscription';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
@@ -280,9 +280,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     newConceptsIndicatorsKeys.forEach(indicator => {
       this.sendEventToGA({
-        'eventCategory': 'concept',
-        'eventAction': `set which: ${chartName} marker ${indicator}`,
-        'eventLabel': newConceptsIndicators[indicator].which
+        eventCategory: 'concept',
+        eventAction: `set which: ${chartName} marker ${indicator}`,
+        eventLabel: newConceptsIndicators[indicator].which
       });
     });
   }
@@ -302,9 +302,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     newUniqueGeoEntities.forEach(geo => {
       this.sendEventToGA({
-        'eventCategory': 'entity',
-        'eventAction': `select entity: ${chartName} marker`,
-        'eventLabel': geo
+        eventCategory: 'entity',
+        eventAction: `select entity: ${chartName} marker`,
+        eventLabel: geo
       });
     });
   }
@@ -327,13 +327,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const {from, select, responseLength} = data;
     const analyticsTypeOptions = {
       request: {
-        'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
-        'eventAction': GA_EVENT_ACTION_REQUEST
+        eventCategory: `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+        eventAction: GA_EVENT_ACTION_REQUEST
       },
       response: {
-        'eventCategory': `${from}: ${select.value.join(',')};${select.key.join(',')}`,
-        'eventAction': GA_EVENT_ACTION_RESPONSE,
-        'eventLabel': `rows: ${responseLength}`
+        eventCategory: `${from}: ${select.value.join(',')};${select.key.join(',')}`,
+        eventAction: GA_EVENT_ACTION_RESPONSE,
+        eventLabel: `rows: ${responseLength}`
       }
     };
 
