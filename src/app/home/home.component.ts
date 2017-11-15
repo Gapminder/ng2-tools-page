@@ -112,7 +112,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
 
         window.location.hash = `#${stringModel}`;
-        // console.log('TOOLS-PAGE HASH CHANGE (source id: vizabi persistent change)', window.location.hash);
+        // console.log('TOOLS-PAGE HASH CHANGE (source id: vizabi persistent change); isInner=',
+        //  hashModelDesc.isInnerChange, window.location.hash);
 
         if (!hashModelDesc.isInnerChange) {
           this.vizabiInstances[this.currentChartType].modelHash = stringModel;
