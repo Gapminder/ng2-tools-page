@@ -28,7 +28,7 @@ export class VizabiModelChanged implements Action {
   static TYPE = 'VizabiModelChanged';
   type: string = VizabiModelChanged.TYPE;
 
-  constructor(public model: any) {
+  constructor(public model: any, public isInnerChange = false) {
   }
 }
 

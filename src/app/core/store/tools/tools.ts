@@ -104,7 +104,7 @@ export function reducer(state: State = initialState, action: ToolsActions): Stat
     }
     case VizabiModelChanged.TYPE: {
       const act = action as VizabiModelChanged;
-      return Object.assign({}, state, { currentHashModel: act.model });
+      return Object.assign({}, state, { currentHashModel: act.model, isInnerChange: act.isInnerChange});
     }
     case VizabiInstanceCreated.TYPE: {
       const act = action as VizabiInstanceCreated;

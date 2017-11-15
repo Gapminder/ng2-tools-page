@@ -86,23 +86,23 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     });
 
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
-      .filter(hashModel => !this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModel))
-      .filter(hashModel => !!Object.keys(hashModel).length)
-      .map(hashModel => {
-        if (!includes(this.slugs, hashModel['chart-type'])) {
+      .filter(hashModelDesc => !this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModelDesc.currentHashModel))
+      .filter(hashModelDesc => !!Object.keys(hashModelDesc.currentHashModel).length)
+      .map(hashModelDesc => {
+        if (!includes(this.slugs, hashModelDesc.currentHashModel['chart-type'])) {
           return {'chart-type': 'bubbles'};
         }
 
-        return hashModel;
+        return hashModelDesc;
       })
       .debounceTime(MODEL_CHANGED_DEBOUNCE)
-      .subscribe(hashModel => {
+      .subscribe((hashModelDesc: any) => {
         const oldHashModel = this.currentHashModel;
 
-        this.currentHashModel = hashModel;
-        this.currentChartType = hashModel['chart-type'];
+        this.currentHashModel = hashModelDesc.currentHashModel;
+        this.currentChartType = hashModelDesc.currentHashModel['chart-type'];
 
-        const restoredStringModel = this.restoreState(hashModel, oldHashModel);
+        const restoredStringModel = this.restoreState(hashModelDesc.currentHashModel, oldHashModel);
 
         if (restoredStringModel) {
           this.currentHashModel = this.vizabiToolsService.getModelFromString(restoredStringModel);
@@ -110,10 +110,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         const stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
 
+
         window.location.hash = `#${stringModel}`;
         // console.log('TOOLS-PAGE HASH CHANGE (source id: vizabi persistent change)', window.location.hash);
 
-        this.vizabiInstances[this.currentChartType].modelHash = stringModel;
+        if (!hashModelDesc.isInnerChange) {
+          this.vizabiInstances[this.currentChartType].modelHash = stringModel;
+        }
 
         const currentPathWithHash = this.location.path(true);
 
@@ -239,7 +242,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     // console.log('TOOLS-PAGE from Vizabi - onChanged', model);
 
-    this.store.dispatch(new VizabiModelChanged(model));
+    this.store.dispatch(new VizabiModelChanged(model, true));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
   }
 
