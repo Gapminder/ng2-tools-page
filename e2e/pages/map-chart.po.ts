@@ -4,7 +4,7 @@ import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
 export class MapChart extends CommonChartPage {
-  url = '#_chart-type=map';
+  url = 'chart-type=map';
   chartLink: ExtendedElementFinder = _$('.about a[href*="map"]');
 
   selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bmc-entity label"]');

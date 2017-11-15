@@ -24,21 +24,21 @@ export class Slider {
     await this.waitForSliderToBeReady();
     await browser.actions().dragAndDrop(this.sliderButton, {x: -900, y: 0}).perform();
 
-    return await browser.wait(EC.urlContains('#_state_time_value='), 10000);
+    return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to middle');
   }
 
   async dragToStart(): Promise<{}> {
     await this.waitForSliderToBeReady();
     await browser.actions().dragAndDrop(this.sliderButton, CommonChartPage.buttonPlay).perform();
 
-    return await browser.wait(EC.urlContains('#_state_time_value='), 10000);
+    return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to start');
   }
 
   async dragToRightEdge(): Promise<{}> {
     await this.waitForSliderToBeReady();
     await browser.actions().dragAndDrop(this.sliderButton, this.speedStepper).perform();
 
-    return await browser.wait(EC.urlContains('#_state_time_value='), 10000);
+    return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to right');
   }
 
   async playTimesliderSeconds(seconds: number): Promise<void> {

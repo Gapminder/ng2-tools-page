@@ -2,9 +2,10 @@ import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions a
 
 import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
+import { waitForUrlToChange } from '../helpers/helper';
 
 export class BubbleChart extends CommonChartPage {
-  url = '#_chart-type=bubbles';
+  url = 'chart-type=bubbles';
   chartLink: ExtendedElementFinder = _$('.about a[href*="bubbles"]');
 
   public dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
@@ -53,7 +54,8 @@ export class BubbleChart extends CommonChartPage {
   async clickOnCountryBubble(country: string): Promise<{}> {
     await this.getCountryBubble(country).safeClick();
 
-    return await browser.wait(EC.visibilityOf(this.countryTooltip(country)), 2000);
+    // await browser.wait(EC.visibilityOf(this.countryTooltip(country)), 2000);
+    return await waitForUrlToChange();
   }
 
   async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {

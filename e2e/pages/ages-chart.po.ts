@@ -5,7 +5,7 @@ import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/
 import { ActionSequence, promise } from 'selenium-webdriver';
 
 export class AgesChart extends CommonChartPage {
-  url = '#_chart-type=popbyage';
+  url = 'chart-type=popbyage';
   chartLink: ExtendedElementFinder = _$('.about a[href*="popbyage"]');
 
   searchInputField: ExtendedElementFinder = _$('.vzb-show-search');

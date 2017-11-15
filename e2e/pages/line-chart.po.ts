@@ -10,7 +10,7 @@ import { ExtendedElementFinder, _$, _$$, ExtendedArrayFinder } from '../helpers/
 
 export class LineChart extends CommonChartPage {
   type = 'lineChart';
-  url = '#_chart-type=linechart';
+  url = 'chart-type=linechart';
   chartLink: ExtendedElementFinder = _$('.about a[href*="linechart"]');
 
   dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
