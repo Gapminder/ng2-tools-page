@@ -27,7 +27,7 @@ describe('Social media buttons', () => {
     await closeSocialTabAndSwitchToDefault();
   });
 
-  it('mail-to', async() => {
+  xit('mail-to: https://github.com/Gapminder/ng2-tools-page/issues/135', async() => {
     await browser.wait(EC.visibilityOf(header.mailButtonDesktop));
 
     expect(await header.mailLinkDesktop.getAttribute('href')).toContain(mailBasic);
