@@ -43,7 +43,7 @@ describe('Header: ', () => {
     });
 
     it(`chart links`, async() => {
-      const DATA_PROVIDER = [
+      const expectedLinks = [
         `${browser.baseUrl}#_${mapChart.url}`,
         `${browser.baseUrl}#_${mountainChart.url}`,
         `${browser.baseUrl}#_${lineChart.url}`,
@@ -55,7 +55,7 @@ describe('Header: ', () => {
       const chartLinks = $$('.chart-switcher-options a');
       const links = await chartLinks.map(el => el.getAttribute('href')).then(res => res.sort());
 
-      await expect(DATA_PROVIDER.sort()).toEqual(links as any);
+      await expect(expectedLinks.sort()).toEqual(links as any);
     });
   });
 });

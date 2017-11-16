@@ -28,6 +28,7 @@ export class Header {
   currentLanguage: ExtendedElementFinder = _$('.lang-current');
   englishLanguage: ExtendedElementFinder = _$$('app-language-switcher .selected li').first();
   rtlLanguage: ExtendedElementFinder = _$$('app-language-switcher .selected li').get(1);
+  shareLabel: ExtendedElementFinder = this.socialDesktop._$$('.share-text-box').first();
 
   async switchToChart(chartUrl: string) {
     await this.chartSwitcherBtn.safeClick();

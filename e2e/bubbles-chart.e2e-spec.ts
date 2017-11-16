@@ -175,7 +175,7 @@ describe('Bubbles chart - Acceptance', () => {
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(100);
   });
 
-  fit('Lock button', async() => {
+  it('Lock button', async() => {
     /**
      * should check that when select a country, click "Lock", and drag the time slider or play,
      * all unselected countries stay in place and only the selected one moves(TC15)

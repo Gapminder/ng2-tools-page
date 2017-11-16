@@ -3,13 +3,16 @@ import { browser, ExpectedConditions as EC } from 'protractor';
 import { Header } from './pages/components/header.e2e-component';
 import { LineChart } from './pages/line-chart.po';
 import { _$, ExtendedElementFinder } from './helpers/ExtendedElementFinder';
+import { BubbleChart } from './pages/bubble-chart.po';
+import { Slider } from './pages/components/slider.e2e-component';
 
 const lineChart: LineChart = new LineChart();
+const bubbleChart: BubbleChart = new BubbleChart();
+const slider: Slider = new Slider();
 const header: Header = new Header();
 
 describe('Social media buttons', () => {
-  const mailBasic = 'mailto:?subject=Gapminder';
-  const mailState = '';
+  const mailBasic = `mailto:?subject=Gapminder&body=${browser.baseUrl}`;
 
   const tweetStatus: ExtendedElementFinder = _$('#status');
   const twitterUrl = 'https://twitter.com/intent/tweet?original_referer=';
@@ -27,20 +30,33 @@ describe('Social media buttons', () => {
     await closeSocialTabAndSwitchToDefault();
   });
 
-  xit('mail-to: https://github.com/Gapminder/ng2-tools-page/issues/135', async() => {
+  it('Mail-to: basic state', async() => {
+    await header.shareLabel.safeClick();
     await browser.wait(EC.visibilityOf(header.mailButtonDesktop));
+    const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
 
-    expect(await header.mailLinkDesktop.getAttribute('href')).toContain(mailBasic);
+    await expect(actualMailLink).toEqual(`${mailBasic}#_chart-type=bubbles&locale_id=en`);
   });
 
-  xit('Mail-to include state in subject', async() => {
-    // there will be hidden button to activate url changing
+  it('Mail-to: entities in state', async() => {
     await lineChart.openChart();
     await lineChart.selectLine('China');
-    await header.mailButtonDesktop.click();
+    await header.shareLabel.safeClick();
 
-    expect(await header.mailLinkDesktop.safeGetAttribute('href')).toContain(mailBasic);
-    expect(await header.mailLinkDesktop.safeGetAttribute('href')).toContain(mailState);
+    const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
+
+    await expect(actualMailLink).toEqual(`${mailBasic}#_state_marker_select@_geo=chn;;;;&chart-type=linechart&locale_id=en`);
+  });
+
+  it('Mail-to: timeslider in state', async() => {
+    await bubbleChart.openChart();
+    await slider.dragToMiddle();
+    const sliderValue = await slider.getPosition();
+    await header.shareLabel.safeClick();
+
+    const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
+
+    await expect(actualMailLink).toEqual(`${mailBasic}#_state_time_value=${sliderValue};;&chart-type=bubbles&locale_id=en`);
   });
 
   it('twitter', async() => {
