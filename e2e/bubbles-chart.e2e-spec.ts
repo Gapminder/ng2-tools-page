@@ -126,10 +126,10 @@ describe('Bubbles chart - Acceptance', () => {
     await sidebar.searchAndSelectCountry('India');
     expect(await bubbleChart.selectedCountries.count()).toEqual(2);
 
-    expect(bubbleChart.selectedCountries.getText()).toMatch('China 2015');
-    expect(bubbleChart.selectedCountries.getText()).toMatch('India 2015');
-    expect(browser.getCurrentUrl()).toContain('geo=ind');
-    expect(browser.getCurrentUrl()).toContain('geo=chn');
+    expect(await bubbleChart.selectedCountries.getText()).toMatch('China 2015');
+    expect(await bubbleChart.selectedCountries.getText()).toMatch('India 2015');
+    expect(await browser.getCurrentUrl()).toContain('geo=ind');
+    expect(await browser.getCurrentUrl()).toContain('geo=chn');
 
     await sidebar.deselectCountryInSearch('India');
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
@@ -137,8 +137,8 @@ describe('Bubbles chart - Acceptance', () => {
     await sidebar.deselectCountryInSearch('China');
     expect(await bubbleChart.selectedCountries.count()).toEqual(0);
 
-    expect(browser.getCurrentUrl()).not.toContain('geo=ind');
-    expect(browser.getCurrentUrl()).not.toContain('geo=chn');
+    expect(await browser.getCurrentUrl()).not.toContain('geo=ind');
+    expect(await browser.getCurrentUrl()).not.toContain('geo=chn');
   });
 
   it('trialsegments for bubbles on play', async() => {
@@ -175,7 +175,7 @@ describe('Bubbles chart - Acceptance', () => {
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(100);
   });
 
-  it('Lock button', async() => {
+  fit('Lock button', async() => {
     /**
      * should check that when select a country, click "Lock", and drag the time slider or play,
      * all unselected countries stay in place and only the selected one moves(TC15)
@@ -195,7 +195,7 @@ describe('Bubbles chart - Acceptance', () => {
 
     await expect(coordinatesOfUnselectedBubbles).toEqual(coordinatesOfUnselectedBubbles2);
 
-    await slider.playTimesliderSeconds(3);
+    await slider.playTimesliderSeconds(4);
 
     const coordinatesOfUnselectedBubbles3 = await bubbleChart.getCoordinatesOfLowerOpacityBubblesOnBubblesChart();
 
@@ -214,9 +214,9 @@ describe('Bubbles chart - Acceptance', () => {
      */
     const initialRadius = await bubbleChart.getBubblesRadius();
 
-    sidebar.optionsButton.safeClick();
-    sidebar.optionsMenuSizeButton.safeClick();
-    safeDragAndDrop(sidebar.optionsMenuBubblesResizeToddler, {x: 60, y: 0});
+    await sidebar.optionsButton.safeClick();
+    await sidebar.optionsMenuSizeButton.safeClick();
+    await safeDragAndDrop(sidebar.optionsMenuBubblesResizeToddler, {x: 60, y: 0});
 
     const finalRadius = await bubbleChart.getBubblesRadius();
 

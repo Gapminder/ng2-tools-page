@@ -49,8 +49,8 @@ export class Header {
     let language: ExtendedElementFinder;
     rtl ? language = this.rtlLanguage : language = this.englishLanguage;
 
-    this.languageSwitcherBtn.safeClick();
-    language.safeClick();
+    await this.languageSwitcherBtn.safeClick();
+    await language.safeClick();
     await waitForUrlToChange();
     await waitForSpinner();
   }
