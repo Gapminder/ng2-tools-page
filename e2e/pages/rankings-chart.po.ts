@@ -6,7 +6,7 @@ import { promise } from 'selenium-webdriver';
 import { isCountryAddedInUrl } from '../helpers/helper';
 
 export class RankingsChart extends CommonChartPage {
-  url = '#_chart-type=barrank';
+  url = 'chart-type=barrank';
   chartLink: ExtendedElementFinder = _$('.about a[href*="barrank"]');
 
   dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');

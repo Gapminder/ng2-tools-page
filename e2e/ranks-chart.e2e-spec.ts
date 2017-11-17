@@ -102,13 +102,13 @@ describe('Ranks chart', () => {
     await waitForSpinner();
     const barsBefore = await ranksChart.getBarsPosition(NUMBER_OF_BARS);
 
-    slider.dragToMiddle();
+    await slider.dragToMiddle();
 
     const barsAfter = await ranksChart.getBarsPosition(NUMBER_OF_BARS);
 
-    expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
-    expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
-    expect(barsBefore).not.toEqual(barsAfter);
+    await expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsBefore).not.toEqual(barsAfter);
   });
 
   it(`"SHOW" button hide all except selected`, async() => {
@@ -155,8 +155,8 @@ describe('Ranks chart', () => {
 
     expect(await ranksChart.yAxisBtn.getText()).toContain(yAxisValue, 'Y axis button text');
     // bars should be resorted
-    expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
-    expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
-    expect(barsBefore).not.toEqual(barsAfter);
+    await expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsBefore).not.toEqual(barsAfter);
   });
 });

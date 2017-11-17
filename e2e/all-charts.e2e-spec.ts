@@ -30,7 +30,7 @@ describe('No additional data in URL when chart opens', () => {
       const chart = data.chart;
       await chart.openByClick();
 
-      expect(await browser.getCurrentUrl()).toEqual(`${browser.baseUrl}${chart.url}&locale_id=en`);
+      expect(await browser.getCurrentUrl()).toEqual(`${browser.baseUrl}#_${chart.url}`);
     });
   });
 });

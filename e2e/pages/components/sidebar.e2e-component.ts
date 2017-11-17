@@ -116,7 +116,7 @@ export class Sidebar {
     await browser.wait(EC.presenceOf(this.searchResult.first()), 5000, 'search results not present');
     await this.searchResult.findElementByExactText(country).safeClick();
 
-    await browser.wait(isCountryAddedInUrl(country, select));
+    await browser.wait(isCountryAddedInUrl(country, select), 10000, 'coutry in URL');
 
     await waitForSpinner();
   }

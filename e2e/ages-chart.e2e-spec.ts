@@ -21,7 +21,7 @@ describe('Ages chart - Acceptance', () => {
     await safeOpen(protractor.browser.baseUrl);
     await agesChart.openByClick();
 
-    expect(await browser.getCurrentUrl()).toEqual(`${browser.baseUrl}${agesChart.url}&locale_id=en`);
+    expect(await browser.getCurrentUrl()).toEqual(`${browser.baseUrl}#_${agesChart.url}`);
   });
 
   it(`Data shown by hover on bar`, async() => {

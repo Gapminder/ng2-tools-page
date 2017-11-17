@@ -3,9 +3,10 @@ import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions a
 import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 import { ActionSequence, promise } from 'selenium-webdriver';
+import { safeDragAndDrop } from '../helpers/helper';
 
 export class AgesChart extends CommonChartPage {
-  url = '#_chart-type=popbyage';
+  url = 'chart-type=popbyage';
   chartLink: ExtendedElementFinder = _$('.about a[href*="popbyage"]');
 
   searchInputField: ExtendedElementFinder = _$('.vzb-show-search');
@@ -37,11 +38,6 @@ export class AgesChart extends CommonChartPage {
   }
 
   moveGroupSlider() {
-    return browser.actions()
-      .mouseMove(this.groupSliderHangle)
-      .mouseDown()
-      .mouseMove(this.secondGroup)
-      .mouseUp()
-      .perform();
+    return safeDragAndDrop(this.groupSliderHangle, this.secondGroup);
   }
 }

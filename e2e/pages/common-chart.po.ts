@@ -59,7 +59,7 @@ export class CommonChartPage {
 
   async openChart(): Promise<void> {
     await browser.get('/');
-    await safeOpen(this.url);
+    await safeOpen(`#_${this.url}`);
   }
 
   async openByClick(): Promise<{}> {

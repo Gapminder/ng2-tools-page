@@ -124,7 +124,7 @@ describe('Line chart', () => {
 
     const filteredModelCountries = modalCountriesText.toString();
 
-    filteredChartCountries.forEach(item => {
+    await filteredChartCountries.forEach(item => {
       expect(filteredModelCountries.includes(item)).toBe(true, `${item} not match ${filteredModelCountries}`);
     });
   });
@@ -140,7 +140,7 @@ describe('Line chart', () => {
     expect(await lineChart.countHighlightedLines()).toEqual(1);
   });
 
-  xit('Settings should be stored in URL: https://github.com/vizabi/vizabi/issues/2782', async() => {
+  it('Settings should be stored in URL', async() => {
     /**
      * don't fixed yet: https://github.com/vizabi/vizabi/issues/2782
      */

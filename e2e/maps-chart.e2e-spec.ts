@@ -101,7 +101,7 @@ describe('Maps chart - Acceptance', () => {
     expect(await browser.isElementPresent(mapChart.selectedCountryLabel)).toBeFalsy();
   });
 
-  it('Countries could be selected/deselected using the button "Find"(TC31)', async() => {
+  it('Countries could be selected/deselected using the search in sidebar', async() => {
     await sidebar.searchAndSelectCountry('China');
     expect(await mapChart.selectedCountries.count()).toEqual(1);
 
@@ -110,8 +110,8 @@ describe('Maps chart - Acceptance', () => {
 
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('China');
     expect(await mapChart.selectedCountriesLabels.getText()).toMatch('India');
-    expect(browser.getCurrentUrl()).toContain('geo=ind');
-    expect(browser.getCurrentUrl()).toContain('geo=chn');
+    expect(await browser.getCurrentUrl()).toContain('geo=ind');
+    expect(await browser.getCurrentUrl()).toContain('geo=chn');
 
     await sidebar.deselectCountryInSearch('India');
     expect(await mapChart.selectedCountries.count()).toEqual(1);
@@ -119,8 +119,8 @@ describe('Maps chart - Acceptance', () => {
     await sidebar.deselectCountryInSearch('China');
     expect(await mapChart.selectedCountries.count()).toEqual(0);
 
-    expect(browser.getCurrentUrl()).not.toContain('geo=ind');
-    expect(browser.getCurrentUrl()).not.toContain('geo=chn');
+    expect(await browser.getCurrentUrl()).not.toContain('geo=ind');
+    expect(await browser.getCurrentUrl()).not.toContain('geo=chn');
   });
 
   it('Chart title show the exact values on hover(TC32)', async() => {
