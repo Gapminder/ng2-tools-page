@@ -54,7 +54,8 @@ export const getCreatedVizabiInstance = createSelector(getVizabiInstances, getCr
     instance: instances[tool]
   }
 });
-export const getCurrentVizabiModelHash = createSelector(getTools, (tools: any) => tools.currentHashModel);
+export const getCurrentVizabiModelHash = createSelector(getTools, (tools: any) =>
+  ({currentHashModel: tools.currentHashModel, isInnerChange: tools.isInnerChange}));
 
 export const getToolItemsAsArray = createSelector(getToolItems, (tools: any) => {
   if (!tools) return [];
