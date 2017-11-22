@@ -1,17 +1,11 @@
 import {
   AfterContentInit,
   Component,
-  ComponentFactory,
-  ComponentFactoryResolver,
-  ComponentRef,
   OnDestroy,
-  ViewChild,
-  ViewContainerRef,
   ViewEncapsulation
 } from '@angular/core';
 import {
   getClient,
-  getConfigChangeUID,
   getRelatedItemsOfSelectedTool,
   getSelectedTool,
   getToolItemsAsArray,
@@ -25,7 +19,6 @@ import { Observable } from 'rxjs/Observable';
 import { SetLanguageChooserVisibility } from '../core/store/layout/layout.actions';
 import { SelectTool } from '../core/store/tools/tools.actions';
 import { TrackGaToolChangeEvent } from '../core/store/google/google.actions';
-import { HomeComponent } from '../home/home.component';
 import { Subscription } from 'rxjs/Subscription';
 
 @Component({
@@ -34,9 +27,7 @@ import { Subscription } from 'rxjs/Subscription';
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.styl', './page.component.rtl.styl']
 })
-export class PageComponent implements AfterContentInit, OnDestroy {
-  @ViewChild('homeContainer', { read: ViewContainerRef }) homeContainer;
-
+export class PageComponent implements OnDestroy {
   client$: Observable<string>;
   selectedTool$: Observable<string>;
   isEmbeddedMode$: Observable<boolean>;
@@ -48,9 +39,7 @@ export class PageComponent implements AfterContentInit, OnDestroy {
 
   private configChangedSubscription: Subscription;
 
-  private homeComponentRef: ComponentRef<HomeComponent>;
-
-  constructor(private store: Store<State>, private resolver: ComponentFactoryResolver) {
+  constructor(private store: Store<State>) {
     this.isRtl$ = store.select(isRtl);
     this.isEmbeddedMode$ = store.select(isEmbeddedMode);
     this.relatedItems$ = this.store.select(getRelatedItemsOfSelectedTool);
@@ -83,18 +72,7 @@ export class PageComponent implements AfterContentInit, OnDestroy {
     }
   }
 
-  ngAfterContentInit(): void {
-    this.configChangedSubscription = this.store.select(getConfigChangeUID).subscribe(() => this.loadHomeComponent());
-  }
-
   ngOnDestroy(): void {
-    this.homeComponentRef.destroy();
     this.configChangedSubscription.unsubscribe();
-  }
-
-  loadHomeComponent() {
-    this.homeContainer.clear();
-    const factory: ComponentFactory<HomeComponent> = this.resolver.resolveComponentFactory(HomeComponent);
-    this.homeComponentRef = this.homeContainer.createComponent(factory);
   }
 }

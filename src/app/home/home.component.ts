@@ -1,4 +1,7 @@
-import { AfterViewInit, Component, OnDestroy, ViewEncapsulation } from '@angular/core';
+import {
+  AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,
+  ViewEncapsulation
+} from '@angular/core';
 import { Location } from '@angular/common';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '../../environments/environment';
@@ -38,7 +41,8 @@ declare const ga: any;
   encapsulation: ViewEncapsulation.None,
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.styl']
+  styleUrls: ['./home.component.styl'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class HomeComponent implements AfterViewInit, OnDestroy {
@@ -74,6 +78,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   constructor(public langService: LanguageService,
               private router: Router,
               private location: Location,
+              private cd: ChangeDetectorRef,
               private vizabiToolsService: VizabiToolsService,
               private store: Store<State>) {
     this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
@@ -110,14 +115,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         const stringModel = restoredStringModel || this.vizabiToolsService.convertModelToString(this.currentHashModel);
 
-
-        window.location.hash = `#${stringModel}`;
-        // console.log('TOOLS-PAGE HASH CHANGE (source id: vizabi persistent change); isInner=',
-        //  hashModelDesc.isInnerChange, window.location.hash);
-
         if (!hashModelDesc.isInnerChange) {
           this.vizabiInstances[this.currentChartType].modelHash = stringModel;
+
+          this.cd.detectChanges();
         }
+
+        window.location.hash = `#${stringModel}`;
 
         const currentPathWithHash = this.location.path(true);
 
@@ -186,8 +190,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         const model = this.vizabiToolsService.getModelFromUrl();
 
         if (!isEqual(this.currentHashModel, model)) {
-          // console.log('TOOLS-PAGE routesModelChangesSubscription', model);
-
           this.store.dispatch(new VizabiModelChanged(model));
         }
       });
@@ -202,14 +204,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
           ? urlModel
           : Object.assign(this.vizabiToolsService.simplifyModel(chartTransitionType), {'chart-type': selectedTool}))
       );
-
-      // console.log('TOOLS-PAGE toolChangesSubscription');
     });
 
     this.localeChangesSubscription = this.store.select(getCurrentLocale).subscribe((locale: VizabiLocale) => {
       const model = {...this.vizabiToolsService.getModelFromUrl(), ...locale};
-
-      // console.log('TOOLS-PAGE localeChangesSubscription');
 
       this.store.dispatch(new VizabiModelChanged(model));
     });
@@ -240,8 +238,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.sendConceptsStateToGA(type, state);
       this.sendEntitiesStateToGA(type, state);
     }
-
-    // console.log('TOOLS-PAGE from Vizabi - onChanged', model);
 
     this.store.dispatch(new VizabiModelChanged(model, true));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
