@@ -150,8 +150,8 @@ describe('Line chart', () => {
 
     expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.highlighted);
-    expect(await lineChart.countHighlightedLines()).toEqual(2);
-    expect(await lineChart.countDimmedLines()).toEqual(2);
+    expect(await lineChart.countHighlightedLines()).toEqual(1);
+    expect(await lineChart.countDimmedLines()).toEqual(4);
   });
 
   it(`Hover on line change Color section (legend color and dropdown label)`, async() => {

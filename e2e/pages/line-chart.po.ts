@@ -3,7 +3,8 @@ import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions a
 import { CommonChartPage } from './common-chart.po';
 import {
   findElementByExactText, isCountryAddedInUrl, waitForSliderToBeReady,
-  waitForSpinner
+  waitForSpinner,
+  waitForUrlToChange
 } from '../helpers/helper';
 import { Slider } from './components/slider.e2e-component';
 import { ExtendedElementFinder, _$, _$$, ExtendedArrayFinder } from '../helpers/ExtendedElementFinder';
@@ -74,6 +75,7 @@ export class LineChart extends CommonChartPage {
   async selectLine(country: string): Promise<void> {
     await browser.wait(EC.visibilityOf(this.selectedCountries.first()));
     await new ExtendedArrayFinder(this.selectedCountries).findElementByExactText(country).safeClick();
+    await waitForUrlToChange();
     await browser.wait(isCountryAddedInUrl(country));
   }
 

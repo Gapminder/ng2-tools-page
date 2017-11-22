@@ -25,9 +25,9 @@ export function waitForSpinner() {
 }
 
 export function safeDragAndDrop(from: ElementFinder, to: any) {
-  return browser.wait(EC.visibilityOf(from), TIMEOUT, `element ${from.locator().value} not visible`).then(() => {
-    return browser.actions().dragAndDrop(from, to).perform();
-  });
+  return browser.wait(EC.visibilityOf(from), TIMEOUT, `element ${from.locator().value} not visible`)
+  .then(() => disableAnimations())
+  .then(() => browser.actions().dragAndDrop(from, to).perform());
 }
 
 export function safeExpectIsDispayed(element: ElementFinder, interval?: number) {
@@ -78,4 +78,17 @@ export function isCountryAddedInUrl(country: string, state = true): Function {
       });
     };
   }
+}
+
+export function disableAnimations(){
+  return browser.executeScript(`var style = document.createElement('style');
+  style.type = 'text/css';
+  style.innerHTML = '* {' +
+    '-webkit-transition: none !important;' +
+    '-moz-transition: none !important' +
+    '-o-transition: none !important' +
+    '-ms-transition: none !important' +
+    'transition: none !important' +
+    '}';
+  document.getElementsByTagName('head')[0].appendChild(style);`)
 }
