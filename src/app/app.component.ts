@@ -24,6 +24,7 @@ export class AppComponent implements OnDestroy {
   private languageDetectionSubscription: Subscription;
   private clientChangeDetectionSubscription: Subscription;
   private embeddedModeDetectionSubscription: Subscription;
+  private fragmentChangeSubscription: Subscription;
 
   constructor(router: Router, store: Store<State>, activated: ActivatedRoute, translate: TranslateService) {
     translate.setDefaultLang('en');
@@ -49,7 +50,7 @@ export class AppComponent implements OnDestroy {
         }
       });
 
-    activated.fragment.subscribe(() => {
+    this.fragmentChangeSubscription = activated.fragment.subscribe(() => {
       store.dispatch(new DetectLanguage());
     });
 
@@ -66,7 +67,8 @@ export class AppComponent implements OnDestroy {
     const subscriptions = [
       this.languageDetectionSubscription,
       this.embeddedModeDetectionSubscription,
-      this.clientChangeDetectionSubscription
+      this.clientChangeDetectionSubscription,
+      this.fragmentChangeSubscription
     ];
 
     subscriptions.forEach(subscription => subscription && subscription.unsubscribe());

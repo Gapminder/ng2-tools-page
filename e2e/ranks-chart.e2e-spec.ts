@@ -1,6 +1,6 @@
 import { browser } from 'protractor';
 
-import { safeExpectIsDispayed, waitForSpinner } from './helpers/helper';
+import { isCountryAddedInUrl, safeExpectIsDispayed, waitForSpinner } from './helpers/helper';
 import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { CommonChartPage } from './pages/common-chart.po';
 import { Slider } from './pages/components/slider.e2e-component';
@@ -102,12 +102,61 @@ describe('Ranks chart', () => {
     await waitForSpinner();
     const barsBefore = await ranksChart.getBarsPosition(NUMBER_OF_BARS);
 
-    slider.dragToMiddle();
+    await slider.dragToMiddle();
 
     const barsAfter = await ranksChart.getBarsPosition(NUMBER_OF_BARS);
 
-    expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
-    expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
-    expect(barsBefore).not.toEqual(barsAfter);
+    await expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsBefore).not.toEqual(barsAfter);
+  });
+
+  it(`"SHOW" button hide all except selected`, async() => {
+    await sidebar.showButton.safeClick();
+
+    await sidebar.searchAndSelectCountryInShowMenu('China');
+
+    expect(await ranksChart.allBars.count()).toEqual(1);
+    expect(await sidebar.countriesList.count()).toEqual(1);
+
+    await sidebar.searchAndSelectCountryInShowMenu('Ukraine');
+
+    expect(await ranksChart.allBars.count()).toEqual(2);
+    expect(await sidebar.countriesList.count()).toEqual(2);
+  });
+
+  it(`"DESELECT" button reset selected countries`, async() => {
+    await sidebar.clickOnCountryFromList('India');
+    await sidebar.deselectButton.safeClick();
+
+    expect(await ranksChart.countDimmedBars()).toEqual(0);
+  });
+
+  it(`Active year at the top`, async() => {
+    await slider.dragToMiddle();
+    const selectedYear = await slider.getPosition();
+
+    expect(await sidebar.yearAtTop.safeGetText()).toEqual(selectedYear);
+  });
+
+  it(`Save settings after page reload`, async() => {
+    await ranksChart.selectBar('India');
+    await ranksChart.refreshPage();
+
+    expect(await ranksChart.selectedCountries.getText()).toMatch('India');
+  });
+
+  it('change Y axis value', async() => {
+    const NUMBER_OF_BARS = 10;
+    const barsBefore = await ranksChart.getBarsPosition(NUMBER_OF_BARS);
+    const yAxisValue = await ranksChart.changeYaxisValue();
+
+    const barsAfter = await ranksChart.getBarsPosition(NUMBER_OF_BARS);
+
+    expect(await ranksChart.yAxisBtn.getText()).toContain(yAxisValue, 'Y axis button text');
+    // bars should be resorted
+    await expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
+    await expect(barsBefore).not.toEqual(barsAfter);
   });
 });

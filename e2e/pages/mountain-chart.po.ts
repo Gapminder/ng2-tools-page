@@ -5,7 +5,7 @@ import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 
 export class MountainChart extends CommonChartPage {
-  url = '#_chart-type=mountain';
+  url = 'chart-type=mountain';
   chartLink: ExtendedElementFinder = _$('.about a[href*="mountain"]');
 
 
@@ -44,17 +44,5 @@ export class MountainChart extends CommonChartPage {
   async hoverMouserOverExtremePovertyTitle(): Promise<void> {
     await browser.actions().mouseMove(this.extremePovertyTitle).mouseMove({x: 10, y: 90}).perform();
     await browser.wait(EC.visibilityOf(this.verticalLine));
-  }
-
-  async searchAndSelectCountryInShowMenu(country: string): Promise<void> {
-    await this.showButtonSearchInputField.typeText(country);
-    await new ExtendedElementFinder(findElementByExactText(this.linesChartSearchResult, country)).safeClick();
-    await waitForSpinner();
-  }
-
-  async deselectCountryInShowMenu(country: string): Promise<void> {
-    await this.showButtonSearchInputField.typeText(country);
-    await new ExtendedElementFinder(findElementByExactText(this.linesChartSearchResult, country)).safeClick();
-    await waitForSpinner();
   }
 }

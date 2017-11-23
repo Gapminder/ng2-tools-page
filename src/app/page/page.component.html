@@ -2,7 +2,7 @@
      (click)="baseElementClickHandler($event)">
   <app-header *ngIf="isVizabiReady$ | async"></app-header>
 
-  <ng-template #homeContainer></ng-template>
+  <app-home></app-home>
 
   <div *ngIf="isVizabiReady$ | async">
     <app-see-also

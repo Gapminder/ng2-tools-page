@@ -2,6 +2,7 @@ import { $, browser, ElementFinder, ExpectedConditions as EC } from 'protractor'
 
 import { CommonChartPage } from '../common-chart.po';
 import { _$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
+import { safeDragAndDrop } from '../../helpers/helper';
 
 export class Slider {
   public sliderSelectedYear: ExtendedElementFinder = _$('.vzb-ts-slider-value');
@@ -22,23 +23,23 @@ export class Slider {
 
   async dragToMiddle(): Promise<{}> {
     await this.waitForSliderToBeReady();
-    await browser.actions().dragAndDrop(this.sliderButton, {x: -900, y: 0}).perform();
+    await safeDragAndDrop(this.sliderButton, {x: -900, y: 0});
 
-    return await browser.wait(EC.urlContains('#_state_time_value='), 10000);
+    return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to middle');
   }
 
   async dragToStart(): Promise<{}> {
     await this.waitForSliderToBeReady();
-    await browser.actions().dragAndDrop(this.sliderButton, CommonChartPage.buttonPlay).perform();
+    await safeDragAndDrop(this.sliderButton, CommonChartPage.buttonPlay);
 
-    return await browser.wait(EC.urlContains('#_state_time_value='), 10000);
+    return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to start');
   }
 
   async dragToRightEdge(): Promise<{}> {
     await this.waitForSliderToBeReady();
-    await browser.actions().dragAndDrop(this.sliderButton, this.speedStepper).perform();
+    await safeDragAndDrop(this.sliderButton, this.speedStepper);
 
-    return await browser.wait(EC.urlContains('#_state_time_value='), 10000);
+    return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to right');
   }
 
   async playTimesliderSeconds(seconds: number): Promise<void> {

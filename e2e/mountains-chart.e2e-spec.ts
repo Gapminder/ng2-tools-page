@@ -50,19 +50,19 @@ describe('Mountains chart - Acceptance', () => {
      */
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
 
-    await mountainChart.advancedControlsShowButtons.safeClick();
+    await sidebar.showButton.safeClick();
 
-    await mountainChart.searchAndSelectCountryInShowMenu('Ukraine');
+    await sidebar.searchAndSelectCountryInShowMenu('Ukraine');
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(1);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(1);
 
-    await mountainChart.searchAndSelectCountryInShowMenu('Austria');
+    await sidebar.searchAndSelectCountryInShowMenu('Austria');
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(2);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(2);
 
-    await mountainChart.searchAndSelectCountryInShowMenu('Brazil');
+    await sidebar.searchAndSelectCountryInShowMenu('Brazil');
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(3);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(3);
@@ -75,20 +75,19 @@ describe('Mountains chart - Acceptance', () => {
      */
     await mountainChart.advancedControlsShowButtons.safeClick();
 
-    await mountainChart.searchAndSelectCountryInShowMenu('Ukraine');
+    await sidebar.searchAndSelectCountryInShowMenu('Ukraine');
     await safeExpectIsDispayed(mountainChart.allCountriesOnChart.first(), 5000);
-
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(1);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(1);
 
-    await mountainChart.searchAndSelectCountryInShowMenu('Austria');
+    await sidebar.searchAndSelectCountryInShowMenu('Austria');
     await safeExpectIsDispayed(mountainChart.allCountriesOnChart.get(1), 5000);
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(2);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(2);
 
-    await mountainChart.deselectCountryInShowMenu('Ukraine');
-    await mountainChart.deselectCountryInShowMenu('Austria');
+    await sidebar.deselectCountryInShowMenu('Ukraine');
+    await sidebar.deselectCountryInShowMenu('Austria');
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toBeGreaterThan(25);
   });

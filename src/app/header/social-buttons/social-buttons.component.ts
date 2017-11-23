@@ -28,10 +28,14 @@ export class SocialButtonsComponent {
   }
 
   mail() {
+    this.setMainLink();
+    this.mailLink.nativeElement.click();
+  }
+
+  setMainLink() {
     const mailUrl = encodeURIComponent(window.location.href);
 
-    this.mailLink.nativeElement.href = `mailto:?subject=Gapminder&amp;body=${mailUrl}`;
-    this.mailLink.nativeElement.click();
+    this.mailLink.nativeElement.href = `mailto:?subject=Gapminder&body=${mailUrl}`;
   }
 
   private openWindow(urlTemplate) {

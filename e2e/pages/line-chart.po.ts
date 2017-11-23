@@ -10,7 +10,7 @@ import { ExtendedElementFinder, _$, _$$, ExtendedArrayFinder } from '../helpers/
 
 export class LineChart extends CommonChartPage {
   type = 'lineChart';
-  url = '#_chart-type=linechart';
+  url = 'chart-type=linechart';
   chartLink: ExtendedElementFinder = _$('.about a[href*="linechart"]');
 
   dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
@@ -102,18 +102,8 @@ export class LineChart extends CommonChartPage {
       .hover();
   }
 
-  async changeYaxisValue(): Promise<string> {
-    await this.yAxisBtn.safeClick();
-    const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
-
-    await browser.wait(EC.visibilityOf(newOption));
-    const newOptionValue = newOption.getText();
-    await newOption.click();
-
-    await waitForSpinner();
-    await waitForSliderToBeReady();
-
-    return newOptionValue;
+  changeYaxisValue(): Promise<string> {
+    return super.changeYaxisValue(this.yAxisBtn);
   }
 
   async clickResetButton(): Promise<void> {

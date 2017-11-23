@@ -6,13 +6,15 @@ import { promise } from 'selenium-webdriver';
 import { isCountryAddedInUrl } from '../helpers/helper';
 
 export class RankingsChart extends CommonChartPage {
-  url = '#_chart-type=barrank';
+  url = 'chart-type=barrank';
   chartLink: ExtendedElementFinder = _$('.about a[href*="barrank"]');
 
   dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
   dataDoubtsWindow: ExtendedElementFinder = _$('.vzb-data-warning-box');
-  public selectedCountries: ExtendedArrayFinder = _$$('.vzb-br-bar.vzb-selected .vzb-br-label'); // TODO
-  public bars: ExtendedArrayFinder = _$$('.vzb-br-bar');
+  selectedCountries: ExtendedArrayFinder = _$$('.vzb-br-bar.vzb-selected .vzb-br-label'); // TODO
+  bars: ExtendedArrayFinder = _$$('.vzb-br-bar');
+  allBars: ElementArrayFinder = $$('.vzb-br-bar');
+  yAxisBtn: ExtendedElementFinder = _$('.vzb-br-title');
 
   public sidebar = {
     timeDisplay: $('.vzb-timedisplay')
@@ -89,4 +91,9 @@ export class RankingsChart extends CommonChartPage {
       .then(sortedArray => sortedArray.slice(0, barsCount))
       .then(filteredByCount => filteredByCount.map(el => el[1])); // return only country names
   }
+
+  changeYaxisValue(): Promise<string> {
+    return super.changeYaxisValue(this.yAxisBtn);
+  }
+
 }

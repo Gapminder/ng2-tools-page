@@ -19,7 +19,8 @@ import { LanguageSwitcherComponent } from './header/language-switcher/language-s
 import { PageComponent } from './page/page.component';
 
 import { DeprecatedUrlGuard } from './core/deprecated-url.service';
-import { Angulartics2GoogleAnalytics, Angulartics2Module } from 'angulartics2';
+import { Angulartics2Module } from 'angulartics2';
+import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './core/store';
 import { EffectsModule } from '@ngrx/effects';
