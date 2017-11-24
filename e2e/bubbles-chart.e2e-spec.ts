@@ -72,7 +72,7 @@ describe('Bubbles chart - Acceptance', () => {
     await bubbleChart.clickOnUnitedStates();
 
     expect(await bubbleChart.getCountryBubble('USA').getCssValue('opacity')).toEqual('1');
-    expect(await bubbleChart.countBubblesByOpacity(0.3)).toBe(await bubbleChart.allBubbles.count()-1);
+    expect(await bubbleChart.countBubblesByOpacity(0.3)).toBe(await bubbleChart.allBubbles.count() - 1);
     expect(await bubbleChart.countBubblesByOpacity(1)).toBe(1);
     expect(await bubbleChart.getCountryBubble('India').getCssValue('opacity')).toEqual('0.3');
   });
@@ -252,8 +252,8 @@ describe('Bubbles chart - Acceptance', () => {
     const usaBubbleInitialColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleInitialColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
     const chinaBubbleInitialColor = await bubbleChart.getCountryBubble('China').getCssValue('fill');
-    
-    const colorNewOption = sidebar.colorListItems.get(3);    
+
+    const colorNewOption = sidebar.colorListItems.get(3);
     await sidebar.selectInColorDropdown(colorNewOption);
 
     await expect(sidebar.colorDropDown.getText()).toContain(colorNewOption.getText());
@@ -306,33 +306,23 @@ describe('Bubbles chart - Acceptance', () => {
     await expect(optionsDialogueRightNewPosition).not.toEqual(optionsDialogueRightFinalPosition);
   });
 
-// TODO complete this after Mountains chart tests
-// it('restore default charts settigns', async() => {
-//   /**
-//    * should check that user is able to restore charts to their default values after changing
-//    * the indicators again and again(TC77)
-//    */
-//   // load bubble chart, switch Y to less time-available indicator. Like number of billionaires or something.
-//   // Check time slider range, it should be restricted to only a few >years.
-//   // Switch Y back to less: time slider should be back to 1800-2015 or what we had at start
-//   page.axisYTitle.click();
-//   page.axisYSearchFieldInputField.clear().sendKeys('Dollar billionaires');
-//   page.waitForTextPresentForElement(page.axisYFirstSearchResult, ('Dollar billionaires'));
-//   page.axisYFirstSearchResult.click();
-//   page.waitForPageToBeReloadedAfterAction();
-//
-//   expect(page.sliderSelectedYear.getAttribute('textContent')).toContain('2007');
-//
-//   page.axisYTitle.click();
-//   page.sizeListLifeExpectancyColorIndicator.click();
-//   page.waitForPageToBeReloadedAfterAction();
-//
-//   expect(page.sliderSelectedYear.getAttribute('textContent')).toContain('2007');
-//
-//   page.dragSliderToPosition(500, 0);
-//
-//   expect(page.sliderSelectedYear.getAttribute('textContent')).toContain('2015');
-// });
+  it('restore default charts settigns', async() => {
+    /**
+     * should check that user is able to restore charts to their default values after changing
+     * the indicators again and again(TC77)
+     */
+    // load bubble chart, switch Y to less time-available indicator. Like number of billionaires or something.
+    // Check time slider range, it should be restricted to only a few >years.
+    // Switch Y back to less: time slider should be back to 1800-2015 or what we had at start
+    await bubbleChart.changeYaxisValue('Dollar billionaires');
+    expect(await slider.getPosition()).toContain('2007');
+
+    await bubbleChart.changeYaxisValue('Life expectancy');
+    expect(await slider.getPosition()).toContain('2007');
+
+    await slider.dragToRightEdge();
+    expect(await slider.getPosition()).toContain('2015');
+  });
 
   it('x, y, trails and zoom remains after page refresh', async() => {
     /**

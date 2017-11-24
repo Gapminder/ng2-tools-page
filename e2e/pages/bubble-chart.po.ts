@@ -2,7 +2,8 @@ import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions a
 
 import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
-import { waitForUrlToChange } from '../helpers/helper';
+import { isCountryAddedInUrl, waitForUrlToChange } from '../helpers/helper';
+import { waitUntil } from '../helpers/waitHelper';
 
 export class BubbleChart extends CommonChartPage {
   url = 'chart-type=bubbles';
@@ -13,6 +14,7 @@ export class BubbleChart extends CommonChartPage {
   public allBubbles: ElementArrayFinder = $$('circle[class*="vzb-bc-entity"]');
   public bubbleLabelOnMouseHover: ElementFinder = $('g[class="vzb-bc-tooltip"]');
   public axisXValue: ElementFinder = $$('g[class="vzb-axis-value"]').first();
+  yAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-y-title');
   public tooltipOnClick: ElementArrayFinder = $$('.vzb-bc-label-content');
   public selectedCountryLabel: ElementFinder = $$('.vzb-label-fill.vzb-tooltip-border').first();
   public countrySelectedBiggerLabel: ElementFinder = $('.vzb-bc-labels .vzb-bc-entity');
@@ -126,10 +128,11 @@ export class BubbleChart extends CommonChartPage {
     return await browser.wait(EC.visibilityOf(this.getCountryBubble('USA')), 4000, `USA bubble to appear`);
   }
 
-  async clickOnChina(): Promise<{}> {
+  async clickOnChina(): Promise<void> {
     await this.clickOnBubble('red', 0, 10, 10);
 
-    return await browser.wait(EC.visibilityOf(this.getCountryBubble('China')), 4000, `China bubble to appear`);
+    await waitUntil(this.getCountryBubble('China'));
+    await browser.wait(isCountryAddedInUrl('China'));
   }
 
   countBubblesByOpacity(opacity?: number) {
@@ -159,6 +162,10 @@ export class BubbleChart extends CommonChartPage {
         return radius;
       });
     });
+  }
+
+  async changeYaxisValue(option: string): Promise<string> {
+    return super.changeYaxisValue(option);
   }
 
   getCoordinatesOfLowerOpacityBubblesOnBubblesChart() {

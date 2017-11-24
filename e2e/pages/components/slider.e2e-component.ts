@@ -9,7 +9,7 @@ export class Slider {
   public sliderButton: ElementFinder = $('.vzb-ts-slider-handle');
   public sliderReady: ElementFinder = $('.domain.rounded'); // TODO remove this because there is static property
   public sliderAxis: ElementFinder = $('.vzb-ts-slider');
-  public speedStepper: ElementFinder = $('.vzb-tool-stepped-speed-slider');
+  public speedStepper: ExtendedElementFinder = _$('.vzb-tool-stepped-speed-slider');
 
   async waitForSliderToBeReady(): Promise<{}> {
     return await browser.wait(EC.visibilityOf(this.sliderReady), 30000, 'slider not visible');
@@ -47,6 +47,11 @@ export class Slider {
     await CommonChartPage.buttonPlay.safeClick();
     await browser.sleep(seconds * 1000);
     await CommonChartPage.buttonPause.safeClick();
+  }
+
+  async playSlider() {
+    await this.waitForSliderToBeReady();
+    await CommonChartPage.buttonPlay.safeClick();
   }
 
 }

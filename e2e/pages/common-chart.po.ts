@@ -1,6 +1,7 @@
 import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
 import {
+  disableAnimations,
   safeOpen, waitForPageLoaded, waitForSliderToBeReady, waitForSpinner,
   waitForUrlToChange
 } from '../helpers/helper';
@@ -40,7 +41,9 @@ export class CommonChartPage {
   public mountainsChart: ElementFinder = $('a[href*="mountain"]');
   public rankingsChart: ElementFinder = $('a[href*="barrank"]');
   public pageHeader: ElementFinder = $('.header');
+  public axisSearchInput: ExtendedElementFinder = _$('.vzb-treemenu-search');
 
+  yAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-y-title');
   url: string;
   chartLink: ExtendedElementFinder;
   selectedCountries: ExtendedArrayFinder;
@@ -86,8 +89,14 @@ export class CommonChartPage {
       });
   }
 
-  async changeYaxisValue(yAxisBtn: ExtendedElementFinder): Promise<string> {
-    await yAxisBtn.safeClick();
+  async changeYaxisValue(option?: string): Promise<string> {
+    await this.yAxisBtn.safeClick();
+
+    if (option) {
+      await this.axisSearchInput.typeText(option);
+      await browser.sleep(1000); // no idea what to wait here
+    }
+
     const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
 
     await browser.wait(EC.visibilityOf(newOption));

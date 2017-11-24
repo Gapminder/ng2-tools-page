@@ -5,6 +5,7 @@ import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { LineChart } from './pages/line-chart.po';
 import { CommonChartPage } from './pages/common-chart.po';
 import { Slider } from './pages/components/slider.e2e-component';
+import { waitUntil } from './helpers/waitHelper';
 
 const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);
@@ -91,18 +92,16 @@ describe('Line chart', () => {
     await sidebar.clickOnCountryFromList('Argentina');
     await lineChart.clickResetButton();
 
-    expect(await lineChart.countriesLines.count()).toEqual(4, 'number of selected countries');
+    expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER, 'number of selected countries');
   });
 
-  // TODO won't work until after adding geo selector to lines
-  // xit('Change lines colors at the top of sidebar', async() => {
-  //   const EC = protractor.ExpectedConditions;
-  //   await sidebar.selectInColorDropdown(sidebar.color.mainReligion);
-  //   await browser.wait(EC.visibilityOf(lineChart.countriesLines.first()));
-  //
-  //   const colorFromColorSection = await sidebar.getColorFromColorSection();
-  //   expect(await lineChart.getLineLabelColor('China')).toEqual(colorFromColorSection, 'line color');
-  // });
+  it('Change lines colors at the top of sidebar', async() => {
+    await sidebar.selectInColorDropdown(sidebar.color.mainReligion);
+    await waitUntil(lineChart.countriesLines.first());
+
+    const colorFromColorSection = await sidebar.getColorFromColorSection();
+    expect(await lineChart.getLineColor('China')).toEqual(colorFromColorSection, 'line color');
+  });
 
   it('"Find" button in sidebar show only selected countries', async() => {
     const chartCountries = lineChart.selectedCountries;

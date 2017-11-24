@@ -1,7 +1,8 @@
 import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
 import {
-  findElementByExactText, isCountryAddedInUrl, waitForSpinner
+  disableAnimations,
+  findElementByExactText, isCountryAddedInUrl, waitForSpinner, waitForUrlToChange
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 
@@ -151,7 +152,9 @@ export class Sidebar {
   }
 
   async getColorFromColorSection(): Promise<string> {
-    return await this.color.firstColor.getCssValue('background-color');
+    const style = await this.color.firstColor.getAttribute('style');
+
+    return style.split(';')[0].split(': ')[1]; // TODO remove magic
   }
 
   async clickOnFindButton(): Promise<void> {
@@ -166,10 +169,18 @@ export class Sidebar {
     return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).perform();
   }
 
+  async changeColor(index?: number){
+    await this.colorDropDown.safeClick();
+    await disableAnimations();
+    await this.colorSearchResults.get(index || 3).safeClick();
+    await waitForUrlToChange();
+    await waitForSpinner();
+  }
+
   async searchAndSelectInColorDropdown(colorOption: string) {
     await this.colorDropDown.safeClick();
     await this.colorSearch.typeText(colorOption);
-    await browser.sleep(1000); // css animation
+    await disableAnimations();
     await browser.wait(EC.presenceOf(element(by.cssContainingText(this.colorSearchResults.first().locator().value, colorOption))));
     await this.colorSearchResults.first().safeClick();
   }

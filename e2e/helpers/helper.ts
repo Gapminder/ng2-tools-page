@@ -56,7 +56,7 @@ export async function waitForUrlToChange() {
     return browser.getCurrentUrl().then(url => {
       return url !== currentUrl;
     });
-  });
+  }, MAX_TIMEOUT, 'URL not changed');
 }
 
 export function isCountryAddedInUrl(country: string, state = true): Function {
