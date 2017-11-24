@@ -1,13 +1,14 @@
-import { $, browser, ElementFinder } from 'protractor';
+import { $, ElementFinder } from 'protractor';
 import { _$, _$$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
-import { promise } from 'selenium-webdriver';
 import { waitForPageLoaded, waitForSpinner, waitForUrlToChange } from '../../helpers/helper';
+import { waitUntil } from '../../helpers/waitHelper';
 
 export class Header {
   rootSelector: ElementFinder = $('.header');
   /**
    * Social buttons
    */
+  // desktop
   socialDesktop: ExtendedElementFinder = _$('.social.desktop');
   mailButtonDesktop: ExtendedElementFinder = this.socialDesktop._$$('.mail.button').first();
   mailLinkDesktop: ExtendedElementFinder = this.socialDesktop._$$('app-social-buttons > a').first();
@@ -15,20 +16,29 @@ export class Header {
   facebookSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.facebook.button').first();
   icoplaneSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.button.ico-plane').first();
   icocodeSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.button.ico-code').first();
+  shareLabel: ExtendedElementFinder = this.socialDesktop._$$('.share-text-box').first();
+  howToButtonDesktop: ExtendedElementFinder = _$('#how-to-button');
 
+  // mobile
   socialMobile: ExtendedElementFinder = _$('[class="mobile"]');
   mailButtonMobile: ExtendedElementFinder = this.socialMobile._$$('.mail.button').first();
   twitterSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.twitter.button').first();
   facebookSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.facebook.button').first();
   icoplaneSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.button.ico-plane').first();
   icocodeSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.button.ico-code').first();
+  howToButtonMobile: ExtendedElementFinder = this.socialMobile._$$('#how-to-button').first();
 
+  howToModal: ExtendedElementFinder = _$('.how-to-modal');
   chartSwitcherBtn: ExtendedElementFinder = _$('.chart-switcher');
+
+  /**
+   * language switcher
+   */
   languageSwitcherBtn: ExtendedElementFinder = _$('.lang-wrapper');
   currentLanguage: ExtendedElementFinder = _$('.lang-current');
   englishLanguage: ExtendedElementFinder = _$$('app-language-switcher .selected li').first();
   rtlLanguage: ExtendedElementFinder = _$$('app-language-switcher .selected li').get(1);
-  shareLabel: ExtendedElementFinder = this.socialDesktop._$$('.share-text-box').first();
+  vimeoIframe: ExtendedElementFinder = this.howToModal._$$('iframe').first();
 
   async switchToChart(chartUrl: string) {
     await this.chartSwitcherBtn.safeClick();
@@ -54,5 +64,10 @@ export class Header {
     await language.safeClick();
     await waitForUrlToChange();
     await waitForSpinner();
+  }
+
+  async openHowToUsePopup() {
+    await this.howToButtonDesktop.safeClick();
+    await waitUntil(this.howToModal);
   }
 }

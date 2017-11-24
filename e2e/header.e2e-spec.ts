@@ -29,6 +29,12 @@ describe('Header: ', () => {
     await expect($('.vzb-rtl').isPresent()).toBeFalsy();
   });
 
+  it('"How to use" popup contains Vimeo player', async() => {
+    await header.openHowToUsePopup();
+
+    expect(await header.vimeoIframe.safeGetAttribute('src')).toEqual('https://player.vimeo.com/video/231885967');
+  });
+
 
   describe('chart switcher', () => {
     const mapChart: MapChart = new MapChart();
