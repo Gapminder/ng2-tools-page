@@ -50,7 +50,7 @@ export class BubbleChart extends CommonChartPage {
   async hoverMouseOverCountry(country: string): Promise<{}> {
     await browser.actions().mouseMove(this.getCountryBubble(country)).perform();
 
-    return await browser.wait(EC.visibilityOf(this.bubbleLabelOnMouseHover), 2000);
+    return await waitUntil(this.bubbleLabelOnMouseHover);
   }
 
   async clickOnCountryBubble(country: string): Promise<{}> {
@@ -68,7 +68,7 @@ export class BubbleChart extends CommonChartPage {
       'green': 'rgb(127, 235, 0)'
     };
 
-    await browser.wait(EC.visibilityOf($$(`circle[style*='fill: ']`).first()));
+    await waitUntil($$(`circle[style*='fill: ']`).first());
 
     return $$(`circle[style*='fill: ${colors[color.toLocaleLowerCase()]}']`).get(index);
   }
@@ -88,7 +88,7 @@ export class BubbleChart extends CommonChartPage {
       .mouseMove(x && y ? {x: x, y: y} : filteredElement)
       .perform();
 
-    await browser.wait(EC.visibilityOf(this.bubbleLabelOnMouseHover), 4000);
+    await waitUntil(this.bubbleLabelOnMouseHover);
 
     return filteredElement;
   }
@@ -108,14 +108,14 @@ export class BubbleChart extends CommonChartPage {
         .click()
         .perform();
     }).then(() => {
-      return browser.wait(EC.visibilityOf(this.tooltipOnClick.last()), 4000);
+      return waitUntil(this.tooltipOnClick.last());
     });
   }
 
   async deselectBubble(country: string): Promise<{}> {
     await this.getCountryBubble(country).safeClick();
 
-    return await browser.wait(EC.invisibilityOf(this.countryTooltip(country)), 2000);
+    return await waitUntil(this.countryTooltip(country));
   }
 
   async hoverUnitedStates(): Promise<{}> {
@@ -125,7 +125,7 @@ export class BubbleChart extends CommonChartPage {
   async clickOnUnitedStates(): Promise<{}> {
     await this.clickOnBubble('green', 0, 10, 10);
 
-    return await browser.wait(EC.visibilityOf(this.getCountryBubble('USA')), 4000, `USA bubble to appear`);
+    return await waitUntil(this.getCountryBubble('USA'));
   }
 
   async clickOnChina(): Promise<void> {
@@ -153,7 +153,7 @@ export class BubbleChart extends CommonChartPage {
     await browser.actions().mouseMove(this.selectedBubbleLabel).perform();
     await this.xIconOnBubble.safeClick();
 
-    return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 5000);
+    return await waitUntil(this.tooltipOnClick.last());
   }
 
   getBubblesRadius() {

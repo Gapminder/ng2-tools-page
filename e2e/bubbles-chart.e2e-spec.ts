@@ -17,7 +17,7 @@ describe('Bubbles chart - Acceptance', () => {
     await bubbleChart.openChart();
   });
 
-  it('data warning to the bottom right(TC05)', async() => {
+  it('data warning modal', async() => {
     await bubbleChart.dataDoubtsLink.safeClick();
     await safeExpectIsDispayed(bubbleChart.dataDoubtsWindow);
   });

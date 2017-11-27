@@ -5,6 +5,7 @@ import { LineChart } from './pages/line-chart.po';
 import { _$, ExtendedElementFinder } from './helpers/ExtendedElementFinder';
 import { BubbleChart } from './pages/bubble-chart.po';
 import { Slider } from './pages/components/slider.e2e-component';
+import { waitUntil } from './helpers/waitHelper';
 
 const lineChart: LineChart = new LineChart();
 const bubbleChart: BubbleChart = new BubbleChart();
@@ -32,7 +33,7 @@ describe('Social media buttons', () => {
 
   it('Mail-to: basic state', async() => {
     await header.shareLabel.safeClick();
-    await browser.wait(EC.visibilityOf(header.mailButtonDesktop));
+    await waitUntil(header.mailButtonDesktop);
     const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
 
     await expect(actualMailLink).toEqual(`${mailBasic}#_chart-type=bubbles&locale_id=en`);
@@ -64,7 +65,7 @@ describe('Social media buttons', () => {
     const handles = await browser.getAllWindowHandles();
     await browser.switchTo().window(handles[1]);
 
-    await browser.wait(EC.visibilityOf(tweetStatus), 10000, 'tweet status');
+    await waitUntil(tweetStatus);
     // expect(await tweetStatus.safeGetText()).toContain('Gapminder '); // this will not work on localhost
     expect(await browser.getCurrentUrl()).toContain(twitterUrl);
     expect(await browser.getCurrentUrl()).toContain('Gapminder');

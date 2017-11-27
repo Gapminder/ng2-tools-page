@@ -7,6 +7,7 @@ import {
 } from '../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 import { promise } from 'selenium-webdriver';
+import { waitUntil } from '../helpers/waitHelper';
 
 export class CommonChartPage {
   static countries = {
@@ -53,8 +54,8 @@ export class CommonChartPage {
   yAsixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
 
   async waitForToolsPageCompletelyLoaded(): Promise<{}> {
-    await browser.wait(EC.visibilityOf(CommonChartPage.sideBar));
-    await browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay));
+    await waitUntil(CommonChartPage.sideBar);
+    await waitUntil(CommonChartPage.buttonPlay);
     await browser.wait(EC.invisibilityOf(this.movingSliderProgress.get(1)), 30000);
 
     return await waitForSpinner();
@@ -83,7 +84,7 @@ export class CommonChartPage {
   }
 
   getSelectedCountriesNames(): promise.Promise<string> {
-    return browser.wait(EC.visibilityOf(this.selectedCountries.first()))
+    return waitUntil(this.selectedCountries.first())
       .then(() => {
         return this.selectedCountries.getText(); // TODO css animation can fail the test
       });
@@ -99,7 +100,7 @@ export class CommonChartPage {
 
     const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
 
-    await browser.wait(EC.visibilityOf(newOption));
+    await waitUntil(newOption);
     const newOptionValue = newOption.getText();
     await newOption.click();
 

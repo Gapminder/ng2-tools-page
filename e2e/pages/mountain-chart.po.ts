@@ -3,6 +3,7 @@ import { $, $$, ElementArrayFinder, ElementFinder, browser, ExpectedConditions a
 import { findElementByExactText, waitForSpinner } from '../helpers/helper';
 import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
+import { waitUntil } from '../helpers/waitHelper';
 
 export class MountainChart extends CommonChartPage {
   url = 'chart-type=mountain';
@@ -38,11 +39,11 @@ export class MountainChart extends CommonChartPage {
 
   async hoverMouseOver500AxisXOnMountainsChart(): Promise<void> {
     await browser.actions().mouseMove(this.axisXLineNumbers.get(10)).perform();
-    await browser.wait(EC.visibilityOf(this.verticalLine));
+    await waitUntil(this.verticalLine);
   }
 
   async hoverMouserOverExtremePovertyTitle(): Promise<void> {
     await browser.actions().mouseMove(this.extremePovertyTitle).mouseMove({x: 10, y: 90}).perform();
-    await browser.wait(EC.visibilityOf(this.verticalLine));
+    await waitUntil(this.verticalLine));
   }
 }

@@ -60,8 +60,6 @@ describe('Maps chart - Acceptance', () => {
      * should check that clicking the bubble of the United States should select it. The bubble gets full opacity,
      * while the other bubbles get lower opacity(TC28)
      */
-    await browser.wait(protractor.ExpectedConditions.visibilityOf(mapChart.allBubbles.first())); // TODO remove this when ready
-
     const nonSelectedBubblesCount = await mapChart.allBubbles.count();
     await mapChart.clickOnBubble('green');
     expect(await mapChart.selectedCountriesLabels.safeGetText()).toMatch('United States');
