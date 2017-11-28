@@ -8,17 +8,17 @@ import { waitUntil } from '../helpers/waitHelper';
 export class BubbleChart extends CommonChartPage {
   url = 'chart-type=bubbles';
   chartLink: ExtendedElementFinder = _$('.about a[href*="bubbles"]');
-
+  
   public dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
   public dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-body');
   public allBubbles: ElementArrayFinder = $$('circle[class*="vzb-bc-entity"]');
-  public bubbleLabelOnMouseHover: ElementFinder = $('g[class="vzb-bc-tooltip"]');
+  public bubbleLabelOnMouseHover: ExtendedElementFinder = _$('g[class="vzb-bc-tooltip"]');
   public axisXValue: ElementFinder = $$('g[class="vzb-axis-value"]').first();
   yAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-y-title');
   public tooltipOnClick: ElementArrayFinder = $$('.vzb-bc-label-content');
-  public selectedCountryLabel: ElementFinder = $$('.vzb-label-fill.vzb-tooltip-border').first();
+  public selectedCountryLabel: ExtendedElementFinder = _$$('.vzb-label-fill.vzb-tooltip-border').first();
   public countrySelectedBiggerLabel: ElementFinder = $('.vzb-bc-labels .vzb-bc-entity');
-  public selectedBubbleLabel: ElementFinder = $('.vzb-label-fill.vzb-tooltip-border');
+  public selectedBubbleLabel: ExtendedElementFinder = _$('.vzb-label-fill.vzb-tooltip-border');
   public xIconOnBubble: ExtendedElementFinder = _$('[class="vzb-bc-label-x"]');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
@@ -115,7 +115,7 @@ export class BubbleChart extends CommonChartPage {
   async deselectBubble(country: string): Promise<{}> {
     await this.getCountryBubble(country).safeClick();
 
-    return await waitUntil(this.countryTooltip(country));
+    return await browser.wait(EC.invisibilityOf(this.countryTooltip(country)), 5000, 'tooltip visible');
   }
 
   async hoverUnitedStates(): Promise<{}> {
@@ -153,7 +153,7 @@ export class BubbleChart extends CommonChartPage {
     await browser.actions().mouseMove(this.selectedBubbleLabel).perform();
     await this.xIconOnBubble.safeClick();
 
-    return await waitUntil(this.tooltipOnClick.last());
+    return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 5000, 'tooltip visible');
   }
 
   getBubblesRadius() {

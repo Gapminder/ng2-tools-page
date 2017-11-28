@@ -44,6 +44,6 @@ export class MountainChart extends CommonChartPage {
 
   async hoverMouserOverExtremePovertyTitle(): Promise<void> {
     await browser.actions().mouseMove(this.extremePovertyTitle).mouseMove({x: 10, y: 90}).perform();
-    await waitUntil(this.verticalLine));
+    await waitUntil(this.verticalLine);
   }
 }

@@ -15,20 +15,6 @@ describe('Ranks chart', () => {
     await ranksChart.openChart();
   });
 
-  it('Add country from country list in sidebar', async() => {
-    await sidebar.clickOnCountryFromList('Argentina');
-    await expect(ranksChart.getSelectedCountriesNames()).toMatch('Argentina');
-
-    expect(await ranksChart.selectedCountries.count()).toEqual(1);
-  });
-
-  it('Add country from search in sidebar', async() => {
-    await sidebar.searchAndSelectCountry('Argentina');
-    await expect(ranksChart.getSelectedCountriesNames()).toMatch('Argentina');
-
-    expect(await ranksChart.selectedCountries.count()).toEqual(1);
-  });
-
   it('Select bar by click', async() => {
     await ranksChart.selectBar('India');
 
@@ -72,14 +58,6 @@ describe('Ranks chart', () => {
     expect(Number(await sidebar.minimapAsiaRegion.getCssValue('opacity'))).toEqual(CommonChartPage.opacity.highlighted);
   });
 
-  it('Change color at the top of sidebar', async() => {
-    await sidebar.searchAndSelectInColorDropdown('Main religion');
-    await waitForSpinner();
-
-    const colorFromColorSection = await sidebar.color.firstColor.getAttribute('style');
-    expect(colorFromColorSection).toContain(await ranksChart.getBarForCountry('China').safeGetCssValue('fill'));
-  });
-
   it('Data doubts button', async() => {
     await ranksChart.dataDoubtsLink.safeClick();
 
@@ -109,34 +87,6 @@ describe('Ranks chart', () => {
     await expect(barsBefore.length).toEqual(NUMBER_OF_BARS);
     await expect(barsAfter.length).toEqual(NUMBER_OF_BARS);
     await expect(barsBefore).not.toEqual(barsAfter);
-  });
-
-  it(`"SHOW" button hide all except selected`, async() => {
-    await sidebar.showButton.safeClick();
-
-    await sidebar.searchAndSelectCountryInShowMenu('China');
-
-    expect(await ranksChart.allBars.count()).toEqual(1);
-    expect(await sidebar.countriesList.count()).toEqual(1);
-
-    await sidebar.searchAndSelectCountryInShowMenu('Ukraine');
-
-    expect(await ranksChart.allBars.count()).toEqual(2);
-    expect(await sidebar.countriesList.count()).toEqual(2);
-  });
-
-  it(`"DESELECT" button reset selected countries`, async() => {
-    await sidebar.clickOnCountryFromList('India');
-    await sidebar.deselectButton.safeClick();
-
-    expect(await ranksChart.countDimmedBars()).toEqual(0);
-  });
-
-  it(`Active year at the top`, async() => {
-    await slider.dragToMiddle();
-    const selectedYear = await slider.getPosition();
-
-    expect(await sidebar.yearAtTop.safeGetText()).toEqual(selectedYear);
   });
 
   it(`Save settings after page reload`, async() => {

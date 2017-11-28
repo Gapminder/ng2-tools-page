@@ -139,6 +139,12 @@ export class Sidebar {
     await waitForSpinner();
   }
 
+  async hoverCountryFromList(country: string): Promise<void> {
+    const countryFromList: ElementFinder = await findElementByExactText(this.searchResult, country);
+
+    await new ExtendedElementFinder(countryFromList).hover();
+  }
+
   async selectInColorDropdown(element: ExtendedElementFinder | ElementFinder): Promise<{}> {
     await this.colorDropDown.safeClick();
 

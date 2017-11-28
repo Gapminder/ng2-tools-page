@@ -9,14 +9,14 @@ const mapChart: MapChart = new MapChart();
 const sidebar: Sidebar = new Sidebar(mapChart);
 const slider: Slider = new Slider();
 
-describe('Maps chart - Acceptance', () => {
+describe('Maps chart', () => {
   beforeEach(async() => {
     await mapChart.openChart();
   });
 
-  it('bubbles change size with timeslider drag and play(TC25)', async() => {
+  fit('bubbles change size with timeslider drag and play(TC25)', async() => {
     const initialSelectedYear = await slider.getPosition();
-    await sidebar.searchAndSelectCountry('China');
+    await mapChart.clickOnBubble('red');
     const initialBubbleSize = await mapChart.selectedBubbles.getAttribute('r');
     await slider.dragToMiddle();
 
@@ -98,29 +98,7 @@ describe('Maps chart - Acceptance', () => {
 
     expect(await browser.isElementPresent(mapChart.selectedCountryLabel)).toBeFalsy();
   });
-
-  it('Countries could be selected/deselected using the search in sidebar', async() => {
-    await sidebar.searchAndSelectCountry('China');
-    expect(await mapChart.selectedCountries.count()).toEqual(1);
-
-    await sidebar.searchAndSelectCountry('India');
-    expect(await mapChart.selectedCountries.count()).toEqual(2);
-
-    expect(await mapChart.selectedCountriesLabels.getText()).toMatch('China');
-    expect(await mapChart.selectedCountriesLabels.getText()).toMatch('India');
-    expect(await browser.getCurrentUrl()).toContain('geo=ind');
-    expect(await browser.getCurrentUrl()).toContain('geo=chn');
-
-    await sidebar.deselectCountryInSearch('India');
-    expect(await mapChart.selectedCountries.count()).toEqual(1);
-
-    await sidebar.deselectCountryInSearch('China');
-    expect(await mapChart.selectedCountries.count()).toEqual(0);
-
-    expect(await browser.getCurrentUrl()).not.toContain('geo=ind');
-    expect(await browser.getCurrentUrl()).not.toContain('geo=chn');
-  });
-
+  
   it('Chart title show the exact values on hover(TC32)', async() => {
     waitForPageLoaded();
     const axisYInitialText = await mapChart.yAxisTitle.getText();
