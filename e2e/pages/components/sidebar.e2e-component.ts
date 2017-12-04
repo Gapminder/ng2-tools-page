@@ -33,9 +33,10 @@ export class Sidebar {
   colorSearch: ExtendedElementFinder = _$('#vzb-treemenu-search');
   colorSearchResults: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
   colorIndicatorDropdown: ExtendedElementFinder = _$$('span[class="vzb-ip-holder"] > span').get(8); // TODO
+  colorListItems: ExtendedArrayFinder = _$$('span[class="vzb-treemenu-list-item-label"]');
   color = {
-    childMortalityRate: _$$('span[class="vzb-treemenu-list-item-label"]').get(3), // TODO add test class to vizabi
-    incomePerPerson: _$$('span[class="vzb-treemenu-list-item-label"]').get(4), // TODO add test class to vizabi
+    childMortalityRate: this.colorListItems.get(3), // TODO add test class to vizabi
+    incomePerPerson: this.colorListItems.get(4), // TODO add test class to vizabi
     mainReligion: element(by.cssContainingText('.vzb-treemenu-list-item-label', 'Main religion')),
     firstColor: $$('.vzb-cl-color-sample').first()
   };
@@ -74,7 +75,7 @@ export class Sidebar {
    * Size
    */
   sizeDropDown: ElementFinder = $$('span[class="vzb-ip-select"]').get(1);
-  sizeListBabiesPerWomanColorIndicator: ExtendedElementFinder = _$$('span[class="vzb-treemenu-list-item-label"]').first();
+  sizeListBabiesPerWomanColorIndicator: ExtendedElementFinder = this.colorListItems.first();
 
   /**
    * Zoom

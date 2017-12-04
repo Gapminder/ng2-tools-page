@@ -1,6 +1,6 @@
 import { browser, protractor } from 'protractor';
 
-import { safeDragAndDrop, safeExpectIsDispayed, waitForSpinner } from './helpers/helper';
+import { safeDragAndDrop, safeExpectIsDispayed, waitForSpinner, disableAnimations } from './helpers/helper';
 import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { CommonChartPage } from './pages/common-chart.po';
 import { BubbleChart } from './pages/bubble-chart.po';
@@ -72,7 +72,7 @@ describe('Bubbles chart - Acceptance', () => {
     await bubbleChart.clickOnUnitedStates();
 
     expect(await bubbleChart.getCountryBubble('USA').getCssValue('opacity')).toEqual('1');
-    expect(await bubbleChart.countBubblesByOpacity(0.3)).toBe(194);
+    expect(await bubbleChart.countBubblesByOpacity(0.3)).toBe(await bubbleChart.allBubbles.count()-1);
     expect(await bubbleChart.countBubblesByOpacity(1)).toBe(1);
     expect(await bubbleChart.getCountryBubble('India').getCssValue('opacity')).toEqual('0.3');
   });
@@ -252,9 +252,11 @@ describe('Bubbles chart - Acceptance', () => {
     const usaBubbleInitialColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleInitialColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
     const chinaBubbleInitialColor = await bubbleChart.getCountryBubble('China').getCssValue('fill');
-    await sidebar.selectInColorDropdown(sidebar.color.childMortalityRate);
+    
+    const colorNewOption = sidebar.colorListItems.get(3);    
+    await sidebar.selectInColorDropdown(colorNewOption);
 
-    expect(await sidebar.colorDropDown.getText()).toContain('Child mortality');
+    await expect(sidebar.colorDropDown.getText()).toContain(colorNewOption.getText());
 
     const usaBubbleNewColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleNewColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
@@ -264,9 +266,10 @@ describe('Bubbles chart - Acceptance', () => {
     expect(indiaBubbleInitialColor).not.toEqual(indiaBubbleNewColor);
     expect(chinaBubbleInitialColor).not.toEqual(chinaBubbleNewColor);
 
-    await sidebar.selectInColorDropdown(sidebar.color.incomePerPerson);
+    const colorFinalOption = sidebar.colorListItems.get(2);
+    await sidebar.selectInColorDropdown(colorFinalOption);
 
-    expect(await sidebar.colorDropDown.getText()).toContain('Income per person');
+    await expect(sidebar.colorDropDown.getText()).toContain(colorFinalOption.getText());
 
     const usaBubbleFinalColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleFinalColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
