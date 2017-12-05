@@ -3,9 +3,9 @@ import {
   ViewEncapsulation
 } from '@angular/core';
 import { Location } from '@angular/common';
-import { NavigationEnd, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { get, cloneDeep, includes, isEmpty, omitBy, map, difference, isEqual } from 'lodash-es';
+import { get, cloneDeep, includes, isEmpty, omitBy, map, difference } from 'lodash-es';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/debounceTime';
@@ -68,10 +68,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private initialToolsSetupSubscription: Subscription;
   private localeChangesSubscription: Subscription;
   private toolChangesSubscription: Subscription;
-  private routesModelChangesSubscription: Subscription;
   private vizabiModelIndicators = cloneDeep(INITIAL_VIZABI_MODEL_INDICATORS);
   private vizabiModelGeoEntities = [];
   private initialVizabiInstances = {};
+  private lang;
 
   private urlFragmentChangesSubscription: Subscription;
 
@@ -102,6 +102,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       })
       .debounceTime(MODEL_CHANGED_DEBOUNCE)
       .subscribe((hashModelDesc: any) => {
+        this.lang = hashModelDesc.currentHashModel.locale ?
+          hashModelDesc.currentHashModel.locale.id : langService.detectLanguage().key;
+
         const oldHashModel = this.currentHashModel;
 
         this.currentHashModel = hashModelDesc.currentHashModel;
@@ -117,11 +120,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
         if (!hashModelDesc.isInnerChange) {
           this.vizabiInstances[this.currentChartType].modelHash = stringModel;
-
           this.cd.detectChanges();
         }
-
-        window.location.hash = `#${stringModel}`;
 
         const currentPathWithHash = this.location.path(true);
 
@@ -185,15 +185,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.routesModelChangesSubscription = this.router.events.filter(event => event instanceof NavigationEnd)
-      .subscribe(() => {
-        const model = this.vizabiToolsService.getModelFromUrl();
-
-        if (!isEqual(this.currentHashModel, model)) {
-          this.store.dispatch(new VizabiModelChanged(model));
-        }
-      });
-
     this.toolChangesSubscription = this.store.select(getSelectedTool).subscribe(selectedTool => {
       const urlModel = this.vizabiToolsService.getModelFromUrl();
       const toolInUrlIsSame = urlModel && urlModel['chart-type'] === selectedTool;
@@ -332,8 +323,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.vizabiCreationSubscription,
       this.initialToolsSetupSubscription,
       this.localeChangesSubscription,
-      this.toolChangesSubscription,
-      this.routesModelChangesSubscription
+      this.toolChangesSubscription
     ];
 
     subscriptions.forEach((subscription: Subscription) => subscription && subscription.unsubscribe());
