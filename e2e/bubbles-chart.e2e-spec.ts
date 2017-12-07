@@ -1,18 +1,14 @@
-import { browser, protractor } from 'protractor';
-
 import { safeDragAndDrop, safeExpectIsDispayed, waitForSpinner, disableAnimations } from './helpers/helper';
-import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { CommonChartPage } from './pages/common-chart.po';
 import { BubbleChart } from './pages/bubble-chart.po';
 import { Slider } from './pages/components/slider.e2e-component';
+import { browser } from 'protractor';
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
 const slider: Slider = new Slider();
 
 describe('Bubbles chart', () => {
-  const sidebar: Sidebar = new Sidebar(bubbleChart);
-
   beforeEach(async () => {
     await bubbleChart.openChart();
   });
@@ -118,7 +114,7 @@ describe('Bubbles chart', () => {
     expect(await bubbleChart.countryTooltip('India').isPresent()).toBe(false, 'tooltip should be hidden');
   });
 
-  it('trialsegments for bubbles on play', async () => {
+  it('Trialsegments are left for bubbles on play', async () => {
     /**
      * should check that when select China and the United States bubbles and click on play,
      * the trails being left for those two countries(TC13)
@@ -133,11 +129,11 @@ describe('Bubbles chart', () => {
 
     await slider.playTimesliderSeconds(5);
 
-    expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(50);
+    expect(await bubbleChart.indiaTrails.count()).toBeGreaterThan(50);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(50);
   });
 
-  it(`trialsegments for bubbles on drag'n'drop`, async () => {
+  it(`Trialsegments are left for bubbles on drag'n'drop`, async () => {
     /**
      * should check that when select China and the United States bubbles and and drag the timeslider,
      * the trails being left for those two countries(TC14)
@@ -168,5 +164,21 @@ describe('Bubbles chart', () => {
 
     await slider.dragToRightEdge();
     expect(await slider.getPosition()).toContain('2015');
+  });
+
+  it('Change Y-axis value, stored in URL', async () => {
+    const axisValue = await bubbleChart.changeYaxisValue('Dollar billionaires');
+    const urlSettings = axisValue.toLowerCase().replace(/\W/g, '/_');
+
+    expect((await commonChartPage.yAxisBtn.safeGetText()).replace(' ▼','')).toEqual(axisValue);
+    expect(await browser.getCurrentUrl()).toContain(urlSettings);
+  });
+
+  it('Change X-axis value, stored in URL', async () => {
+    const axisValue = await bubbleChart.changeXaxisValue('Dollar billionaires');
+    const urlSettings = axisValue.toLowerCase().replace(/\W/g, '/_');
+
+    expect((await commonChartPage.xAxisBtn.safeGetText()).replace(' ▼','')).toEqual(axisValue);
+    expect(await browser.getCurrentUrl()).toContain(urlSettings);
   });
 });

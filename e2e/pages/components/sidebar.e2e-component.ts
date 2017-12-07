@@ -2,7 +2,7 @@ import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, Expecte
 
 import {
   disableAnimations,
-  findElementByExactText, isCountryAddedInUrl, waitForSpinner, waitForUrlToChange
+  findElementByExactText, isCountryAddedInUrl, safeDragAndDrop, waitForSpinner, waitForUrlToChange
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 
@@ -41,7 +41,8 @@ export class Sidebar {
     mainReligion: element(by.cssContainingText('.vzb-treemenu-list-item-label', 'Main religion')),
     firstColor: $$('.vzb-cl-color-sample').first()
   };
-  minimapAsiaRegion = this.sidebar.miniMap.$$('path').first(); // TODO maybe add selector to vizabi
+  minimapAsiaRegion = this.sidebar.miniMap.$$('path').first();
+  minimapDropdown: ExtendedElementFinder = _$('[class=vzb-cl-select-dialog]'); // will find any active(mobile or desktop)
 
   /**
    * Search select
@@ -71,6 +72,8 @@ export class Sidebar {
   optionsMenuHandIcon: ElementFinder = $('.thumb-tack-class-ico-drag[data-dialogtype="moreoptions"]');
   optionsModalDialogue: ElementArrayFinder = $$('div[data-dlg="moreoptions"]');
   optionsOkBtn: ElementFinder = $$('.vzb-dialog-button.vzb-label-primary').last();
+
+  opacityMenu: ExtendedElementFinder = _$('[data-dlg="opacity"]');
 
   /**
    * Size
@@ -175,7 +178,21 @@ export class Sidebar {
     return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).perform();
   }
 
-  async changeColor(index?: number){
+  async clickMinimapRegion(region?: string): Promise<void> {
+    // TODO make this work for specific region
+    // const elem = await this.sidebar.miniMap.$$('path').first();
+
+    return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).click().perform();
+  }
+
+  async removeEverythingElseInMinimap() {
+    await this.clickMinimapRegion();
+    await this.minimapDropdown._$$('.vzb-cl-select-dialog-item').get(1).click();
+    await waitForUrlToChange();
+    await waitForSpinner();
+  }
+
+  async changeColor(index?: number) {
     await this.colorDropDown.safeClick();
     await disableAnimations();
     await this.colorSearchResults.get(index || 3).safeClick();
@@ -201,5 +218,22 @@ export class Sidebar {
     await this.showButtonSearchInputField.typeText(country);
     await new ExtendedElementFinder(findElementByExactText(this.showSearchResult, country)).safeClick();
     await waitForSpinner();
+  }
+
+  async changeOpacityForNonSelected(): Promise<void> {
+    const nonSelectedSlider: ExtendedElementFinder = this.opacityMenu._$$('.vzb-dialog-bubbleopacity-selectdim .handle--e').first();
+    await this.changeOpacity(nonSelectedSlider);
+  }
+
+  async changeRegularOpacity(): Promise<void> {
+    const regularOpacitySlider: ExtendedElementFinder = this.opacityMenu._$$('.vzb-dialog-bubbleopacity-regular .handle--e').first();
+    await this.changeOpacity(regularOpacitySlider);
+  }
+
+  async changeOpacity(sliderType: ExtendedElementFinder): Promise<void> {
+    await this.optionsButton.safeClick();
+    await this.opacityMenu.safeClick();
+    await safeDragAndDrop(sliderType, {x: -50, y: 0});
+    await waitForUrlToChange();
   }
 }

@@ -11,7 +11,7 @@ const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);
 const slider: Slider = new Slider();
 
-describe('Line chart', () => {
+describe('Line chart: ', () => {
   const DEFAULT_COUNTRIES_NUMBER = 4;
   beforeEach(async () => {
     await lineChart.openChart();

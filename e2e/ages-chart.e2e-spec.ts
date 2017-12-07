@@ -24,7 +24,6 @@ describe('Ages chart', () => {
     const URL = await browser.getCurrentUrl();
     const pattern = new RegExp(agesChart.url, 'g');
 
-    await expect(URL.match(/locale_id=en/g).length).toEqual(1);
     await expect(URL.match(pattern).length).toEqual(1);
   });
 

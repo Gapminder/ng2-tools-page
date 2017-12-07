@@ -8,10 +8,10 @@ import { waitUntil } from '../helpers/waitHelper';
 export class BubbleChart extends CommonChartPage {
   url = 'chart-type=bubbles';
   chartLink: ExtendedElementFinder = _$('.about a[href*="bubbles"]');
-  
+
   public dataDoubtsLink: ExtendedElementFinder = _$('.vzb-data-warning');
   public dataDoubtsWindow: ElementFinder = $('.vzb-data-warning-body');
-  public allBubbles: ElementArrayFinder = $$('circle[class*="vzb-bc-entity"]');
+  public allBubbles: ExtendedArrayFinder = _$$('circle[class*="vzb-bc-entity"]');
   public bubbleLabelOnMouseHover: ExtendedElementFinder = _$('g[class="vzb-bc-tooltip"]');
   public axisXValue: ElementFinder = $$('g[class="vzb-axis-value"]').first();
   yAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-y-title');
@@ -22,6 +22,7 @@ export class BubbleChart extends CommonChartPage {
   public xIconOnBubble: ExtendedElementFinder = _$('[class="vzb-bc-label-x"]');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
+  public indiaTrails: ElementArrayFinder = $$('.trail-ind [class="vzb-bc-trailsegment"]');
   public usaTrails: ElementArrayFinder = $$('.trail-usa [class="vzb-bc-trailsegment"]');
   public selectedCountries: ExtendedArrayFinder = _$$('[class*="vzb-bc-entity label"]');
 
@@ -53,11 +54,8 @@ export class BubbleChart extends CommonChartPage {
     return await waitUntil(this.bubbleLabelOnMouseHover);
   }
 
-  async clickOnCountryBubble(country: string): Promise<{}> {
+  async clickOnCountryBubble(country: string): Promise<void> {
     await this.getCountryBubble(country).safeClick();
-
-    // await browser.wait(EC.visibilityOf(this.countryTooltip(country)), 2000);
-    return await waitForUrlToChange();
   }
 
   async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {
@@ -132,7 +130,7 @@ export class BubbleChart extends CommonChartPage {
     await this.clickOnBubble('red', 0, 10, 10);
 
     await waitUntil(this.getCountryBubble('China'));
-    await browser.wait(isCountryAddedInUrl('China'));
+    await browser.wait(isCountryAddedInUrl('China'), 5000, 'country added in URL');
   }
 
   countBubblesByOpacity(opacity?: number) {
@@ -150,7 +148,7 @@ export class BubbleChart extends CommonChartPage {
   }
 
   async clickXiconOnBubble(country: string): Promise<{}> {
-    await browser.actions().mouseMove(this.selectedBubbleLabel).perform();
+    await this.selectedBubbleLabel.hover();
     await this.xIconOnBubble.safeClick();
 
     return await browser.wait(EC.invisibilityOf(this.tooltipOnClick.last()), 5000, 'tooltip visible');
@@ -168,6 +166,10 @@ export class BubbleChart extends CommonChartPage {
     return super.changeYaxisValue(option);
   }
 
+  async changeXaxisValue(option: string): Promise<string> {
+    return super.changeXaxisValue(option);
+  }
+
   getCoordinatesOfLowerOpacityBubblesOnBubblesChart() {
     /**
      * return sorted array with bubbles coordinates
@@ -183,4 +185,6 @@ export class BubbleChart extends CommonChartPage {
         return obj.sort((obj1: any, obj2: any) => obj1.cx - obj2.cx);
       });
   }
+
+
 }

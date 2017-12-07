@@ -14,7 +14,7 @@ describe('Mountains chart', () => {
     await mountainChart.openChart();
   });
 
-  it('text on vertical line at the end of the chart', async() => {
+  it('text on vertical line at the end of the chart', async () => {
     /**
      * should check that in 2015, the percentage of people living in the extreme poverty should be 11.5 ± 0.3%,
      * and the world population should be 7.33B(TC19)

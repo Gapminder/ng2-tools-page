@@ -39,7 +39,7 @@ export class Slider {
     await this.waitForSliderToBeReady();
     await safeDragAndDrop(this.sliderButton, this.speedStepper);
 
-    return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to right');
+    return await browser.wait(EC.not(EC.urlContains('#_state_time_value=')), 10000, 'drag slider to right');
   }
 
   async playTimesliderSeconds(seconds: number): Promise<void> {

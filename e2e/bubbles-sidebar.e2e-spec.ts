@@ -4,6 +4,7 @@ import { browser } from "protractor";
 import { safeDragAndDrop, waitForSpinner } from "./helpers/helper";
 import { CommonChartPage } from "./pages/common-chart.po";
 import { Slider } from "./pages/components/slider.e2e-component";
+import { MapChart } from './pages/map-chart.po';
 
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
@@ -13,11 +14,19 @@ const slider: Slider = new Slider();
 describe('Bubbles chart: Sidebar', () => {
   const sidebar: Sidebar = new Sidebar(bubbleChart);
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await bubbleChart.openChart();
   });
 
-  it('deselect country using search field', async() => {
+  it('Select country using search', async () => {
+    const country = 'China';
+    await sidebar.searchAndSelectCountry(country);
+
+    expect(await bubbleChart.selectedCountries.count()).toEqual(1);
+    expect(await browser.getCurrentUrl()).toContain(CommonChartPage.countries[country]);
+  });
+
+  it('deselect country using search field', async () => {
     // should check that countries could be selected/deselected using the button "Find" to the right(TC11)
     await sidebar.searchAndSelectCountry('China');
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
@@ -40,7 +49,7 @@ describe('Bubbles chart: Sidebar', () => {
     expect(await browser.getCurrentUrl()).not.toContain('geo=chn');
   });
 
-  it('x, y, trails and zoom remains after page refresh', async() => {
+  it('x, y, trails and zoom remains after page refresh', async () => {
     /**
      * should check that x, y, trails and zoom  remains after page refresh(TC79)
      */
@@ -70,7 +79,7 @@ describe('Bubbles chart: Sidebar', () => {
   });
 
 
-  it('Lock button', async() => {
+  it('Lock button', async () => {
     /**
      * should check that when select a country, click "Lock", and drag the time slider or play,
      * all unselected countries stay in place and only the selected one moves(TC15)
@@ -102,7 +111,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(yCoord).not.toEqual(yCoordNew);
   });
 
-  it('Size section', async() => {
+  it('Size section', async () => {
     /**
      * should check that click on Size, a pop up with size sliders comes up,
      * the minimum and maximum sizes of bubbles can be changed. They update instantaneously(TC16)
@@ -116,10 +125,11 @@ describe('Bubbles chart: Sidebar', () => {
     const finalRadius = await bubbleChart.getBubblesRadius();
 
     await expect(initialRadius).not.toEqual(finalRadius);
+    await expect(browser.getCurrentUrl()).toContain(`size_extent@`);
     // await expect(finalRadius[0]).toBeGreaterThan(initialRadius); // TODO add check like this
   });
 
-  it('change Size indicator', async() => {
+  it('change Size indicator', async () => {
     /**
      * should check that the indicator represented by the Size can be changed(TC16)
      */
@@ -143,7 +153,7 @@ describe('Bubbles chart: Sidebar', () => {
     expect(await sidebar.sizeDropDown.getText()).toEqual(finalIndicator);
   });
 
-  it('clicking color bring the panel. Color of bubbles can be changed(TC17)', async() => {
+  it('clicking color bring the panel. Color of bubbles can be changed(TC17)', async () => {
     const usaBubbleInitialColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleInitialColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
     const chinaBubbleInitialColor = await bubbleChart.getCountryBubble('China').getCssValue('fill');
@@ -175,7 +185,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(chinaBubbleInitialColor).not.toEqual(chinaBubbleFinalColor);
   });
 
-  it(`drag'n'drop panel using the hand icon`, async() => {
+  it(`drag'n'drop panel using the hand icon`, async () => {
     /**
      * should check that on large screen resolutions panel can be dragged using the hand icon(TC18)
      */
@@ -200,4 +210,44 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(optionsDialogueTopNewPosition).not.toEqual(optionsDialogueTopFinalPosition);
     await expect(optionsDialogueRightNewPosition).not.toEqual(optionsDialogueRightFinalPosition);
   });
+
+  it('Change opacity for non-selected bubbles', async () => {
+    await sidebar.searchAndSelectCountry('China');
+    const nonSelectedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.dimmed);
+
+    await sidebar.changeOpacityForNonSelected();
+    const newOpacity = await bubbleChart.allBubbles.last().getCssValue('opacity');
+
+    expect(await bubbleChart.countBubblesByOpacity(Number(newOpacity))).toEqual(nonSelectedBubbles);
+    expect(await browser.getCurrentUrl()).toContain(`opacitySelectDim:${newOpacity}`);
+  });
+
+  it('Change regular opacity', async () => {
+    const highlightedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.highlighted);
+
+    await sidebar.changeRegularOpacity();
+    const newOpacity = await bubbleChart.allBubbles.last().getCssValue('opacity');
+
+    expect(await bubbleChart.countBubblesByOpacity(Number(newOpacity))).toEqual(highlightedBubbles);
+    expect(await browser.getCurrentUrl()).toContain(`opacityRegular:${newOpacity}`);
+  });
+
+  // TODO: in progress
+  xit('Click on minimap region - "Remove everything else"', async () => {
+    // const allBubbles = await bubbleChart.allBubbles.count();
+    // console.log(await bubbleChart.allBubbles.count());
+    // await sidebar.removeEverythingElseInMinimap();
+    //
+    // console.log(await bubbleChart.allBubbles.count());
+    // await expect(true).toBe(false);
+
+    const mapChart: MapChart = new MapChart();
+    const sb: Sidebar = new Sidebar(mapChart);
+
+    await mapChart.openByClick();
+    await sidebar.removeEverythingElseInMinimap();
+
+  });
+
+
 });

@@ -45,13 +45,15 @@ export class CommonChartPage {
   public axisSearchInput: ExtendedElementFinder = _$('.vzb-treemenu-search');
 
   yAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-y-title');
+  xAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-x-title');
+
   url: string;
   chartLink: ExtendedElementFinder;
   selectedCountries: ExtendedArrayFinder;
 
   public axisYMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-y g[class="tick"] text').last();
   public axisXMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-x g[class="tick"] text').last();
-  yAsixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
+  asixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
 
   async waitForToolsPageCompletelyLoaded(): Promise<{}> {
     await waitUntil(CommonChartPage.sideBar);
@@ -62,8 +64,8 @@ export class CommonChartPage {
   }
 
   async openChart(): Promise<void> {
-    await browser.get('/');
     await safeOpen(`#_${this.url}`);
+    await this.refreshPage(); // TODO: remove this after fix: https://github.com/Gapminder/ng2-tools-page/issues/175
   }
 
   async openByClick(): Promise<{}> {
@@ -91,14 +93,22 @@ export class CommonChartPage {
   }
 
   async changeYaxisValue(option?: string): Promise<string> {
-    await this.yAxisBtn.safeClick();
+    return await this.changeAxisValue(this.yAxisBtn, option);
+  }
+
+  async changeXaxisValue(option: string) {
+    return await this.changeAxisValue(this.xAxisBtn, option);
+  }
+
+  async changeAxisValue(axisBtn: ExtendedElementFinder, option?: string): Promise<string> {
+    await axisBtn.safeClick();
 
     if (option) {
       await this.axisSearchInput.typeText(option);
       await browser.sleep(1000); // no idea what to wait here
     }
 
-    const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
+    const newOption: ExtendedElementFinder = this.asixDropdownOptions.first();
 
     await waitUntil(newOption);
     const newOptionValue = newOption.getText();

@@ -23,7 +23,7 @@ const DATA_PROVIDER = {
 
 describe('All charts - Acceptance', () => {
 
-  describe('No additional data in URL when chart opens', () => {
+  xdescribe('No additional data in URL when chart opens', () => {
     /**
      * Tests which check URL's correctness when switching between charts. Browser has to be restarted before each test!
      */
@@ -37,7 +37,6 @@ describe('All charts - Acceptance', () => {
         const URL = await browser.getCurrentUrl();
         const pattern = new RegExp(chart.url, 'g');
 
-        await expect(URL.match(/locale_id=en/g).length).toEqual(1);
         await expect(URL.match(pattern).length).toEqual(1);
       });
     });
@@ -130,7 +129,7 @@ describe('All charts - Acceptance', () => {
       await bubbleChart.openChart();
     });
 
-    xit('Back button works: https://github.com/Gapminder/ng2-tools-page/issues/54', async() => {
+    it('Back button works', async() => {
       const urlBefore = await browser.getCurrentUrl();
 
       await bubbleChart.clickOnChina();

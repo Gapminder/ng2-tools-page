@@ -23,7 +23,7 @@ export class LineChart extends CommonChartPage {
    */
   latestPointOnChart: ElementFinder = $('[class="vzb-axis-value"]');
   selectedCountries: ExtendedArrayFinder = _$$('.vzb-lc-labelname.vzb-lc-labelfill');
-  yAsixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
+  asixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
   yAxisBtn: ExtendedElementFinder = _$('.vzb-lc-axis-y-title');
   axisValues: ElementArrayFinder = $$('.vzb-lc-axis-x .tick text');
   countriesLines: ElementArrayFinder = $$('.vzb-lc-line');
@@ -76,7 +76,6 @@ export class LineChart extends CommonChartPage {
   async selectLine(country: string): Promise<void> {
     await waitUntil(this.selectedCountries.first());
     await new ExtendedArrayFinder(this.selectedCountries).findElementByExactText(country).safeClick();
-    await waitForUrlToChange();
     await browser.wait(isCountryAddedInUrl(country));
   }
 
