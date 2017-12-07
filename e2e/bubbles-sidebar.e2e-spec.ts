@@ -232,22 +232,18 @@ describe('Bubbles chart: Sidebar', () => {
     expect(await browser.getCurrentUrl()).toContain(`opacityRegular:${newOpacity}`);
   });
 
-  // TODO: in progress
-  xit('Click on minimap region - "Remove everything else"', async () => {
-    // const allBubbles = await bubbleChart.allBubbles.count();
-    // console.log(await bubbleChart.allBubbles.count());
-    // await sidebar.removeEverythingElseInMinimap();
-    //
-    // console.log(await bubbleChart.allBubbles.count());
-    // await expect(true).toBe(false);
-
-    const mapChart: MapChart = new MapChart();
-    const sb: Sidebar = new Sidebar(mapChart);
-
-    await mapChart.openByClick();
-    await sidebar.removeEverythingElseInMinimap();
-
+  it('Click on minimap region - "Remove everything else"', async () => {
+    const allBubbles = await bubbleChart.allBubbles.count();
+    await sidebar.removeEverythingElseInMinimap('Asia');
+    
+    expect(await bubbleChart.allBubbles.count()).toEqual(allBubbles - await bubbleChart.countBubblesByColor('red'));
   });
 
-
+  it('Click on minimap region - "Select all in this group"', async () => {
+    const selectedBubbles = await bubbleChart.countBubblesByColor('red');
+    await sidebar.selectAllInThisGroup('Asia');
+    const selectedLabels = await bubbleChart.allLabels.count();
+    
+    expect(selectedLabels).toEqual(selectedBubbles);
+  });
 });

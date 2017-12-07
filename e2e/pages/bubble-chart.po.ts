@@ -19,6 +19,7 @@ export class BubbleChart extends CommonChartPage {
   public selectedCountryLabel: ExtendedElementFinder = _$$('.vzb-label-fill.vzb-tooltip-border').first();
   public countrySelectedBiggerLabel: ElementFinder = $('.vzb-bc-labels .vzb-bc-entity');
   public selectedBubbleLabel: ExtendedElementFinder = _$('.vzb-label-fill.vzb-tooltip-border');
+  public allLabels: ExtendedArrayFinder = _$$('[class*="vzb-bc-entity label-"]');
   public xIconOnBubble: ExtendedElementFinder = _$('[class="vzb-bc-label-x"]');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');
@@ -32,6 +33,13 @@ export class BubbleChart extends CommonChartPage {
     bubbleOpacityControl: $('.vzb-dialog-bubbleopacity'),
     resetFiltersBtn: $('.vzb-find-deselect'),
     zoomSection: $('.vzb-dialog-zoom-buttonlist')
+  };
+  
+  public colors = {
+    'red': 'rgb(255, 88, 114)',
+    'yellow': 'rgb(255, 231, 0)',
+    'blue': 'rgb(0, 213, 233)',
+    'green': 'rgb(127, 235, 0)'
   };
 
   countryTooltip = country => $(`[class*="vzb-bc-entity label-${CommonChartPage.countries[country]}"]`);
@@ -59,16 +67,9 @@ export class BubbleChart extends CommonChartPage {
   }
 
   async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {
-    const colors = {
-      'red': 'rgb(255, 88, 114)',
-      'yellow': 'rgb(255, 231, 0)',
-      'blue': 'rgb(0, 213, 233)',
-      'green': 'rgb(127, 235, 0)'
-    };
-
     await waitUntil($$(`circle[style*='fill: ']`).first());
 
-    return $$(`circle[style*='fill: ${colors[color.toLocaleLowerCase()]}']`).get(index);
+    return $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).get(index);
   }
 
   async hoverMouseOverBubble(color: string, index = 0, x = 0, y = 0): Promise<ElementFinder> {
@@ -142,6 +143,10 @@ export class BubbleChart extends CommonChartPage {
 
     return $$(`circle[style*='opacity: ${opacity}']`).count();
   }
+
+  countBubblesByColor(color: string) {
+    return $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).count();
+  }  
 
   dragAndDropSelectedCountryLabelBubblesChart(x: number, y: number) {
     return browser.actions().dragAndDrop(this.selectedCountryLabel, {x: x, y: y}).perform();

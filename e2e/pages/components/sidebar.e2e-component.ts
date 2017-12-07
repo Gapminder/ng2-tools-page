@@ -185,10 +185,15 @@ export class Sidebar {
     return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).click().perform();
   }
 
-  async removeEverythingElseInMinimap() {
+  async removeEverythingElseInMinimap(region: string) {
     await this.clickMinimapRegion();
     await this.minimapDropdown._$$('.vzb-cl-select-dialog-item').get(1).click();
-    await waitForUrlToChange();
+    await waitForSpinner();
+  }
+
+  async selectAllInThisGroup(region: string) {
+    await this.clickMinimapRegion();
+    await this.minimapDropdown._$$('.vzb-cl-select-dialog-item').get(0).click();
     await waitForSpinner();
   }
 
