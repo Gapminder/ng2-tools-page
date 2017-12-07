@@ -6,12 +6,12 @@
           [readerPlugins]="readerPlugins"
           [readerName]="'waffle'"
           [extResources]="extResources"
-          [stopUrlRedirect]="true"
+          [stopUrlRedirect]="false"
           (onCreated)="onCreated($event)"
           (onChanged)="onChanged($event)"
           [chartType]="vizabiInstances[slug].chartType"
           [model]="initialVizabiInstances[slug].model"
-          [language]="langService.detectLanguage().key"
+          [language]="lang"
           [modelHash]="vizabiInstances[slug].modelHash">
   </vizabi>
 </div>
