@@ -1,11 +1,13 @@
 import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
 import {
+  disableAnimations,
   safeOpen, waitForPageLoaded, waitForSliderToBeReady, waitForSpinner,
   waitForUrlToChange
 } from '../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 import { promise } from 'selenium-webdriver';
+import { waitUntil } from '../helpers/waitHelper';
 
 export class CommonChartPage {
   static countries = {
@@ -40,6 +42,10 @@ export class CommonChartPage {
   public mountainsChart: ElementFinder = $('a[href*="mountain"]');
   public rankingsChart: ElementFinder = $('a[href*="barrank"]');
   public pageHeader: ElementFinder = $('.header');
+  public axisSearchInput: ExtendedElementFinder = _$('.vzb-treemenu-search');
+
+  yAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-y-title');
+  xAxisBtn: ExtendedElementFinder = _$('.vzb-bc-axis-x-title');
 
   url: string;
   chartLink: ExtendedElementFinder;
@@ -47,19 +53,20 @@ export class CommonChartPage {
 
   public axisYMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-y g[class="tick"] text').last();
   public axisXMaxValue: ExtendedElementFinder = _$$('.vzb-bc-axis-x g[class="tick"] text').last();
-  yAsixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
+  asixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
 
   async waitForToolsPageCompletelyLoaded(): Promise<{}> {
-    await browser.wait(EC.visibilityOf(CommonChartPage.sideBar));
-    await browser.wait(EC.visibilityOf(CommonChartPage.buttonPlay));
+    await waitUntil(CommonChartPage.sideBar);
+    await waitUntil(CommonChartPage.buttonPlay);
     await browser.wait(EC.invisibilityOf(this.movingSliderProgress.get(1)), 30000);
 
     return await waitForSpinner();
   }
 
   async openChart(): Promise<void> {
-    await browser.get('/');
     await safeOpen(`#_${this.url}`);
+    // await browser.get(browser.baseUrl + '#_' + this.url);
+    // await this.refreshPage(); // TODO: remove this after fix: https://github.com/Gapminder/ng2-tools-page/issues/175
   }
 
   async openByClick(): Promise<{}> {
@@ -80,17 +87,31 @@ export class CommonChartPage {
   }
 
   getSelectedCountriesNames(): promise.Promise<string> {
-    return browser.wait(EC.visibilityOf(this.selectedCountries.first()))
+    return waitUntil(this.selectedCountries.first())
       .then(() => {
         return this.selectedCountries.getText(); // TODO css animation can fail the test
       });
   }
 
-  async changeYaxisValue(yAxisBtn: ExtendedElementFinder): Promise<string> {
-    await yAxisBtn.safeClick();
-    const newOption: ExtendedElementFinder = this.yAsixDropdownOptions.first();
+  async changeYaxisValue(option?: string): Promise<string> {
+    return await this.changeAxisValue(this.yAxisBtn, option);
+  }
 
-    await browser.wait(EC.visibilityOf(newOption));
+  async changeXaxisValue(option: string) {
+    return await this.changeAxisValue(this.xAxisBtn, option);
+  }
+
+  async changeAxisValue(axisBtn: ExtendedElementFinder, option?: string): Promise<string> {
+    await axisBtn.safeClick();
+
+    if (option) {
+      await this.axisSearchInput.typeText(option);
+      await browser.sleep(1000); // no idea what to wait here
+    }
+
+    const newOption: ExtendedElementFinder = this.asixDropdownOptions.first();
+
+    await waitUntil(newOption);
     const newOptionValue = newOption.getText();
     await newOption.click();
 

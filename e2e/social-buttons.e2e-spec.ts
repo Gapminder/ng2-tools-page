@@ -5,6 +5,7 @@ import { LineChart } from './pages/line-chart.po';
 import { _$, ExtendedElementFinder } from './helpers/ExtendedElementFinder';
 import { BubbleChart } from './pages/bubble-chart.po';
 import { Slider } from './pages/components/slider.e2e-component';
+import { waitUntil } from './helpers/waitHelper';
 
 const lineChart: LineChart = new LineChart();
 const bubbleChart: BubbleChart = new BubbleChart();
@@ -12,7 +13,7 @@ const slider: Slider = new Slider();
 const header: Header = new Header();
 
 describe('Social media buttons', () => {
-  const mailBasic = `mailto:?subject=Gapminder&body=${browser.baseUrl}`;
+  const mailBasic = `mailto:?subject=Gapminder&body=`;
 
   const tweetStatus: ExtendedElementFinder = _$('#status');
   const twitterUrl = 'https://twitter.com/intent/tweet?original_referer=';
@@ -22,55 +23,60 @@ describe('Social media buttons', () => {
   const facebookUrl = 'https://www.facebook.com/login.php?skip_api_login=1&api_key=966242223397117&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fsharer%2Fsharer.php';
   const facebookFormAction = '/login.php?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fsharer%2Fsharer.php';
 
-  beforeAll(async() => {
+  beforeAll(async () => {
     await browser.get('./');
   });
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await closeSocialTabAndSwitchToDefault();
   });
 
-  it('Mail-to: basic state', async() => {
+  it('Mail-to: basic state', async () => {
     await header.shareLabel.safeClick();
-    await browser.wait(EC.visibilityOf(header.mailButtonDesktop));
+    await waitUntil(header.mailButtonDesktop);
+    const expectedUrl = mailBasic + (await browser.getCurrentUrl());
+
     const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
 
-    await expect(actualMailLink).toEqual(`${mailBasic}#_chart-type=bubbles&locale_id=en`);
+    await expect(actualMailLink).toEqual(expectedUrl);
   });
 
-  it('Mail-to: entities in state', async() => {
+  it('Mail-to: entities in state', async () => {
     await lineChart.openChart();
     await lineChart.selectLine('China');
+    const expectedUrl = mailBasic + (await browser.getCurrentUrl());    
     await header.shareLabel.safeClick();
 
     const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
 
-    await expect(actualMailLink).toEqual(`${mailBasic}#_state_marker_select@_geo=chn;;;;&chart-type=linechart&locale_id=en`);
+    await expect(actualMailLink).toEqual(expectedUrl);
   });
 
-  it('Mail-to: timeslider in state', async() => {
+  it('Mail-to: timeslider in state', async () => {
     await bubbleChart.openChart();
     await slider.dragToMiddle();
-    const sliderValue = await slider.getPosition();
+    const expectedUrl = mailBasic + (await browser.getCurrentUrl());
+
     await header.shareLabel.safeClick();
 
     const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
 
-    await expect(actualMailLink).toEqual(`${mailBasic}#_state_time_value=${sliderValue};;&chart-type=bubbles&locale_id=en`);
+    // await expect(actualMailLink).toEqual(`${mailBasic}#_state_time_value=${sliderValue};;&chart-type=bubbles&locale_id=en`);
+    await expect(actualMailLink).toEqual(expectedUrl);
   });
 
-  it('twitter', async() => {
+  it('twitter', async () => {
     await header.twitterSocialDesktop.safeClick();
     const handles = await browser.getAllWindowHandles();
     await browser.switchTo().window(handles[1]);
 
-    await browser.wait(EC.visibilityOf(tweetStatus), 10000, 'tweet status');
+    await waitUntil(tweetStatus);
     // expect(await tweetStatus.safeGetText()).toContain('Gapminder '); // this will not work on localhost
     expect(await browser.getCurrentUrl()).toContain(twitterUrl);
     expect(await browser.getCurrentUrl()).toContain('Gapminder');
   });
 
-  it('facebook', async() => {
+  xit('facebook: https://github.com/Gapminder/ng2-tools-page/issues/174', async () => {
     await header.facebookSocialDesktop.safeClick();
     const handles = await browser.getAllWindowHandles();
     await browser.switchTo().window(handles[1]);

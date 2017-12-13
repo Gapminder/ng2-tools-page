@@ -10,7 +10,7 @@ import { MountainChart } from './pages/mountain-chart.po';
 import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { Slider } from './pages/components/slider.e2e-component';
 
-import { safeOpen } from './helpers/helper';
+import { safeOpen, waitForPageLoaded, waitForUrlToChange } from './helpers/helper';
 
 const DATA_PROVIDER = {
   'Bubbles Chart': {chart: new BubbleChart()},
@@ -19,27 +19,27 @@ const DATA_PROVIDER = {
   'Line Chart': {chart: new LineChart()},
   'Rankings Chart': {chart: new RankingsChart()}
 };
-describe('No additional data in URL when chart opens', () => {
-  /**
-   * Tests which check URL's correctness when switching between charts. Browser has to be restarted before each test!
-   */
-
-  using(DATA_PROVIDER, (data, description) => {
-    it(`URL on ${description} page`, async() => {
-      await safeOpen(protractor.browser.baseUrl);
-      const chart = data.chart;
-      await chart.openByClick();
-
-      const URL = await browser.getCurrentUrl();
-      const pattern = new RegExp(chart.url, 'g');
-
-      await expect(URL.match(/locale_id=en/g).length).toEqual(1);
-      await expect(URL.match(pattern).length).toEqual(1);
-    });
-  });
-});
 
 describe('All charts - Acceptance', () => {
+
+  describe('No additional data in URL when chart opens', () => {
+    /**
+     * Tests which check URL's correctness when switching between charts. Browser has to be restarted before each test!
+     */
+
+    using(DATA_PROVIDER, (data, description) => {
+      it(`URL on ${description} page`, async() => {
+        await safeOpen('');
+        const chart = data.chart;
+        await chart.openByClick();
+
+        const URL = await browser.getCurrentUrl();
+        const pattern = new RegExp(chart.url, 'g');
+
+        await expect(URL.match(pattern).length).toEqual(1);
+      });
+    });
+  });
 
   describe('Side panel presence(TC33)', () => {
     /**
@@ -51,10 +51,10 @@ describe('All charts - Acceptance', () => {
         const chart = data.chart;
         await chart.openChart();
 
-        const sidebar: Sidebar = await new Sidebar(chart);
+        const sidebar: Sidebar = new Sidebar(chart);
         await sidebar.waitForVisible();
 
-        const commonSidebar = await sidebar.sidebar;
+        const commonSidebar = sidebar.sidebar;
         Object.keys(commonSidebar).forEach(element => {
           expect(commonSidebar[element].isPresent()).toBe(true, `${element} not found`);
         });
@@ -96,27 +96,87 @@ describe('All charts - Acceptance', () => {
         await expect(browser.getCurrentUrl()).toContain(sliderAfterPageReload);
       });
     });
+
+    using(DATA_PROVIDER, (data, description) => {
+      it(`Entities are selected after page reload on ${description} page`, async() => {
+        const chart = data.chart;
+        const sidebar: Sidebar = new Sidebar(chart);
+
+        await chart.openChart();
+
+        await sidebar.searchAndSelectCountry('Australia');
+        await sidebar.searchAndSelectCountry('Bangladesh');
+
+        expect(await chart.getSelectedCountriesNames()).toMatch('Australia');
+        expect(await chart.getSelectedCountriesNames()).toMatch('Bangladesh');
+
+        await chart.refreshPage();
+
+        expect(await chart.getSelectedCountriesNames()).toMatch('Australia');
+        expect(await chart.getSelectedCountriesNames()).toMatch('Bangladesh');
+        await expect(browser.getCurrentUrl()).toContain('=aus');
+        await expect(browser.getCurrentUrl()).toContain('=bgd');
+      });
+    });
   });
 
-  using(DATA_PROVIDER, (data, description) => {
-    it(`Entities are selected after page reload on ${description} page`, async() => {
-      const chart = data.chart;
-      const sidebar: Sidebar = new Sidebar(chart);
+  describe('Browser history', () => {
+    let bubbleChart: BubbleChart;
 
-      await chart.openChart();
+    beforeEach(async() => {
+      bubbleChart = new BubbleChart();
+      await bubbleChart.openChart();
+    });
 
-      await sidebar.searchAndSelectCountry('Australia');
-      await sidebar.searchAndSelectCountry('Bangladesh');
+    it('Back button works', async() => {
+      const urlBefore = await browser.getCurrentUrl();
 
-      expect(await chart.getSelectedCountriesNames()).toMatch('Australia');
-      expect(await chart.getSelectedCountriesNames()).toMatch('Bangladesh');
+      await bubbleChart.clickOnChina();
 
-      await chart.refreshPage();
+      await browser.navigate().back();
+      await waitForPageLoaded();
 
-      expect(await chart.getSelectedCountriesNames()).toMatch('Australia');
-      expect(await chart.getSelectedCountriesNames()).toMatch('Bangladesh');
-      await expect(browser.getCurrentUrl()).toContain('=aus');
-      await expect(browser.getCurrentUrl()).toContain('=bgd');
+      expect(await browser.getCurrentUrl()).toEqual(urlBefore);
+      expect(await bubbleChart.selectedCountries.count()).toEqual(0);
+    });
+
+    xit('Forward button works', async() => {
+      await bubbleChart.clickOnChina();
+      const urlAfter = await browser.getCurrentUrl();
+
+      await browser.navigate().back();
+      await waitForPageLoaded();
+
+      await browser.sleep(1000); // no idea what to wait in this case
+
+      await browser.navigate().forward();
+      await waitForPageLoaded();
+
+      expect(await browser.getCurrentUrl()).toEqual(urlAfter);
+      expect(await bubbleChart.selectedCountries.count()).toEqual(1);
+    });
+  });
+
+  describe('Switching between charts', () => {
+    let bubbleChart: BubbleChart;
+    let mapChart: MapChart;
+
+    beforeEach(async() => {
+      bubbleChart = new BubbleChart();
+      mapChart = new MapChart();
+
+      await bubbleChart.openChart();
+    });
+
+    it('Country remains selected', async() => {
+      await bubbleChart.clickOnUnitedStates();
+      const selectedCountriesOnBubbles = await bubbleChart.selectedCountries.getText();
+
+      await mapChart.openByClick();
+      await waitForPageLoaded();
+
+      expect(await mapChart.selectedCountries.count()).toEqual(1);
+      expect(selectedCountriesOnBubbles).toMatch(await mapChart.selectedCountries.first().getText());
     });
   });
 });

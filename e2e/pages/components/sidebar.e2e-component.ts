@@ -1,7 +1,8 @@
 import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
 import {
-  findElementByExactText, isCountryAddedInUrl, waitForSpinner
+  disableAnimations,
+  findElementByExactText, isCountryAddedInUrl, safeDragAndDrop, waitForSpinner, waitForUrlToChange
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 
@@ -40,7 +41,8 @@ export class Sidebar {
     mainReligion: element(by.cssContainingText('.vzb-treemenu-list-item-label', 'Main religion')),
     firstColor: $$('.vzb-cl-color-sample').first()
   };
-  minimapAsiaRegion = this.sidebar.miniMap.$$('path').first(); // TODO maybe add selector to vizabi
+  minimapAsiaRegion = this.sidebar.miniMap.$$('path').first();
+  minimapDropdown: ExtendedElementFinder = _$('[class=vzb-cl-select-dialog]'); // will find any active(mobile or desktop)
 
   /**
    * Search select
@@ -70,6 +72,8 @@ export class Sidebar {
   optionsMenuHandIcon: ElementFinder = $('.thumb-tack-class-ico-drag[data-dialogtype="moreoptions"]');
   optionsModalDialogue: ElementArrayFinder = $$('div[data-dlg="moreoptions"]');
   optionsOkBtn: ElementFinder = $$('.vzb-dialog-button.vzb-label-primary').last();
+
+  opacityMenu: ExtendedElementFinder = _$('[data-dlg="opacity"]');
 
   /**
    * Size
@@ -138,6 +142,12 @@ export class Sidebar {
     await waitForSpinner();
   }
 
+  async hoverCountryFromList(country: string): Promise<void> {
+    const countryFromList: ElementFinder = await findElementByExactText(this.searchResult, country);
+
+    await new ExtendedElementFinder(countryFromList).hover();
+  }
+
   async selectInColorDropdown(element: ExtendedElementFinder | ElementFinder): Promise<{}> {
     await this.colorDropDown.safeClick();
 
@@ -151,7 +161,9 @@ export class Sidebar {
   }
 
   async getColorFromColorSection(): Promise<string> {
-    return await this.color.firstColor.getCssValue('background-color');
+    const style = await this.color.firstColor.getAttribute('style');
+
+    return style.split(';')[0].split(': ')[1]; // TODO remove magic
   }
 
   async clickOnFindButton(): Promise<void> {
@@ -166,10 +178,37 @@ export class Sidebar {
     return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).perform();
   }
 
+  async clickMinimapRegion(region?: string): Promise<void> {
+    // TODO make this work for specific region
+    // const elem = await this.sidebar.miniMap.$$('path').first();
+
+    return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).click().perform();
+  }
+
+  async removeEverythingElseInMinimap(region: string) {
+    await this.clickMinimapRegion();
+    await this.minimapDropdown._$$('.vzb-cl-select-dialog-item').get(1).click();
+    await waitForSpinner();
+  }
+
+  async selectAllInThisGroup(region: string) {
+    await this.clickMinimapRegion();
+    await this.minimapDropdown._$$('.vzb-cl-select-dialog-item').get(0).click();
+    await waitForSpinner();
+  }
+
+  async changeColor(index?: number) {
+    await this.colorDropDown.safeClick();
+    await disableAnimations();
+    await this.colorSearchResults.get(index || 3).safeClick();
+    await waitForUrlToChange();
+    await waitForSpinner();
+  }
+
   async searchAndSelectInColorDropdown(colorOption: string) {
     await this.colorDropDown.safeClick();
     await this.colorSearch.typeText(colorOption);
-    await browser.sleep(1000); // css animation
+    await disableAnimations();
     await browser.wait(EC.presenceOf(element(by.cssContainingText(this.colorSearchResults.first().locator().value, colorOption))));
     await this.colorSearchResults.first().safeClick();
   }
@@ -184,5 +223,22 @@ export class Sidebar {
     await this.showButtonSearchInputField.typeText(country);
     await new ExtendedElementFinder(findElementByExactText(this.showSearchResult, country)).safeClick();
     await waitForSpinner();
+  }
+
+  async changeOpacityForNonSelected(): Promise<void> {
+    const nonSelectedSlider: ExtendedElementFinder = this.opacityMenu._$$('.vzb-dialog-bubbleopacity-selectdim .handle--e').first();
+    await this.changeOpacity(nonSelectedSlider);
+  }
+
+  async changeRegularOpacity(): Promise<void> {
+    const regularOpacitySlider: ExtendedElementFinder = this.opacityMenu._$$('.vzb-dialog-bubbleopacity-regular .handle--e').first();
+    await this.changeOpacity(regularOpacitySlider);
+  }
+
+  async changeOpacity(sliderType: ExtendedElementFinder): Promise<void> {
+    await this.optionsButton.safeClick();
+    await this.opacityMenu.safeClick();
+    await safeDragAndDrop(sliderType, {x: -50, y: 0});
+    await waitForUrlToChange();
   }
 }

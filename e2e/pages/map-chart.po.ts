@@ -2,6 +2,7 @@ import { $, $$, ElementArrayFinder, ElementFinder, browser, ExpectedConditions a
 
 import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
+import { waitUntil } from '../helpers/waitHelper';
 
 export class MapChart extends CommonChartPage {
   url = 'chart-type=map';
@@ -39,7 +40,7 @@ export class MapChart extends CommonChartPage {
       'green': '#7feb00'
     };
 
-    await browser.wait(EC.visibilityOf(this.allBubbles.first()), 5000);
+    await waitUntil(this.allBubbles.first());
 
     return await _$$(`circle[fill = '${colors[color.toLocaleLowerCase()]}']`).get(index);
   }
@@ -50,7 +51,7 @@ export class MapChart extends CommonChartPage {
     await browser.actions().mouseMove(filteredElement)
       .perform();
 
-    await browser.wait(EC.visibilityOf(this.bubbleLabelOnMouseHover), 4000);
+    await waitUntil(this.bubbleLabelOnMouseHover);
 
     return filteredElement;
   }
@@ -58,7 +59,7 @@ export class MapChart extends CommonChartPage {
   async clickOnBubble(color: string, index = 0): Promise<void> {
     const bubble: ExtendedElementFinder = await this.filterBubblesByColor(color, index);
     await bubble.safeClick();
-    await browser.wait(EC.visibilityOf(this.tooltipOnClick), 4000);
+    await waitUntil(this.tooltipOnClick);
   }
 
   async deselectBubble(color: string, index = 0): Promise<void> {
