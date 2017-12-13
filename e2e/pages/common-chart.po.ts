@@ -65,7 +65,8 @@ export class CommonChartPage {
 
   async openChart(): Promise<void> {
     await safeOpen(`#_${this.url}`);
-    await this.refreshPage(); // TODO: remove this after fix: https://github.com/Gapminder/ng2-tools-page/issues/175
+    // await browser.get(browser.baseUrl + '#_' + this.url);
+    // await this.refreshPage(); // TODO: remove this after fix: https://github.com/Gapminder/ng2-tools-page/issues/175
   }
 
   async openByClick(): Promise<{}> {

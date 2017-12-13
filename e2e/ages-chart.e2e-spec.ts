@@ -18,7 +18,7 @@ describe('Ages chart', () => {
   });
 
   it(`Open chart by click on link`, async() => {
-    await safeOpen(protractor.browser.baseUrl);
+    await safeOpen('');
     await agesChart.openByClick();
 
     const URL = await browser.getCurrentUrl();

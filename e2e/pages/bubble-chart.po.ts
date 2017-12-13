@@ -19,7 +19,7 @@ export class BubbleChart extends CommonChartPage {
   public selectedCountryLabel: ExtendedElementFinder = _$$('.vzb-label-fill.vzb-tooltip-border').first();
   public countrySelectedBiggerLabel: ElementFinder = $('.vzb-bc-labels .vzb-bc-entity');
   public selectedBubbleLabel: ExtendedElementFinder = _$('.vzb-label-fill.vzb-tooltip-border');
-  public allLabels: ExtendedArrayFinder = _$$('[class*="vzb-bc-entity label-"]');
+  public allLabels: ExtendedArrayFinder = _$$('.vzb-bc-entity[class*=label-][transform*=translate]');
   public xIconOnBubble: ExtendedElementFinder = _$('[class="vzb-bc-label-x"]');
   public trials: ElementArrayFinder = $$('.vzb-bc-entity.entity-trail');
   public chinaTrails: ElementArrayFinder = $$('.trail-chn [class="vzb-bc-trailsegment"]');

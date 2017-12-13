@@ -6,7 +6,7 @@ describe('Slider', () => {
   const slider: Slider = new Slider();
 
   beforeEach(async() => {
-    await safeOpen('./');
+    await safeOpen('');
   });
 
   it('Change speed during playing not reset slider', async() => {

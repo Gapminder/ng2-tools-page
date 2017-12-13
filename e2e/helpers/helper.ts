@@ -7,6 +7,7 @@ const TIMEOUT = 15000;
 
 export function safeOpen(url: string) {
   return browser.get(browser.baseUrl + url)
+    .then(() => browser.refresh())
     .then(() => waitForPageLoaded());
 }
 

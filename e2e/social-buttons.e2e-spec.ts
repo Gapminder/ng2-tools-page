@@ -76,7 +76,7 @@ describe('Social media buttons', () => {
     expect(await browser.getCurrentUrl()).toContain('Gapminder');
   });
 
-  it('facebook', async () => {
+  xit('facebook: https://github.com/Gapminder/ng2-tools-page/issues/174', async () => {
     await header.facebookSocialDesktop.safeClick();
     const handles = await browser.getAllWindowHandles();
     await browser.switchTo().window(handles[1]);

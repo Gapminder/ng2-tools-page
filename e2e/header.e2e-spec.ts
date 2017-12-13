@@ -12,7 +12,7 @@ describe('Header: ', () => {
   const header: Header = new Header();
 
   beforeAll(async() => {
-    await safeOpen('./');
+    await safeOpen('');
   });
 
   it('change language to RTL', async() => {
@@ -45,7 +45,7 @@ describe('Header: ', () => {
     const agesChart: AgesChart = new AgesChart();
 
     beforeAll(async() => {
-      await safeOpen('./');
+      await safeOpen('');
     });
 
     it(`chart links`, async() => {

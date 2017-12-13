@@ -11,7 +11,6 @@ import { Sidebar } from './pages/components/sidebar.e2e-component';
 import { Slider } from './pages/components/slider.e2e-component';
 
 import { safeOpen, waitForPageLoaded, waitForUrlToChange } from './helpers/helper';
-import { jitStatements } from '@angular/compiler/src/output/output_jit';
 
 const DATA_PROVIDER = {
   'Bubbles Chart': {chart: new BubbleChart()},
@@ -23,14 +22,14 @@ const DATA_PROVIDER = {
 
 describe('All charts - Acceptance', () => {
 
-  xdescribe('No additional data in URL when chart opens', () => {
+  describe('No additional data in URL when chart opens', () => {
     /**
      * Tests which check URL's correctness when switching between charts. Browser has to be restarted before each test!
      */
 
     using(DATA_PROVIDER, (data, description) => {
       it(`URL on ${description} page`, async() => {
-        await safeOpen(protractor.browser.baseUrl);
+        await safeOpen('');
         const chart = data.chart;
         await chart.openByClick();
 
@@ -52,10 +51,10 @@ describe('All charts - Acceptance', () => {
         const chart = data.chart;
         await chart.openChart();
 
-        const sidebar: Sidebar = await new Sidebar(chart);
+        const sidebar: Sidebar = new Sidebar(chart);
         await sidebar.waitForVisible();
 
-        const commonSidebar = await sidebar.sidebar;
+        const commonSidebar = sidebar.sidebar;
         Object.keys(commonSidebar).forEach(element => {
           expect(commonSidebar[element].isPresent()).toBe(true, `${element} not found`);
         });
@@ -141,7 +140,7 @@ describe('All charts - Acceptance', () => {
       expect(await bubbleChart.selectedCountries.count()).toEqual(0);
     });
 
-    it('Forward button works', async() => {
+    xit('Forward button works', async() => {
       await bubbleChart.clickOnChina();
       const urlAfter = await browser.getCurrentUrl();
 

@@ -119,17 +119,14 @@ describe('Bubbles chart', () => {
      * should check that when select China and the United States bubbles and click on play,
      * the trails being left for those two countries(TC13)
      */
-    await bubbleChart.clickOnChina();
     await bubbleChart.clickOnUnitedStates();
 
     await slider.playTimesliderSeconds(5);
 
-    expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(20);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(20);
 
     await slider.playTimesliderSeconds(5);
 
-    expect(await bubbleChart.indiaTrails.count()).toBeGreaterThan(50);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(50);
   });
 
@@ -138,13 +135,11 @@ describe('Bubbles chart', () => {
      * should check that when select China and the United States bubbles and and drag the timeslider,
      * the trails being left for those two countries(TC14)
      */
-    await bubbleChart.clickOnChina();
     await bubbleChart.clickOnUnitedStates();
 
     await slider.dragToMiddle();
     await slider.dragToRightEdge();
 
-    expect(await bubbleChart.chinaTrails.count()).toBeGreaterThan(100);
     expect(await bubbleChart.usaTrails.count()).toBeGreaterThan(100);
   });
 

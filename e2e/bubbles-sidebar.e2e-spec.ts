@@ -233,15 +233,14 @@ describe('Bubbles chart: Sidebar', () => {
   });
 
   it('Click on minimap region - "Remove everything else"', async () => {
-    const allBubbles = await bubbleChart.allBubbles.count();
     await sidebar.removeEverythingElseInMinimap('Asia');
     
-    expect(await bubbleChart.allBubbles.count()).toEqual(allBubbles - await bubbleChart.countBubblesByColor('red'));
+    await expect(bubbleChart.allBubbles.count()).toEqual(bubbleChart.countBubblesByColor('red'));
   });
 
   it('Click on minimap region - "Select all in this group"', async () => {
-    const selectedBubbles = await bubbleChart.countBubblesByColor('red');
     await sidebar.selectAllInThisGroup('Asia');
+    const selectedBubbles = await bubbleChart.countBubblesByColor('red');
     const selectedLabels = await bubbleChart.allLabels.count();
     
     expect(selectedLabels).toEqual(selectedBubbles);
