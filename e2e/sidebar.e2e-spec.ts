@@ -1,7 +1,7 @@
 import { safeDragAndDrop, safeOpen } from './helpers/helper';
-import { BubbleChart } from './pages/bubble-chart.po';
-import { Sidebar } from './pages/components/sidebar.e2e-component';
-import { CommonChartPage } from './pages/common-chart.po';
+import { BubbleChart } from './pageObjects/bubble-chart.po';
+import { Sidebar } from './pageObjects/components/sidebar.e2e-component';
+import { CommonChartPage } from './pageObjects/common-chart.po';
 import { _$, _$$ } from './helpers/ExtendedElementFinder';
 import { browser } from 'protractor';
 

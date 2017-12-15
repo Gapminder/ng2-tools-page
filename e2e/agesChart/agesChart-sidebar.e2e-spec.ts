@@ -1,8 +1,8 @@
-import { CommonChartPage } from "./pages/common-chart.po";
-import { AgesChart } from "./pages/ages-chart.po";
-import { Slider } from "./pages/components/slider.e2e-component";
-import { Sidebar } from "./pages/components/sidebar.e2e-component";
-import { safeOpen, waitForSpinner } from "./helpers/helper";
+import { CommonChartPage } from "../pageObjects/common-chart.po";
+import { AgesChart } from "../pageObjects/ages-chart.po";
+import { Slider } from "../pageObjects/components/slider.e2e-component";
+import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { safeOpen, waitForSpinner, waitForSliderToBeReady } from "../helpers/helper";
 import { browser } from "protractor";
 
 
@@ -28,6 +28,7 @@ describe('Ages chart: Sidebar', () => {
     const allBarsBefore = await agesChart.bars.count();
     await agesChart.moveGroupSlider();
     await waitForSpinner();
+    await waitForSliderToBeReady();
     const allBarsAfter = await agesChart.bars.count();
 
     await expect(allBarsBefore).toBeGreaterThan(allBarsAfter);

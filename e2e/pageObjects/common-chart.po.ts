@@ -65,6 +65,7 @@ export class CommonChartPage {
 
   async openChart(): Promise<void> {
     await safeOpen(`#_${this.url}`);
+    await disableAnimations();
     // await browser.get(browser.baseUrl + '#_' + this.url);
     // await this.refreshPage(); // TODO: remove this after fix: https://github.com/Gapminder/ng2-tools-page/issues/175
   }
@@ -84,13 +85,15 @@ export class CommonChartPage {
   async refreshPage(): Promise<void> {
     await browser.refresh();
     await waitForPageLoaded();
+    await disableAnimations();
   }
 
-  getSelectedCountriesNames(): promise.Promise<string> {
-    return waitUntil(this.selectedCountries.first())
-      .then(() => {
-        return this.selectedCountries.getText(); // TODO css animation can fail the test
-      });
+  async getSelectedCountriesNames(): Promise<string> {
+    await disableAnimations();
+    await waitUntil(this.selectedCountries.first());
+    await browser.sleep(1000); // TODO decide what to do with this
+
+    return await this.selectedCountries.safeGetText();
   }
 
   async changeYaxisValue(option?: string): Promise<string> {
@@ -112,7 +115,7 @@ export class CommonChartPage {
     const newOption: ExtendedElementFinder = this.asixDropdownOptions.first();
 
     await waitUntil(newOption);
-    const newOptionValue = newOption.getText();
+    const newOptionValue = await newOption.getText();
     await newOption.click();
 
     await waitForSpinner();

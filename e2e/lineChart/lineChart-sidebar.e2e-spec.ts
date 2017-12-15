@@ -1,7 +1,7 @@
-import { LineChart } from "./pages/line-chart.po";
-import { Sidebar } from "./pages/components/sidebar.e2e-component";
-import { Slider } from "./pages/components/slider.e2e-component";
-import { waitUntil } from "./helpers/waitHelper";
+import { LineChart } from "../pageObjects/line-chart.po";
+import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { Slider } from "../pageObjects/components/slider.e2e-component";
+import { waitUntil } from "../helpers/waitHelper";
 
 const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);

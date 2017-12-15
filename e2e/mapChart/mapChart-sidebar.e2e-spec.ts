@@ -1,7 +1,7 @@
 import { browser } from "protractor";
-import { MapChart } from "./pages/map-chart.po";
-import { Sidebar } from "./pages/components/sidebar.e2e-component";
-import { Slider } from "./pages/components/slider.e2e-component";
+import { MapChart } from "../pageObjects/map-chart.po";
+import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { Slider } from "../pageObjects/components/slider.e2e-component";
 
 const mapChart: MapChart = new MapChart();
 const sidebar: Sidebar = new Sidebar(mapChart);

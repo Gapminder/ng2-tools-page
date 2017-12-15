@@ -1,6 +1,6 @@
 'use strict';
-
 exports.config = {
+  // seleniumAddress: 'http://localhost:4444/wd/hub',
   specs: [
     './e2e/**/*.e2e-spec.ts'
   ],
@@ -13,14 +13,27 @@ exports.config = {
         'browser': 'INFO'
       },
       // shardTestFiles: true,
-      // maxInstances: 5,
-      // count: 1,
-      // screenResolution: "1920x1080",
+      // maxInstances: 2,
       chromeOptions: {
         args: ['no-sandbox', 'disable-infobars', 'headless']
       },
     },
-
+    // crossbrowser testing:
+    // selenium server should be started for safari, microsoftEdge and firefox. directConnect works correctly only with Chrome.
+    // 
+    // {
+    //   browserName: 'firefox',
+    //   "moz:firefoxOptions": {
+    //     "args": ["-headless"],
+    //   }
+    // },
+    // {
+    //   browserName: 'MicrosoftEdge'
+    // },
+    // {
+    //   browserName: 'safari'
+    // },
+    // mouseMove action is not implemented in safari
   ],
 
   directConnect: true,
@@ -29,7 +42,7 @@ exports.config = {
   useAllAngular2AppRoots: true,
   allScriptsTimeout: 60000,
   getPageTimeout: 60000,
-  // restartBrowserBetweenTests: true,
+  SELENIUM_PROMISE_MANAGER: false,
   untrackOutstandingTimeouts: true,
   framework: 'jasmine',
   jasmineNodeOpts: {
@@ -50,7 +63,7 @@ exports.config = {
 
     jasmine.getEnv().addReporter(new SpecReporter({
       spec: {
-        displayStacktrace: true
+        displayStacktrace: 'specs'
       }
     }));
   }

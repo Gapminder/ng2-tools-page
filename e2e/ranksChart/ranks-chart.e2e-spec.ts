@@ -1,10 +1,10 @@
 import { browser } from 'protractor';
 
-import { isCountryAddedInUrl, safeExpectIsDispayed, waitForSpinner } from './helpers/helper';
-import { Sidebar } from './pages/components/sidebar.e2e-component';
-import { CommonChartPage } from './pages/common-chart.po';
-import { Slider } from './pages/components/slider.e2e-component';
-import { RankingsChart } from './pages/rankings-chart.po';
+import { isCountryAddedInUrl, safeExpectIsDispayed, waitForSpinner } from '../helpers/helper';
+import { Sidebar } from '../pageObjects/components/sidebar.e2e-component';
+import { CommonChartPage } from '../pageObjects/common-chart.po';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
+import { RankingsChart } from '../pageObjects/rankings-chart.po';
 
 const ranksChart: RankingsChart = new RankingsChart();
 const sidebar: Sidebar = new Sidebar(ranksChart);

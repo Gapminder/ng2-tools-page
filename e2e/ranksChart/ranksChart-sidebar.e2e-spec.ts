@@ -1,7 +1,7 @@
-import { waitForSpinner } from "./helpers/helper";
-import { RankingsChart } from "./pages/rankings-chart.po";
-import { Sidebar } from "./pages/components/sidebar.e2e-component";
-import { Slider } from "./pages/components/slider.e2e-component";
+import { waitForSpinner } from "../helpers/helper";
+import { RankingsChart } from "../pageObjects/rankings-chart.po";
+import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { Slider } from "../pageObjects/components/slider.e2e-component";
 
 const ranksChart: RankingsChart = new RankingsChart();
 const sidebar: Sidebar = new Sidebar(ranksChart);

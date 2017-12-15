@@ -1,9 +1,9 @@
 import { browser, protractor } from 'protractor';
 
-import { safeExpectIsDispayed, waitForSliderToBeReady } from './helpers/helper';
-import { MountainChart } from './pages/mountain-chart.po';
-import { Sidebar } from './pages/components/sidebar.e2e-component';
-import { Slider } from './pages/components/slider.e2e-component';
+import { safeExpectIsDispayed, waitForSliderToBeReady } from '../helpers/helper';
+import { MountainChart } from '../pageObjects/mountain-chart.po';
+import { Sidebar } from '../pageObjects/components/sidebar.e2e-component';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
 
 const mountainChart: MountainChart = new MountainChart();
 const sidebar: Sidebar = new Sidebar(mountainChart);
