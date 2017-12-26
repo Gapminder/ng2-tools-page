@@ -18,7 +18,7 @@
   "chart_is_loading": "Chargement du graphique en cours",
   "popular": "Populaire",
   "other_tools": "Autres outils",
-  "facts": "Facts",
+  "facts": "Faits",
   "tools_offline": "Tools Offline",
   "download_these_tools": "Download these tools for Windows, Mac or Linux",
   "answers": "Answers",
@@ -68,8 +68,8 @@
   "trends": "Trends",
   "line_chart_desc": "This graph shows how a trend changes across the years",
   "ages": "Ages",
-  "pop_by_age_desc": "This graph shows the population by age",
+  "pop_by_age_desc": "Ce graphique montre la population par âge",
   "dollar_street": "Dollar Street",
-  "dollar_street_project": "Dollar Street project",
-  "share": "Share"
+  "dollar_street_project": "Projet Dollar Street",
+  "share": "Partager"
 }
