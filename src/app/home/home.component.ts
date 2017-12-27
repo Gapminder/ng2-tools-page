@@ -1,41 +1,73 @@
+import { Location } from '@angular/common';
 import {
   AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy,
   ViewEncapsulation
 } from '@angular/core';
-import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
-import { get, cloneDeep, includes, isEmpty, omitBy, map, difference } from 'lodash-es';
-import 'rxjs/add/operator/filter';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/debounceTime';
 import { Store } from '@ngrx/store';
+import { cloneDeep, difference, get, includes, isEmpty, map, omitBy } from 'lodash-es';
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/operator/distinctUntilChanged';
+import 'rxjs/add/operator/filter';
+import { Subscription } from 'rxjs/Subscription';
+import { WsReader } from 'vizabi-ws-reader';
+import { environment } from '../../environments/environment';
+import { getTransitionType, TransitionType } from '../core/charts-transition';
+import { LanguageService } from '../core/language.service';
 import {
-  getCurrentLocale,
-  getCurrentVizabiModelHash,
-  getInitialToolsSetup,
-  getSelectedTool,
+  getCurrentLocale, getCurrentVizabiModelHash, getInitialToolsSetup, getSelectedTool,
   State
 } from '../core/store';
 import { TrackGaPageEvent, TrackGaVizabiModelChangeEvent } from '../core/store/google/google.actions';
 import { VizabiLocale } from '../core/store/language/language';
 import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/store/tools/tools.actions';
-import { Subscription } from 'rxjs/Subscription';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
-import { getTransitionType, TransitionType } from '../core/charts-transition';
-import { LanguageService } from '../core/language.service';
 
-const {WsReader} = require('vizabi-ws-reader');
 const MODEL_CHANGED_DEBOUNCE = 200;
 
 const GA_TRACKER_NAME_AND_METHOD = 'toolsPageTracker.send';
 const GA_TYPE = 'event';
 const GA_EVENT_ACTION_REQUEST = 'request';
 const GA_EVENT_ACTION_RESPONSE = 'response';
-const INITIAL_VIZABI_MODEL_INDICATORS = Object.freeze({axis_x: {}, axis_y: {}, size: {}});
+const GA_EVENT_ACTION_ERROR = 'error';
+const GA_EVENT_ACTION_MESSAGE = 'message';
+const INITIAL_VIZABI_MODEL_INDICATORS = Object.freeze({ axis_x: {}, axis_y: {}, size: {} });
 const EXCEPTIONAL_VIZABI_CHARTS = ['LineChart', 'PopByAge'];
 
 declare const ga: any;
+
+export interface GAReaderHookResponseData {
+  data?: number;
+  code: number | null;
+  message: string;
+  metadata: {
+    endpoint: string;
+  };
+}
+
+export interface GAReaderHook {
+  from: string;
+  select: {
+    value: string[];
+    key: string[];
+  };
+  responseData: GAReaderHookResponseData
+}
+
+export interface HashModel {
+  currentHashModel: {
+    locale: {
+      id: string;
+    };
+    'chart-type': string;
+  };
+  detectLanguage: Function;
+  isInnerChange: boolean;
+}
+
+export interface ReaderPlugin {
+  onReadHook: Function;
+}
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -44,14 +76,13 @@ declare const ga: any;
   styleUrls: ['./home.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class HomeComponent implements AfterViewInit, OnDestroy {
   slugs: string[];
   currentChartType = '';
   currentHashModel;
 
   readerModuleObject = WsReader;
-  readerPlugins = [{onReadHook: this.sendQueriesStatsToGA.bind(this)}];
+  readerPlugins: ReaderPlugin[] = [];
   extResources = {
     host: `${environment.wsUrl}/`,
     dataPath: '/api/ddf/',
@@ -86,24 +117,25 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.slugs = initial.slugs;
       this.defaultTool = initial.defaultTool;
       this.toolToSlug = initial.toolToSlug;
-      this.initialVizabiInstances = Object.assign({}, initial.initialVizabiInstances);
-      this.vizabiInstances = Object.assign({}, initial.initialVizabiInstances);
+      this.initialVizabiInstances = { ...initial.initialVizabiInstances };
+      this.vizabiInstances = { ...initial.initialVizabiInstances };
     });
 
+    this.readerPlugins.push({ onReadHook: this.sendQueriesStatsToGA.bind(this) });
+
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
-      .filter(hashModelDesc => !this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModelDesc.currentHashModel))
+      .filter((hashModelDesc: HashModel) => this.isModelChanged(hashModelDesc))
       .filter(hashModelDesc => !!Object.keys(hashModelDesc.currentHashModel).length)
       .map(hashModelDesc => {
         if (!includes(this.slugs, hashModelDesc.currentHashModel['chart-type'])) {
-          return {'chart-type': 'bubbles'};
+          return { 'chart-type': 'bubbles' };
         }
 
         return hashModelDesc;
       })
       .debounceTime(MODEL_CHANGED_DEBOUNCE)
-      .subscribe((hashModelDesc: any) => {
-        this.lang = hashModelDesc.currentHashModel.locale ?
-          hashModelDesc.currentHashModel.locale.id : langService.detectLanguage().key;
+      .subscribe((hashModelDesc: HashModel) => {
+        this.lang = get(hashModelDesc, 'currentHashModel.locale.id', null) || langService.detectLanguage().key;
 
         const oldHashModel = this.currentHashModel;
 
@@ -153,7 +185,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       if (chartTransitionType === TransitionType.FromSelectToShow) {
         const dimToShow = oldHashModel.state.marker.select.map(item => item[dim]);
 
-        this.currentHashModel.state = {entities: {show: {[dim]: {$in: dimToShow}}}};
+        this.currentHashModel.state = { entities: { show: { [dim]: { $in: dimToShow } } } };
 
         modelChanged = true;
       }
@@ -162,10 +194,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         let dimToSelect = [];
 
         if (oldHashModel.state.entities.show[dim] && !isEmpty(oldHashModel.state.entities.show[dim].$in)) {
-          dimToSelect = oldHashModel.state.entities.show[dim].$in.map(item => ({[dim]: item}));
+          dimToSelect = oldHashModel.state.entities.show[dim].$in.map(item => ({ [dim]: item }));
         }
 
-        this.currentHashModel.state = {marker: {select: dimToSelect}};
+        this.currentHashModel.state = { marker: { select: dimToSelect } };
 
         modelChanged = true;
       }
@@ -193,12 +225,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.store.dispatch(new VizabiModelChanged(
         toolInUrlIsSame
           ? urlModel
-          : Object.assign(this.vizabiToolsService.simplifyModel(chartTransitionType), {'chart-type': selectedTool}))
+          : Object.assign(this.vizabiToolsService.simplifyModel(chartTransitionType), { 'chart-type': selectedTool }))
       );
     });
 
     this.localeChangesSubscription = this.store.select(getCurrentLocale).subscribe((locale: VizabiLocale) => {
-      const model = {...this.vizabiToolsService.getModelFromUrl(), ...locale};
+      const model = { ...this.vizabiToolsService.getModelFromUrl(), ...locale };
 
       this.store.dispatch(new VizabiModelChanged(model));
     });
@@ -221,8 +253,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const state = get(changes, 'modelDiff.state');
     const model = {
       ...modelDiff,
-      ...{'chart-type': this.toolToSlug[type]},
-      locale: {id: this.langService.detectLanguage().key}
+      ...{ 'chart-type': this.toolToSlug[type] },
+      locale: { id: this.langService.detectLanguage().key }
     };
 
     if (state && (state.marker || state.entities)) {
@@ -235,7 +267,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   sendConceptsStateToGA(chartName, state) {
-    const {marker} = state;
+    const { marker } = state;
     const newConceptsIndicators = this.getUniqueConceptsIndicators(marker);
     const newConceptsIndicatorsKeys = Object.keys(newConceptsIndicators);
 
@@ -243,7 +275,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    this.vizabiModelIndicators = {...this.vizabiModelIndicators, ...newConceptsIndicators};
+    this.vizabiModelIndicators = { ...this.vizabiModelIndicators, ...newConceptsIndicators };
 
     newConceptsIndicatorsKeys.forEach(indicator => {
       this.sendEventToGA({
@@ -252,6 +284,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         eventLabel: newConceptsIndicators[indicator].which
       });
     });
+
+    return;
   }
 
   sendEntitiesStateToGA(chartName, state) {
@@ -291,20 +325,36 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   sendQueriesStatsToGA(data, type) {
-    const {from, select, responseLength} = data;
+    const { from, select, responseData } = data;
     const analyticsTypeOptions = {
-      request: {
-        eventCategory: `${from}: ${select.value.join(',')};${select.key.join(',')}`,
-        eventAction: GA_EVENT_ACTION_REQUEST
-      },
-      response: {
-        eventCategory: `${from}: ${select.value.join(',')};${select.key.join(',')}`,
-        eventAction: GA_EVENT_ACTION_RESPONSE,
-        eventLabel: `rows: ${responseLength}`
-      }
+      eventCategory: this._getGAEventCategory(from, select),
+      eventAction: type
     };
+    const eventLabel = this._getEventLabel(type, responseData);
+    this.sendEventToGA(eventLabel ? {eventLabel, ...analyticsTypeOptions} : analyticsTypeOptions);
+  }
 
-    this.sendEventToGA(analyticsTypeOptions[type]);
+  _getGAEventCategory(from: string, { value, key }) {
+    return `${from}: ${value.join(',') || '(empty)'};${key.join(',') || '(empty)'}`;
+  }
+
+  _getEventLabel(type: string, responseData: GAReaderHookResponseData | number | null) {
+    const data = get(responseData, 'data', 0);
+    const code = get(responseData, 'code', null);
+    const message = get(responseData, 'message', null);
+    const endpoint = get(responseData, 'metadata.endpoint', null);
+
+    switch (type) {
+      case GA_EVENT_ACTION_RESPONSE:
+        return `rows: ${data};endpoint: ${endpoint}`;
+      case GA_EVENT_ACTION_ERROR:
+        return `code: ${code};message: ${message};endpoint: ${endpoint}`;
+      case GA_EVENT_ACTION_MESSAGE:
+        return `message: ${message};endpoint: ${endpoint}`;
+      default:
+
+        return null;
+    }
   }
 
   sendEventToGA(analyticsData) {
@@ -327,5 +377,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     ];
 
     subscriptions.forEach((subscription: Subscription) => subscription && subscription.unsubscribe());
+  }
+
+  private isModelChanged(hashModelDesc: HashModel): boolean {
+    return !this.vizabiToolsService.areModelsEqual(this.currentHashModel, hashModelDesc.currentHashModel);
   }
 }

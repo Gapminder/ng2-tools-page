@@ -93,7 +93,7 @@ export class RankingsChart extends CommonChartPage {
   }
 
   changeYaxisValue(): Promise<string> {
-    return super.changeYaxisValue(this.yAxisBtn);
+    return super.changeYaxisValue();
   }
 
 }

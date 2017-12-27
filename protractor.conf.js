@@ -17,7 +17,7 @@ exports.config = {
       // count: 1,
       // screenResolution: "1920x1080",
       chromeOptions: {
-        args: ['no-sandbox', 'disable-infobars']
+        args: ['no-sandbox', 'disable-infobars', 'headless']
       },
     },
 
@@ -27,8 +27,8 @@ exports.config = {
 
   baseUrl: 'http://localhost:4200/tools/',
   useAllAngular2AppRoots: true,
-  allScriptsTimeout: 180000,
-  getPageTimeout: 180000,
+  allScriptsTimeout: 60000,
+  getPageTimeout: 60000,
   // restartBrowserBetweenTests: true,
   untrackOutstandingTimeouts: true,
   framework: 'jasmine',
@@ -37,7 +37,7 @@ exports.config = {
     showColors: true,
     isVerbose: false,
     includeStackTrace: false,
-    defaultTimeoutInterval: 300000,
+    defaultTimeoutInterval: 60000,
     print: function () {
     }
   },

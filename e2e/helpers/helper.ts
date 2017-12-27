@@ -6,9 +6,9 @@ const MAX_TIMEOUT = 30000;
 const TIMEOUT = 15000;
 
 export function safeOpen(url: string) {
-  return browser.get(url).then(() => {
-    return waitForPageLoaded();
-  });
+  return browser.get(browser.baseUrl + url)
+    .then(() => browser.refresh())
+    .then(() => waitForPageLoaded());
 }
 
 export function waitForPageLoaded() {
@@ -26,8 +26,8 @@ export function waitForSpinner() {
 
 export function safeDragAndDrop(from: ElementFinder, to: any) {
   return browser.wait(EC.visibilityOf(from), TIMEOUT, `element ${from.locator().value} not visible`)
-  .then(() => disableAnimations())
-  .then(() => browser.actions().dragAndDrop(from, to).perform());
+    .then(() => disableAnimations())
+    .then(() => browser.actions().dragAndDrop(from, to).perform());
 }
 
 export function safeExpectIsDispayed(element: ElementFinder, interval?: number) {
@@ -56,7 +56,7 @@ export async function waitForUrlToChange() {
     return browser.getCurrentUrl().then(url => {
       return url !== currentUrl;
     });
-  });
+  }, MAX_TIMEOUT, 'URL not changed');
 }
 
 export function isCountryAddedInUrl(country: string, state = true): Function {
@@ -80,7 +80,7 @@ export function isCountryAddedInUrl(country: string, state = true): Function {
   }
 }
 
-export function disableAnimations(){
+export function disableAnimations() {
   return browser.executeScript(`var style = document.createElement('style');
   style.type = 'text/css';
   style.innerHTML = '* {' +

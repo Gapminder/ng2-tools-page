@@ -8,6 +8,7 @@ import {
 } from '../helpers/helper';
 import { Slider } from './components/slider.e2e-component';
 import { ExtendedElementFinder, _$, _$$, ExtendedArrayFinder } from '../helpers/ExtendedElementFinder';
+import { waitUntil } from '../helpers/waitHelper';
 
 export class LineChart extends CommonChartPage {
   type = 'lineChart';
@@ -22,7 +23,7 @@ export class LineChart extends CommonChartPage {
    */
   latestPointOnChart: ElementFinder = $('[class="vzb-axis-value"]');
   selectedCountries: ExtendedArrayFinder = _$$('.vzb-lc-labelname.vzb-lc-labelfill');
-  yAsixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
+  asixDropdownOptions: ExtendedArrayFinder = _$$('.vzb-treemenu-list-item-label');
   yAxisBtn: ExtendedElementFinder = _$('.vzb-lc-axis-y-title');
   axisValues: ElementArrayFinder = $$('.vzb-lc-axis-x .tick text');
   countriesLines: ElementArrayFinder = $$('.vzb-lc-line');
@@ -65,7 +66,7 @@ export class LineChart extends CommonChartPage {
 
   async refreshPage(): Promise<void> {
     await super.refreshPage();
-    await browser.wait(EC.visibilityOf(this.countriesLines.first()));
+    await waitUntil(this.countriesLines.first());
   }
 
   getSelectedCountries() {
@@ -73,14 +74,13 @@ export class LineChart extends CommonChartPage {
   }
 
   async selectLine(country: string): Promise<void> {
-    await browser.wait(EC.visibilityOf(this.selectedCountries.first()));
+    await waitUntil(this.selectedCountries.first());
     await new ExtendedArrayFinder(this.selectedCountries).findElementByExactText(country).safeClick();
-    await waitForUrlToChange();
     await browser.wait(isCountryAddedInUrl(country));
   }
 
   async getLineOpacity(country: string): Promise<number> {
-    await browser.wait(EC.visibilityOf(this.selectedCountries.first()));
+    await waitUntil(this.selectedCountries.first());
 
     return Number(await this.selectedCountries.findElementByExactText(country).safeGetCssValue('opacity'));
   }
@@ -98,14 +98,14 @@ export class LineChart extends CommonChartPage {
   }
 
   async hoverLine(country: string): Promise<void> {
-    await browser.wait(EC.visibilityOf(this.selectedCountries.first()));
+    await waitUntil(this.selectedCountries.first());
     await this.selectedCountries
       .findElementByExactText(country)
       .hover();
   }
 
   changeYaxisValue(): Promise<string> {
-    return super.changeYaxisValue(this.yAxisBtn);
+    return super.changeYaxisValue();
   }
 
   async clickResetButton(): Promise<void> {
@@ -115,6 +115,14 @@ export class LineChart extends CommonChartPage {
   }
 
   async getLineLabelColor(country: string) {
-    return await findElementByExactText(this.selectedCountries, country).getCssValue('fill');
+    return await findElementByExactText(this.selectedCountries, country)
+      .getCssValue('fill');
+  }
+
+  getLineColor(country: string) {
+    return _$(`[class*="vzb-lc-entity-${CommonChartPage.countries[country]}"]`)
+      ._$$('.vzb-lc-line')
+      .first()
+      .getCssValue('stroke');
   }
 }

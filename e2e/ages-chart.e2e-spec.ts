@@ -10,7 +10,7 @@ const commonChartPage: CommonChartPage = new CommonChartPage();
 const agesChart: AgesChart = new AgesChart();
 const slider: Slider = new Slider();
 
-describe('Ages chart - Acceptance', () => {
+describe('Ages chart', () => {
   const sidebar: Sidebar = new Sidebar(agesChart);
 
   beforeEach(async() => {
@@ -18,13 +18,12 @@ describe('Ages chart - Acceptance', () => {
   });
 
   it(`Open chart by click on link`, async() => {
-    await safeOpen(protractor.browser.baseUrl);
+    await safeOpen('');
     await agesChart.openByClick();
 
     const URL = await browser.getCurrentUrl();
     const pattern = new RegExp(agesChart.url, 'g');
 
-    await expect(URL.match(/locale_id=en/g).length).toEqual(1);
     await expect(URL.match(pattern).length).toEqual(1);
   });
 
@@ -32,13 +31,6 @@ describe('Ages chart - Acceptance', () => {
     await agesChart.bars.first().hover();
 
     expect(await agesChart.labelOnBar.safeGetText()).toEqual('0-year-olds World: 136M');
-  });
-
-  it(`add region to chart from sidebar by click`, async() => {
-    await sidebar.clickOnCountryFromList('Africa');
-
-    expect(await agesChart.graphTitles.safeGetText()).toMatch('Africa');
-    expect(await agesChart.graphsOnChart.count()).toEqual(2);
   });
 
   it(`select specific bar on chart (by click on bar)`, async() => {
@@ -51,15 +43,5 @@ describe('Ages chart - Acceptance', () => {
     expect(await agesChart.countHighlightedBars()).toEqual(1);
     expect(await agesChart.countDimmedBars()).toEqual(allBars - 1);
   });
-
-  it(`"Group" slider on sidebar increases group range`, async() => {
-    const allBarsBefore = await agesChart.bars.count();
-    await agesChart.moveGroupSlider();
-    await waitForSpinner();
-    const allBarsAfter = await agesChart.bars.count();
-
-    await expect(allBarsBefore).toBeGreaterThan(allBarsAfter);
-  });
-
 
 });
