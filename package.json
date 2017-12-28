@@ -44,6 +44,7 @@
     "@ngrx/effects": "4.1.1",
     "@ngrx/store": "4.1.1",
     "@types/lodash-es": "4.17.0",
+    "@vimeo/player": "2.2.1",
     "angulartics2": "4.0.2",
     "core-js": "2.5.1",
     "d3": "4.12.0",

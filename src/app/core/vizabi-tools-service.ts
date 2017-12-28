@@ -6,6 +6,8 @@ import { TransitionType } from './charts-transition';
 
 @Injectable()
 export class VizabiToolsService {
+  currentVideoTime;
+  currentVideoContainer;
 
   constructor(private vizabiService: VizabiService, private locationService: LocationService) {
   }
