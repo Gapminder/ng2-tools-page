@@ -1,10 +1,10 @@
 import { browser, protractor } from 'protractor';
 
-import { safeDragAndDrop, safeExpectIsDispayed, safeOpen, waitForSpinner } from './helpers/helper';
-import { Sidebar } from './pages/components/sidebar.e2e-component';
-import { CommonChartPage } from './pages/common-chart.po';
-import { Slider } from './pages/components/slider.e2e-component';
-import { AgesChart } from './pages/ages-chart.po';
+import { safeDragAndDrop, safeExpectIsDispayed, safeOpen, waitForSpinner } from '../helpers/helper';
+import { Sidebar } from '../pageObjects/components/sidebar.e2e-component';
+import { CommonChartPage } from '../pageObjects/common-chart.po';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
+import { AgesChart } from '../pageObjects/ages-chart.po';
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const agesChart: AgesChart = new AgesChart();

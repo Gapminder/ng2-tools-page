@@ -1,6 +1,5 @@
-import { $, $$, ElementArrayFinder, ElementFinder, browser, ExpectedConditions as EC } from 'protractor';
+import { $, $$, browser, ElementArrayFinder, ElementFinder } from 'protractor';
 
-import { findElementByExactText, waitForSpinner } from '../helpers/helper';
 import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 import { waitUntil } from '../helpers/waitHelper';
@@ -11,7 +10,6 @@ export class MountainChart extends CommonChartPage {
 
 
   public selectedCountries: ExtendedArrayFinder = _$$('text[class="vzb-mc-label-text"]');
-  // public mountainsChartLeftSidePanelSelectedCountries: ElementArrayFinder = $$('text[class="vzb-mc-label-text"]');
   public extremePovertyPercentage: ElementFinder = $('text[class="vzb-shadow vzb-mc-probe-value-ul"]');
   public axisXLineNumbers: ElementArrayFinder = $$('g[class="tick"]');
   public verticalLine: ElementFinder = $$('.vzb-mc-probe-value-dl').first();
@@ -38,12 +36,14 @@ export class MountainChart extends CommonChartPage {
   }
 
   async hoverMouseOver500AxisXOnMountainsChart(): Promise<void> {
-    await browser.actions().mouseMove(this.axisXLineNumbers.get(10)).perform();
+    const element = await this.axisXLineNumbers.get(10);
+    await browser.actions().mouseMove(element).perform();
     await waitUntil(this.verticalLine);
   }
 
   async hoverMouserOverExtremePovertyTitle(): Promise<void> {
-    await browser.actions().mouseMove(this.extremePovertyTitle).mouseMove({x: 10, y: 90}).perform();
+    await browser.actions().mouseMove(this.extremePovertyTitle).perform();
+    await browser.actions().mouseMove({x: 10, y: 90}).perform();
     await waitUntil(this.verticalLine);
   }
 }

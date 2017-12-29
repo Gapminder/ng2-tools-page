@@ -1,7 +1,7 @@
-import { MountainChart } from "./pages/mountain-chart.po";
-import { Sidebar } from "./pages/components/sidebar.e2e-component";
-import { Slider } from "./pages/components/slider.e2e-component";
-import { safeExpectIsDispayed } from "./helpers/helper";
+import { MountainChart } from "../pageObjects/mountain-chart.po";
+import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { Slider } from "../pageObjects/components/slider.e2e-component";
+import { safeExpectIsDispayed } from "../helpers/helper";
 
 const mountainChart: MountainChart = new MountainChart();
 const sidebar: Sidebar = new Sidebar(mountainChart);

@@ -3,6 +3,6 @@ import { ExtendedElementFinder } from './ExtendedElementFinder';
 
 const TIMEOUT = 10000;
 
-export function waitUntil(element: ElementFinder | ExtendedElementFinder) {
-  return browser.wait(EC.visibilityOf(element), TIMEOUT, `element ${element.locator().value} not visible`);
+export async function waitUntil(element: ElementFinder | ExtendedElementFinder) {
+  return await browser.wait(EC.visibilityOf(element), TIMEOUT, `element ${element.locator().value} not visible`);
 }

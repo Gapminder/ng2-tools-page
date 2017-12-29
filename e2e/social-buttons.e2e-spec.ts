@@ -1,10 +1,10 @@
 import { browser, ExpectedConditions as EC } from 'protractor';
 
-import { Header } from './pages/components/header.e2e-component';
-import { LineChart } from './pages/line-chart.po';
+import { Header } from './pageObjects/components/header.e2e-component';
+import { LineChart } from './pageObjects/line-chart.po';
 import { _$, ExtendedElementFinder } from './helpers/ExtendedElementFinder';
-import { BubbleChart } from './pages/bubble-chart.po';
-import { Slider } from './pages/components/slider.e2e-component';
+import { BubbleChart } from './pageObjects/bubble-chart.po';
+import { Slider } from './pageObjects/components/slider.e2e-component';
 import { waitUntil } from './helpers/waitHelper';
 
 const lineChart: LineChart = new LineChart();

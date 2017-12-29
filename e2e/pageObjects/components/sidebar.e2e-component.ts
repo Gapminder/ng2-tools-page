@@ -2,7 +2,10 @@ import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, Expecte
 
 import {
   disableAnimations,
-  findElementByExactText, isCountryAddedInUrl, safeDragAndDrop, waitForSpinner, waitForUrlToChange
+  isCountryAddedInUrl,
+  safeDragAndDrop,
+  waitForSpinner,
+  waitForUrlToChange
 } from '../../helpers/helper';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 
@@ -73,7 +76,9 @@ export class Sidebar {
   optionsModalDialogue: ElementArrayFinder = $$('div[data-dlg="moreoptions"]');
   optionsOkBtn: ElementFinder = $$('.vzb-dialog-button.vzb-label-primary').last();
 
+  activeOptionsMenu: ExtendedElementFinder = _$('.vzb-accordion-active');
   opacityMenu: ExtendedElementFinder = _$('[data-dlg="opacity"]');
+  labelsMenu: ExtendedElementFinder = _$('[data-dlg="label"]');
 
   /**
    * Size
@@ -96,7 +101,7 @@ export class Sidebar {
    * Show
    */
   showButtonSearchInputField: ExtendedElementFinder = _$('input[class="vzb-show-search"]');
-  showSearchResult: ElementFinder = $$('div[class*="vzb-show-item vzb-dialog-checkbox"] label').first(); // TODO
+  showSearchResult: ExtendedArrayFinder = _$$('div[class*="vzb-show-item vzb-dialog-checkbox"] label'); // TODO
   showButton: ExtendedElementFinder = _$$('[data-btn="show"]').last();
   deselectButton: ExtendedElementFinder = _$('.vzb-find-deselect');
 
@@ -119,7 +124,8 @@ export class Sidebar {
      */
     await this.searchInputField.typeText(country);
     await browser.wait(EC.presenceOf(this.searchResult.first()), 5000, 'search results not present');
-    await this.searchResult.findElementByExactText(country).safeClick();
+    const counrtyInSearchResults = await this.searchResult.findElementByText(country);
+    await counrtyInSearchResults.safeClick();
 
     await browser.wait(isCountryAddedInUrl(country, select), 10000, 'coutry in URL');
 
@@ -135,17 +141,14 @@ export class Sidebar {
   }
 
   async clickOnCountryFromList(country: string): Promise<void> {
-    const countryFromList: ElementFinder = await findElementByExactText(this.searchResult, country);
+    await this.searchResult.findElementByText(country).safeClick();
 
-    await new ExtendedElementFinder(countryFromList).safeClick();
     await browser.wait(isCountryAddedInUrl(country));
     await waitForSpinner();
   }
 
   async hoverCountryFromList(country: string): Promise<void> {
-    const countryFromList: ElementFinder = await findElementByExactText(this.searchResult, country);
-
-    await new ExtendedElementFinder(countryFromList).hover();
+    await this.searchResult.findElementByText(country).hover();
   }
 
   async selectInColorDropdown(element: ExtendedElementFinder | ElementFinder): Promise<{}> {
@@ -182,7 +185,8 @@ export class Sidebar {
     // TODO make this work for specific region
     // const elem = await this.sidebar.miniMap.$$('path').first();
 
-    return await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).click().perform();
+    await browser.actions().mouseMove(this.minimapAsiaRegion, {x: 20, y: 10}).perform();
+    await browser.actions().click().perform();
   }
 
   async removeEverythingElseInMinimap(region: string) {
@@ -210,18 +214,19 @@ export class Sidebar {
     await this.colorSearch.typeText(colorOption);
     await disableAnimations();
     await browser.wait(EC.presenceOf(element(by.cssContainingText(this.colorSearchResults.first().locator().value, colorOption))));
+    await browser.sleep(1000);
     await this.colorSearchResults.first().safeClick();
   }
 
   async searchAndSelectCountryInShowMenu(country: string): Promise<void> {
     await this.showButtonSearchInputField.typeText(country);
-    await new ExtendedElementFinder(findElementByExactText(this.showSearchResult, country)).safeClick();
+    await this.showSearchResult.findElementByText(country).safeClick();
     await waitForSpinner();
   }
 
   async deselectCountryInShowMenu(country: string): Promise<void> {
     await this.showButtonSearchInputField.typeText(country);
-    await new ExtendedElementFinder(findElementByExactText(this.showSearchResult, country)).safeClick();
+    await this.showSearchResult.findElementByText(country).safeClick();
     await waitForSpinner();
   }
 
@@ -239,6 +244,5 @@ export class Sidebar {
     await this.optionsButton.safeClick();
     await this.opacityMenu.safeClick();
     await safeDragAndDrop(sliderType, {x: -50, y: 0});
-    await waitForUrlToChange();
   }
 }

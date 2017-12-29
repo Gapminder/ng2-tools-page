@@ -1,5 +1,10 @@
-import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
+import {
+  $, $$, browser, by, By, element, ElementArrayFinder, ElementFinder,
+  ExpectedConditions as EC
+} from 'protractor';
 import { promise } from 'selenium-webdriver';
+import { waitUntil } from './waitHelper';
+import { WebdriverWebElement } from 'protractor/built/element';
 
 const TIMEOUT = 15000;
 
@@ -93,14 +98,8 @@ export class ExtendedArrayFinder extends ElementArrayFinder {
     return new ExtendedElementFinder(super.last());
   }
 
-  findElementByExactText(searchText: string): ExtendedElementFinder {
-    return new ExtendedElementFinder(element.all(by.cssContainingText(this.first().locator().value, searchText))
-      .filter(element => {
-        return element.getText()
-          .then(text => {
-            return text === searchText;
-          });
-      }).first());
+  findElementByText(searchText: string): ExtendedElementFinder {
+    return new ExtendedElementFinder(element(by.cssContainingText(this.first().locator().value, searchText)));
   }
 
   safeGetAttribute(attr: string): promise.Promise<string> {

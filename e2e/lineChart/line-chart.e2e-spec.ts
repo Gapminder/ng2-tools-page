@@ -1,11 +1,10 @@
 import { browser } from 'protractor';
 
-import { safeExpectIsDispayed, waitForSliderToBeReady } from './helpers/helper';
-import { Sidebar } from './pages/components/sidebar.e2e-component';
-import { LineChart } from './pages/line-chart.po';
-import { CommonChartPage } from './pages/common-chart.po';
-import { Slider } from './pages/components/slider.e2e-component';
-import { waitUntil } from './helpers/waitHelper';
+import { safeExpectIsDispayed, waitForSliderToBeReady } from '../helpers/helper';
+import { Sidebar } from '../pageObjects/components/sidebar.e2e-component';
+import { LineChart } from '../pageObjects/line-chart.po';
+import { CommonChartPage } from '../pageObjects/common-chart.po';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
 
 const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);
@@ -86,15 +85,12 @@ describe('Line chart: ', () => {
   });
 
   it('Settings should be stored in URL', async () => {
-    /**
-     * don't fixed yet: https://github.com/vizabi/vizabi/issues/2782
-     */
     await sidebar.searchAndSelectCountry('Bangladesh');
     await lineChart.selectLine('China');
     await lineChart.refreshPage();
 
     expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
-    expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.highlighted);
+    expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.dimmed);
     expect(await lineChart.countHighlightedLines()).toEqual(1);
     expect(await lineChart.countDimmedLines()).toEqual(4);
   });

@@ -1,13 +1,9 @@
-import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
+import { $, $$, browser, ElementArrayFinder, ElementFinder } from 'protractor';
 
 import { CommonChartPage } from './common-chart.po';
-import {
-  findElementByExactText, isCountryAddedInUrl, waitForSliderToBeReady,
-  waitForSpinner,
-  waitForUrlToChange
-} from '../helpers/helper';
+import { isCountryAddedInUrl, waitForSliderToBeReady, waitForSpinner, waitForUrlToChange } from '../helpers/helper';
 import { Slider } from './components/slider.e2e-component';
-import { ExtendedElementFinder, _$, _$$, ExtendedArrayFinder } from '../helpers/ExtendedElementFinder';
+import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
 import { waitUntil } from '../helpers/waitHelper';
 
 export class LineChart extends CommonChartPage {
@@ -27,6 +23,7 @@ export class LineChart extends CommonChartPage {
   yAxisBtn: ExtendedElementFinder = _$('.vzb-lc-axis-y-title');
   axisValues: ElementArrayFinder = $$('.vzb-lc-axis-x .tick text');
   countriesLines: ElementArrayFinder = $$('.vzb-lc-line');
+  linesLabels: ExtendedArrayFinder = _$$('[class="vzb-lc-entity"]');
 
   public linesChartShowAllButton: ElementFinder = $('.vzb-dialog-button.vzb-show-deselect');
   public linesChartRightSidePanelCountriesList: ElementArrayFinder = $$('.vzb-show-item.vzb-dialog-checkbox');
@@ -74,34 +71,34 @@ export class LineChart extends CommonChartPage {
   }
 
   async selectLine(country: string): Promise<void> {
-    await waitUntil(this.selectedCountries.first());
-    await new ExtendedArrayFinder(this.selectedCountries).findElementByExactText(country).safeClick();
-    await browser.wait(isCountryAddedInUrl(country));
+    await this.linesLabels.findElementByText(country).safeClick();
+
+    await browser.wait(isCountryAddedInUrl(country), 5000, 'country in URL');
   }
 
   async getLineOpacity(country: string): Promise<number> {
     await waitUntil(this.selectedCountries.first());
 
-    return Number(await this.selectedCountries.findElementByExactText(country).safeGetCssValue('opacity'));
+    return Number(await this.linesLabels.findElementByText(country).safeGetCssValue('opacity'));
   }
 
   async countHighlightedLines(): Promise<number> {
-    return this.countLinesByOpacity(CommonChartPage.opacity.highlighted);
+    return await this.countLinesByOpacity(CommonChartPage.opacity.highlighted);
   }
 
   async countDimmedLines(): Promise<number> {
-    return this.countLinesByOpacity(CommonChartPage.opacity.dimmed);
+    return await this.countLinesByOpacity(CommonChartPage.opacity.dimmed);
   }
 
   async countLinesByOpacity(opacity: number): Promise<number> {
-    return $$(`.vzb-lc-lines .vzb-lc-entity[style="opacity: ${opacity};"]`).count();
+    return await $$(`.vzb-lc-lines .vzb-lc-entity[style="opacity: ${opacity};"]`).count();
   }
 
   async hoverLine(country: string): Promise<void> {
     await waitUntil(this.selectedCountries.first());
-    await this.selectedCountries
-      .findElementByExactText(country)
-      .hover();
+    const lines = _$$('.vzb-lc-entity');
+
+    await this.linesLabels.findElementByText(country).hover();
   }
 
   changeYaxisValue(): Promise<string> {
@@ -115,8 +112,7 @@ export class LineChart extends CommonChartPage {
   }
 
   async getLineLabelColor(country: string) {
-    return await findElementByExactText(this.selectedCountries, country)
-      .getCssValue('fill');
+    return await this.selectedCountries.findElementByText(country).safeGetCssValue('fill');
   }
 
   getLineColor(country: string) {

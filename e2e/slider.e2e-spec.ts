@@ -1,4 +1,4 @@
-import { Slider } from './pages/components/slider.e2e-component';
+import { Slider } from './pageObjects/components/slider.e2e-component';
 import { browser } from 'protractor';
 import { safeOpen, waitForUrlToChange } from './helpers/helper';
 

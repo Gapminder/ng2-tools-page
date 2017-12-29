@@ -2,7 +2,7 @@ import { $, $$, browser, ElementArrayFinder, ElementFinder, ExpectedConditions a
 
 import { CommonChartPage } from './common-chart.po';
 import { _$, _$$, ExtendedArrayFinder, ExtendedElementFinder } from '../helpers/ExtendedElementFinder';
-import { isCountryAddedInUrl, waitForUrlToChange } from '../helpers/helper';
+import { isCountryAddedInUrl, waitForUrlToChange, safeDragAndDrop } from '../helpers/helper';
 import { waitUntil } from '../helpers/waitHelper';
 
 export class BubbleChart extends CommonChartPage {
@@ -34,13 +34,44 @@ export class BubbleChart extends CommonChartPage {
     resetFiltersBtn: $('.vzb-find-deselect'),
     zoomSection: $('.vzb-dialog-zoom-buttonlist')
   };
-  
+
   public colors = {
+    'red': '',
+    'yellow': '',
+    'blue': '',
+    'green': ''
+  };
+
+  public rgbColors = {
     'red': 'rgb(255, 88, 114)',
     'yellow': 'rgb(255, 231, 0)',
     'blue': 'rgb(0, 213, 233)',
     'green': 'rgb(127, 235, 0)'
   };
+
+  public hexColors = {
+    'red': '#ff5872',
+    'yellow': '#ffe700',
+    'blue': '#00d5e9',
+    'green': '#7feb00'
+  };
+
+  constructor() {
+    super();
+
+    (async () => {
+      const browserName = await this.detectBrowser();
+
+      browserName === 'MicrosoftEdge' ? this.colors = this.hexColors : this.colors = this.rgbColors;
+    })();
+  }
+
+  async detectBrowser(): Promise<string> {
+    const browserVersion = await browser.driver.getCapabilities();
+    const browserName = await browserVersion.get('browserName');
+
+    return browserName;
+  }
 
   countryTooltip = country => $(`[class*="vzb-bc-entity label-${CommonChartPage.countries[country]}"]`);
 
@@ -69,7 +100,7 @@ export class BubbleChart extends CommonChartPage {
   async filterBubblesByColor(color: string, index = 0): Promise<ElementFinder> {
     await waitUntil($$(`circle[style*='fill: ']`).first());
 
-    return $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).get(index);
+    return await $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).get(index);
   }
 
   async hoverMouseOverBubble(color: string, index = 0, x = 0, y = 0): Promise<ElementFinder> {
@@ -84,7 +115,10 @@ export class BubbleChart extends CommonChartPage {
      */
     await browser.actions()
       .mouseMove(filteredElement)
-      .mouseMove(x && y ? {x: x, y: y} : filteredElement)
+      .perform();
+
+    await browser.actions()
+      .mouseMove(x && y ? { x: x, y: y } : filteredElement)
       .perform();
 
     await waitUntil(this.bubbleLabelOnMouseHover);
@@ -92,23 +126,28 @@ export class BubbleChart extends CommonChartPage {
     return filteredElement;
   }
 
-  clickOnBubble(color: string, index = 0, x = 0, y = 0): Promise<{}> {
+  async clickOnBubble(color: string, index = 0, x = 0, y = 0): Promise<void> {
     /**
      * x and y needs because some bubbles could overlay another
      */
 
-    return this.filterBubblesByColor(color, index).then(filteredElement => {
-      /**
-       * if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
-       */
-      browser.actions()
-        .mouseMove(filteredElement)
-        .mouseMove(x && y ? {x: x, y: y} : filteredElement)
-        .click()
-        .perform();
-    }).then(() => {
-      return waitUntil(this.tooltipOnClick.last());
-    });
+    const filteredElement = await this.filterBubblesByColor(color, index);
+    /**
+     * if 'x' and 'y' were set - use the coordinates, otherwise just move to the element
+     */
+    await browser.actions()
+      .mouseMove(filteredElement)
+      .perform();
+
+    await browser.actions()
+      .mouseMove(x && y ? { x: x, y: y } : filteredElement)
+      .perform();
+
+    await browser.actions()
+      .click()
+      .perform();
+
+    await waitUntil(this.tooltipOnClick.last());
   }
 
   async deselectBubble(country: string): Promise<{}> {
@@ -146,10 +185,10 @@ export class BubbleChart extends CommonChartPage {
 
   countBubblesByColor(color: string) {
     return $$(`circle[style*='fill: ${this.colors[color.toLocaleLowerCase()]}']`).count();
-  }  
+  }
 
   dragAndDropSelectedCountryLabelBubblesChart(x: number, y: number) {
-    return browser.actions().dragAndDrop(this.selectedCountryLabel, {x: x, y: y}).perform();
+    return safeDragAndDrop(this.selectedCountryLabel, { x: x, y: y });
   }
 
   async clickXiconOnBubble(country: string): Promise<{}> {
@@ -160,11 +199,11 @@ export class BubbleChart extends CommonChartPage {
   }
 
   getBubblesRadius() {
-    return this.allBubbles.map(elem => {
-      return elem.getAttribute('r').then(radius => {
-        return radius;
-      });
-    });
+    return browser.executeScript(function(selector) {
+      const bubbles = document.querySelectorAll(`${selector}`);
+
+      return [...bubbles].map(elem => elem.getAttribute('r'));
+    }, this.allBubbles.first().locator().value);
   }
 
   async changeYaxisValue(option: string): Promise<string> {
@@ -180,16 +219,14 @@ export class BubbleChart extends CommonChartPage {
      * return sorted array with bubbles coordinates
      */
 
-    return $$(`circle[style*='opacity: 0.3']`)
-      .map(elm => {
+    return browser.executeScript(function () {
+      const bubbles = document.querySelectorAll("circle[style*='opacity: 0.3']");
+      [...bubbles].map(elm => {
         return {
           cx: elm.getAttribute('cx'),
           cy: elm.getAttribute('cy')
-        };
-      }).then(obj => {
-        return obj.sort((obj1: any, obj2: any) => obj1.cx - obj2.cx);
-      });
+        }
+      }).sort((obj1: any, obj2: any) => obj1.cx - obj2.cx);
+    })
   }
-
-
 }

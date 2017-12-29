@@ -40,7 +40,8 @@ export class MapChart extends CommonChartPage {
       'green': '#7feb00'
     };
 
-    await waitUntil(this.allBubbles.first());
+    const firstBubble = await this.allBubbles.first();
+    await waitUntil(firstBubble);
 
     return await _$$(`circle[fill = '${colors[color.toLocaleLowerCase()]}']`).get(index);
   }
@@ -66,14 +67,6 @@ export class MapChart extends CommonChartPage {
     const bubble: ExtendedElementFinder = await this.filterBubblesByColor(color, index);
     await bubble.safeClick();
     await browser.wait(EC.invisibilityOf(this.tooltipOnClick), 2000);
-  }
-
-  getOpacityOfNonSelectedBubblesMapsChart() {
-    return this.allBubbles.each(elem => {
-      return elem.getAttribute('style').then(opacity => {
-        return opacity;
-      });
-    });
   }
 
   // TODO make it work with specific country

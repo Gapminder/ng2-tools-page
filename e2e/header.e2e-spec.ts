@@ -1,12 +1,12 @@
 import { safeOpen, waitForPageLoaded } from './helpers/helper';
-import { Header } from './pages/components/header.e2e-component';
-import { RankingsChart } from './pages/rankings-chart.po';
-import { LineChart } from './pages/line-chart.po';
-import { MountainChart } from './pages/mountain-chart.po';
-import { MapChart } from './pages/map-chart.po';
-import { BubbleChart } from './pages/bubble-chart.po';
+import { Header } from './pageObjects/components/header.e2e-component';
+import { RankingsChart } from './pageObjects/rankings-chart.po';
+import { LineChart } from './pageObjects/line-chart.po';
+import { MountainChart } from './pageObjects/mountain-chart.po';
+import { MapChart } from './pageObjects/map-chart.po';
+import { BubbleChart } from './pageObjects/bubble-chart.po';
 import { $, $$, browser } from 'protractor';
-import { AgesChart } from './pages/ages-chart.po';
+import { AgesChart } from './pageObjects/ages-chart.po';
 
 describe('Header: ', () => {
   const header: Header = new Header();
@@ -50,16 +50,19 @@ describe('Header: ', () => {
 
     it(`chart links`, async() => {
       const expectedLinks = [
-        `${browser.baseUrl}#_${mapChart.url}`,
-        `${browser.baseUrl}#_${mountainChart.url}`,
-        `${browser.baseUrl}#_${lineChart.url}`,
-        `${browser.baseUrl}#_${rankingsChart.url}`,
-        `${browser.baseUrl}#_${bubbleChart.url}`,
-        `${browser.baseUrl}#_${agesChart.url}`
+        `/tools/#_${mapChart.url}`,
+        `/tools/#_${mountainChart.url}`,
+        `/tools/#_${lineChart.url}`,
+        `/tools/#_${rankingsChart.url}`,
+        `/tools/#_${bubbleChart.url}`,
+        `/tools/#_${agesChart.url}`
       ];
 
       const chartLinks = $$('.chart-switcher-options a');
-      const links = await chartLinks.map(el => el.getAttribute('href')).then(res => res.sort());
+      const links = await browser.executeScript(function(selector){
+        const chartLinks = document.querySelectorAll(`${selector}`);
+        return [...chartLinks].map(el => el.getAttribute('href')).sort();
+      }, chartLinks.first().locator().value);
 
       await expect(expectedLinks.sort()).toEqual(links as any);
     });

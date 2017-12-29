@@ -1,10 +1,11 @@
-import { Sidebar } from "./pages/components/sidebar.e2e-component";
-import { BubbleChart } from "./pages/bubble-chart.po";
-import { browser } from "protractor";
-import { safeDragAndDrop, waitForSpinner } from "./helpers/helper";
-import { CommonChartPage } from "./pages/common-chart.po";
-import { Slider } from "./pages/components/slider.e2e-component";
-import { MapChart } from './pages/map-chart.po';
+import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { BubbleChart } from "../pageObjects/bubble-chart.po";
+import { browser, $ } from "protractor";
+import { safeDragAndDrop, waitForSpinner, waitForUrlToChange } from "../helpers/helper";
+import { CommonChartPage } from "../pageObjects/common-chart.po";
+import { Slider } from "../pageObjects/components/slider.e2e-component";
+import { MapChart } from '../pageObjects/map-chart.po';
+import { _$ } from "../helpers/ExtendedElementFinder";
 
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
@@ -84,12 +85,12 @@ describe('Bubbles chart: Sidebar', () => {
      * should check that when select a country, click "Lock", and drag the time slider or play,
      * all unselected countries stay in place and only the selected one moves(TC15)
      */
-    await bubbleChart.clickOnChina();
+    await bubbleChart.clickOnCountryBubble('India');
 
     const coordinatesOfUnselectedBubbles = await bubbleChart.getCoordinatesOfLowerOpacityBubblesOnBubblesChart();
 
-    const xCoord = await bubbleChart.getCountryBubble('China').getAttribute('cx');
-    const yCoord = await bubbleChart.getCountryBubble('China').getAttribute('cy');
+    const xCoord = await bubbleChart.getCountryBubble('India').getAttribute('cx');
+    const yCoord = await bubbleChart.getCountryBubble('India').getAttribute('cy');
 
     await bubbleChart.lockButton.safeClick();
     await bubbleChart.trailsButton.safeClick();
@@ -105,8 +106,8 @@ describe('Bubbles chart: Sidebar', () => {
 
     await expect(coordinatesOfUnselectedBubbles2).toEqual(coordinatesOfUnselectedBubbles3);
 
-    const xCoordNew = await bubbleChart.getCountryBubble('China').getAttribute('cx');
-    const yCoordNew = await bubbleChart.getCountryBubble('China').getAttribute('cy');
+    const xCoordNew = await bubbleChart.getCountryBubble('India').getAttribute('cx');
+    const yCoordNew = await bubbleChart.getCountryBubble('India').getAttribute('cy');
     await expect(xCoord).not.toEqual(xCoordNew);
     await expect(yCoord).not.toEqual(yCoordNew);
   });
@@ -121,7 +122,7 @@ describe('Bubbles chart: Sidebar', () => {
     await sidebar.optionsButton.safeClick();
     await sidebar.optionsMenuSizeButton.safeClick();
     await safeDragAndDrop(sidebar.optionsMenuBubblesResizeToddler, {x: 60, y: 0});
-
+    await waitForUrlToChange();
     const finalRadius = await bubbleChart.getBubblesRadius();
 
     await expect(initialRadius).not.toEqual(finalRadius);
@@ -158,7 +159,7 @@ describe('Bubbles chart: Sidebar', () => {
     const indiaBubbleInitialColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
     const chinaBubbleInitialColor = await bubbleChart.getCountryBubble('China').getCssValue('fill');
 
-    const colorNewOption = sidebar.colorListItems.get(3);
+    const colorNewOption = await sidebar.colorListItems.get(3);
     await sidebar.selectInColorDropdown(colorNewOption);
 
     await expect(sidebar.colorDropDown.getText()).toContain(colorNewOption.getText());
@@ -167,11 +168,11 @@ describe('Bubbles chart: Sidebar', () => {
     const indiaBubbleNewColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
     const chinaBubbleNewColor = await bubbleChart.getCountryBubble('China').getCssValue('fill');
 
-    expect(usaBubbleInitialColor).not.toEqual(usaBubbleNewColor);
-    expect(indiaBubbleInitialColor).not.toEqual(indiaBubbleNewColor);
-    expect(chinaBubbleInitialColor).not.toEqual(chinaBubbleNewColor);
+    await expect(usaBubbleInitialColor).not.toEqual(usaBubbleNewColor);
+    await expect(indiaBubbleInitialColor).not.toEqual(indiaBubbleNewColor);
+    await expect(chinaBubbleInitialColor).not.toEqual(chinaBubbleNewColor);
 
-    const colorFinalOption = sidebar.colorListItems.get(2);
+    const colorFinalOption = await sidebar.colorListItems.get(2);
     await sidebar.selectInColorDropdown(colorFinalOption);
 
     await expect(sidebar.colorDropDown.getText()).toContain(colorFinalOption.getText());
@@ -244,5 +245,50 @@ describe('Bubbles chart: Sidebar', () => {
     const selectedLabels = await bubbleChart.allLabels.count();
     
     expect(selectedLabels).toEqual(selectedBubbles);
+  });
+
+  it('remove label boxes', async () => {
+    await bubbleChart.clickOnCountryBubble('India');
+    
+    // open menu and click on the checkbox
+    await sidebar.optionsButton.safeClick();
+    await sidebar.labelsMenu.safeClick();
+    await sidebar.activeOptionsMenu._$$('.vzb-removelabelbox-switch').first().safeClick();
+
+    await expect(bubbleChart.selectedBubbleLabel.isDisplayed()).toBeFalsy();
+    await expect(browser.getCurrentUrl()).toContain('ui_chart_labels_removeLabelBox:true');
+  });
+
+  it('change labels size by moving slider', async () => {
+    await bubbleChart.clickOnCountryBubble('India');
+    const labelSizeBefore = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
+
+    // open menu and move the slider
+    await sidebar.optionsButton.safeClick();
+    await sidebar.labelsMenu.safeClick();
+    await safeDragAndDrop(sidebar.activeOptionsMenu._$$('.handle--e').first(), {x:100, y:0});
+    
+    const labelSizeAfter = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
+
+    await expect(parseInt(labelSizeBefore)).toBeLessThan(parseInt(labelSizeAfter));
+    await expect(browser.getCurrentUrl()).toContain('size/_label_extent@');    
+  });
+
+  it('change label size by choosing option from dropdown', async () => {
+    await bubbleChart.clickOnCountryBubble('India');
+    const labelSizeBefore = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
+    
+    // open menu and move the slider
+    await sidebar.optionsButton.safeClick();
+    await sidebar.labelsMenu.safeClick();
+    await sidebar.activeOptionsMenu._$$('.vzb-ip-holder').first().safeClick();
+
+    await _$('.vzb-treemenu-list-item-label').safeClick();
+    await waitForSpinner();
+
+    const labelSizeAfter = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
+
+    await expect(parseInt(labelSizeBefore)).not.toEqual(parseInt(labelSizeAfter));
+    await expect(browser.getCurrentUrl()).toContain('size/_label_which=');    
   });
 });

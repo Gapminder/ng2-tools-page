@@ -2,13 +2,13 @@ import { browser, protractor } from 'protractor';
 
 import using = require('jasmine-data-provider');
 
-import { BubbleChart } from './pages/bubble-chart.po';
-import { RankingsChart } from './pages/rankings-chart.po';
-import { LineChart } from './pages/line-chart.po';
-import { MapChart } from './pages/map-chart.po';
-import { MountainChart } from './pages/mountain-chart.po';
-import { Sidebar } from './pages/components/sidebar.e2e-component';
-import { Slider } from './pages/components/slider.e2e-component';
+import { BubbleChart } from './pageObjects/bubble-chart.po';
+import { RankingsChart } from './pageObjects/rankings-chart.po';
+import { LineChart } from './pageObjects/line-chart.po';
+import { MapChart } from './pageObjects/map-chart.po';
+import { MountainChart } from './pageObjects/mountain-chart.po';
+import { Sidebar } from './pageObjects/components/sidebar.e2e-component';
+import { Slider } from './pageObjects/components/slider.e2e-component';
 
 import { safeOpen, waitForPageLoaded, waitForUrlToChange } from './helpers/helper';
 
@@ -55,14 +55,15 @@ describe('All charts - Acceptance', () => {
         await sidebar.waitForVisible();
 
         const commonSidebar = sidebar.sidebar;
-        Object.keys(commonSidebar).forEach(element => {
-          expect(commonSidebar[element].isPresent()).toBe(true, `${element} not found`);
-        });
+
+        await Promise.all(Object.keys(commonSidebar).map(async element => {
+          return await expect(commonSidebar[element].isPresent()).toBe(true, `${element} not found`);
+        }));
 
         const chartSideBar = await chart.getSidebarElements();
-        Object.keys(chartSideBar).forEach(element => {
-          expect(chartSideBar[element].isPresent()).toBe(true, `${element} not found`);
-        });
+        await Promise.all(Object.keys(chartSideBar).map(async element => {
+          return await expect(chartSideBar[element].isPresent()).toBe(true, `${element} not found`);
+        }));
       });
     });
   });
@@ -131,7 +132,7 @@ describe('All charts - Acceptance', () => {
     it('Back button works', async() => {
       const urlBefore = await browser.getCurrentUrl();
 
-      await bubbleChart.clickOnChina();
+      await bubbleChart.clickOnCountryBubble('India');
 
       await browser.navigate().back();
       await waitForPageLoaded();
@@ -140,8 +141,8 @@ describe('All charts - Acceptance', () => {
       expect(await bubbleChart.selectedCountries.count()).toEqual(0);
     });
 
-    xit('Forward button works', async() => {
-      await bubbleChart.clickOnChina();
+    xit('Forward button works: https://github.com/Gapminder/ng2-tools-page/issues/154', async() => {
+      await bubbleChart.clickOnCountryBubble('India');
       const urlAfter = await browser.getCurrentUrl();
 
       await browser.navigate().back();

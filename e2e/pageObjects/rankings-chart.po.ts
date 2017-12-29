@@ -81,15 +81,15 @@ export class RankingsChart extends CommonChartPage {
      */
     const pattern = /(translate\(0, )|(\))/g;
 
-    return this.bars
-      .map(el => [el.getAttribute('transform'), el.getAttribute('id')])
-      .then(allBarsPosition => {
-        return allBarsPosition.sort((a, b) => {
-          return Number(a[0].replace(pattern, '')) - Number(b[0].replace(pattern, ''));
-        });
-      })
-      .then(sortedArray => sortedArray.slice(0, barsCount))
-      .then(filteredByCount => filteredByCount.map(el => el[1])); // return only country names
+    return browser.executeScript(function (selector) {
+      const bars = document.querySelectorAll(`${selector}`);
+      const pattern = /(translate\(0, )|(\))/g;
+      
+      return [...bars].map(el => [el.getAttribute('transform'), el.getAttribute('id')])
+      .sort((a, b) => Number(a[0].replace(pattern, '')) - Number(b[0].replace(pattern, '')))
+      .slice(0, 10)
+      .map(el => el[1]) // return only country names
+    }, this.bars.first().locator().value);
   }
 
   changeYaxisValue(): Promise<string> {
