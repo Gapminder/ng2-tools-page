@@ -343,14 +343,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const code = get(responseData, 'code', null);
     const message = get(responseData, 'message', null);
     const endpoint = get(responseData, 'metadata.endpoint', null);
+    const homepoint = get(responseData, 'metadata.homepoint', null);
 
     switch (type) {
       case GA_EVENT_ACTION_RESPONSE:
-        return `rows: ${data};endpoint: ${endpoint}`;
+        return `rows: ${data};endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_ERROR:
-        return `code: ${code};message: ${message};endpoint: ${endpoint}`;
+        return `code: ${code};message: ${message};endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_MESSAGE:
-        return `message: ${message};endpoint: ${endpoint}`;
+        return `message: ${message};endpoint: ${endpoint}; homepoint: ${homepoint}`;
       default:
 
         return null;
