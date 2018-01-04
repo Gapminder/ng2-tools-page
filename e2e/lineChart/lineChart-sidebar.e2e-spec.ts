@@ -1,5 +1,5 @@
-import { LineChart } from "../pageObjects/line-chart.po";
-import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { LineChart } from "../pageObjects/charts/line-chart.po";
+import { Sidebar } from "../pageObjects/sidebar/sidebar.e2e-component";
 import { Slider } from "../pageObjects/components/slider.e2e-component";
 import { waitUntil } from "../helpers/waitHelper";
 
@@ -13,30 +13,30 @@ describe('Line chart: Sidebar', () => {
     await lineChart.openChart();
   });
   it('Add country from country list in sidebar', async () => {
-    await sidebar.clickOnCountryFromList('Argentina');
+    await sidebar.show.clickOnCountryFromList('Argentina');
     await expect(lineChart.getSelectedCountriesNames()).toMatch('Argentina');
 
     expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER + 1);
   });
 
   it('Add country from search in sidebar', async () => {
-    await sidebar.searchAndSelectCountry('Argentina');
+    await sidebar.show.searchAndSelectCountry('Argentina');
     await expect(lineChart.getSelectedCountriesNames()).toMatch('Argentina');
 
     expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER + 1);
   });
 
   it('Reset button drop settings to default', async () => {
-    await sidebar.clickOnCountryFromList('Argentina');
-    await lineChart.clickResetButton();
+    await sidebar.show.clickOnCountryFromList('Argentina');
+    await sidebar.show.clickResetButton();
 
     expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER, 'number of selected countries');
   });
 
   it('"Find" button in sidebar show only selected countries', async () => {
     const chartCountries = lineChart.selectedCountries;
-    await sidebar.clickOnFindButton();
-    const modalCountries = sidebar.countriesInFindModal;
+    await sidebar.findSelect.clickOnFindButton();
+    const modalCountries = sidebar.findSelect.countriesInFindModal;
 
     expect(await chartCountries.count()).toEqual(await modalCountries.count());
 
@@ -59,10 +59,10 @@ describe('Line chart: Sidebar', () => {
   });
 
   it('Change lines colors at the top of sidebar', async () => {
-    await sidebar.selectInColorDropdown(sidebar.color.mainReligion);
+    await sidebar.colorSection.selectInColorDropdown(sidebar.colorSection.color.mainReligion);
     await waitUntil(lineChart.countriesLines.first());
 
-    const colorFromColorSection = await sidebar.getColorFromColorSection();
+    const colorFromColorSection = await sidebar.colorSection.getColorFromColorSection();
     expect(await lineChart.getLineColor('China')).toEqual(colorFromColorSection, 'line color');
   });
 

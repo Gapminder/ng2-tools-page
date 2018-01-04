@@ -1,9 +1,9 @@
 import { browser, ExpectedConditions as EC } from 'protractor';
 
 import { Header } from './pageObjects/components/header.e2e-component';
-import { LineChart } from './pageObjects/line-chart.po';
+import { LineChart } from './pageObjects/charts/line-chart.po';
 import { _$, ExtendedElementFinder } from './helpers/ExtendedElementFinder';
-import { BubbleChart } from './pageObjects/bubble-chart.po';
+import { BubbleChart } from './pageObjects/charts/bubble-chart.po';
 import { Slider } from './pageObjects/components/slider.e2e-component';
 import { waitUntil } from './helpers/waitHelper';
 
@@ -32,11 +32,8 @@ describe('Social media buttons', () => {
   });
 
   it('Mail-to: basic state', async () => {
-    await header.shareLabel.safeClick();
-    await waitUntil(header.mailButtonDesktop);
+    const actualMailLink = await header.refreshMailLink();
     const expectedUrl = mailBasic + (await browser.getCurrentUrl());
-
-    const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
 
     await expect(actualMailLink).toEqual(expectedUrl);
   });
@@ -45,9 +42,7 @@ describe('Social media buttons', () => {
     await lineChart.openChart();
     await lineChart.selectLine('China');
     const expectedUrl = mailBasic + (await browser.getCurrentUrl());    
-    await header.shareLabel.safeClick();
-
-    const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
+    const actualMailLink = await header.refreshMailLink();
 
     await expect(actualMailLink).toEqual(expectedUrl);
   });
@@ -57,16 +52,14 @@ describe('Social media buttons', () => {
     await slider.dragToMiddle();
     const expectedUrl = mailBasic + (await browser.getCurrentUrl());
 
-    await header.shareLabel.safeClick();
-
-    const actualMailLink = decodeURIComponent(await header.mailLinkDesktop.getAttribute('href'));
+    const actualMailLink = await header.refreshMailLink();
 
     // await expect(actualMailLink).toEqual(`${mailBasic}#_state_time_value=${sliderValue};;&chart-type=bubbles&locale_id=en`);
     await expect(actualMailLink).toEqual(expectedUrl);
   });
 
   it('twitter', async () => {
-    await header.twitterSocialDesktop.safeClick();
+    await header.clickOnTwitterIcon();
     const handles = await browser.getAllWindowHandles();
     await browser.switchTo().window(handles[1]);
 
@@ -77,7 +70,7 @@ describe('Social media buttons', () => {
   });
 
   xit('facebook: https://github.com/Gapminder/ng2-tools-page/issues/174', async () => {
-    await header.facebookSocialDesktop.safeClick();
+    await header.clickOnFacebookIcon();
     const handles = await browser.getAllWindowHandles();
     await browser.switchTo().window(handles[1]);
 

@@ -1,12 +1,13 @@
-import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
-import { BubbleChart } from "../pageObjects/bubble-chart.po";
-import { browser, $ } from "protractor";
-import { safeDragAndDrop, waitForSpinner, waitForUrlToChange } from "../helpers/helper";
-import { CommonChartPage } from "../pageObjects/common-chart.po";
-import { Slider } from "../pageObjects/components/slider.e2e-component";
-import { MapChart } from '../pageObjects/map-chart.po';
-import { _$ } from "../helpers/ExtendedElementFinder";
-
+import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
+import { BubbleChart } from '../pageObjects/charts/bubble-chart.po';
+import { browser, $, ExpectedConditions as EC } from 'protractor';
+import { safeDragAndDrop, waitForSpinner, waitForUrlToChange } from '../helpers/helper';
+import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
+import { MapChart } from '../pageObjects/charts/map-chart.po';
+import { _$ } from '../helpers/ExtendedElementFinder';
+import { DialogModal } from '../pageObjects/sidebar/dialogModal.e2e-component';
+import { TreeMenuModal } from '../pageObjects/sidebar/treeMenuModal.e2e-component';
 
 const commonChartPage: CommonChartPage = new CommonChartPage();
 const bubbleChart: BubbleChart = new BubbleChart();
@@ -21,7 +22,7 @@ describe('Bubbles chart: Sidebar', () => {
 
   it('Select country using search', async () => {
     const country = 'China';
-    await sidebar.searchAndSelectCountry(country);
+    await sidebar.findSelect.searchAndSelectCountry(country);
 
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
     expect(await browser.getCurrentUrl()).toContain(CommonChartPage.countries[country]);
@@ -29,10 +30,10 @@ describe('Bubbles chart: Sidebar', () => {
 
   it('deselect country using search field', async () => {
     // should check that countries could be selected/deselected using the button "Find" to the right(TC11)
-    await sidebar.searchAndSelectCountry('China');
+    await sidebar.findSelect.searchAndSelectCountry('China');
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
 
-    await sidebar.searchAndSelectCountry('India');
+    await sidebar.findSelect.searchAndSelectCountry('India');
     expect(await bubbleChart.selectedCountries.count()).toEqual(2);
 
     expect(await bubbleChart.selectedCountries.getText()).toMatch('China 2015');
@@ -40,10 +41,10 @@ describe('Bubbles chart: Sidebar', () => {
     expect(await browser.getCurrentUrl()).toContain('geo=ind');
     expect(await browser.getCurrentUrl()).toContain('geo=chn');
 
-    await sidebar.deselectCountryInSearch('India');
+    await sidebar.findSelect.deselectCountryInSearch('India');
     expect(await bubbleChart.selectedCountries.count()).toEqual(1);
 
-    await sidebar.deselectCountryInSearch('China');
+    await sidebar.findSelect.deselectCountryInSearch('China');
     expect(await bubbleChart.selectedCountries.count()).toEqual(0);
 
     expect(await browser.getCurrentUrl()).not.toContain('geo=ind');
@@ -56,13 +57,13 @@ describe('Bubbles chart: Sidebar', () => {
      */
     // When X is time and showing a trail, zoom a rectangle on the part of the picture. Note min-max for x and y.
     // Refresh. Min-max for x and y should be the same. Trail should be preserved too
-    await sidebar.searchAndSelectCountry('China');
+    await sidebar.findSelect.searchAndSelectCountry('China');
 
     await slider.dragToStart();
     await slider.dragToMiddle();
 
     await sidebar.zoomButton.safeClick();
-    await safeDragAndDrop(bubbleChart.selectedCountryLabel, {x: 250, y: 250});
+    await safeDragAndDrop(bubbleChart.selectedCountryLabel, { x: 250, y: 250 });
 
     const axisYMaxValue = commonChartPage.axisYMaxValue.safeGetAttribute('TextContent');
     const axisXMaxValue = commonChartPage.axisXMaxValue.safeGetAttribute('TextContent');
@@ -121,12 +122,11 @@ describe('Bubbles chart: Sidebar', () => {
 
     await sidebar.optionsButton.safeClick();
     await sidebar.optionsMenuSizeButton.safeClick();
-    await safeDragAndDrop(sidebar.optionsMenuBubblesResizeToddler, {x: 60, y: 0});
-    await waitForUrlToChange();
+    await sidebar.size.moveSizeSlider();
+
     const finalRadius = await bubbleChart.getBubblesRadius();
 
     await expect(initialRadius).not.toEqual(finalRadius);
-    await expect(browser.getCurrentUrl()).toContain(`size_extent@`);
     // await expect(finalRadius[0]).toBeGreaterThan(initialRadius); // TODO add check like this
   });
 
@@ -135,23 +135,20 @@ describe('Bubbles chart: Sidebar', () => {
      * should check that the indicator represented by the Size can be changed(TC16)
      */
     await sidebar.optionsButton.safeClick();
-    await sidebar.optionsMenuSizeButton.safeClick();
+    await sidebar.dialogModal.size.safeClick();
 
     const initialBubblesCount = await bubbleChart.allBubbles.count();
-    const initialIndicator = await sidebar.colorIndicatorDropdown.getText();
-
-    await sidebar.colorIndicatorDropdown.safeClick();
-    await sidebar.sizeListBabiesPerWomanColorIndicator.safeClick();
-    await waitForSpinner();
+    const initialIndicator = await sidebar.size.getCurrentSizeIndicator();
+    await sidebar.size.changeSizeIndicator();
 
     const finalBubblesCount = await bubbleChart.allBubbles.count();
-    const finalIndicator = await sidebar.colorIndicatorDropdown.getText();
+    const finalIndicator = await sidebar.dialogModal.sizeDropdown.getText();
 
     await expect(initialIndicator).not.toEqual(finalIndicator);
     await expect(initialBubblesCount).not.toEqual(finalBubblesCount);
 
     await sidebar.optionsButton.safeClick();
-    expect(await sidebar.sizeDropDown.getText()).toEqual(finalIndicator);
+    expect(await sidebar.size.getCurrentSizeIndicator()).toContain(finalIndicator);
   });
 
   it('clicking color bring the panel. Color of bubbles can be changed(TC17)', async () => {
@@ -159,10 +156,10 @@ describe('Bubbles chart: Sidebar', () => {
     const indiaBubbleInitialColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
     const chinaBubbleInitialColor = await bubbleChart.getCountryBubble('China').getCssValue('fill');
 
-    const colorNewOption = await sidebar.colorListItems.get(3);
-    await sidebar.selectInColorDropdown(colorNewOption);
+    const colorNewOption = await sidebar.treeMenuModal.listItems.get(3);
+    await sidebar.colorSection.selectInColorDropdown(colorNewOption);
 
-    await expect(sidebar.colorDropDown.getText()).toContain(colorNewOption.getText());
+    await expect(sidebar.colorSection.colorLabel.getText()).toContain(colorNewOption.getText());
 
     const usaBubbleNewColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleNewColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
@@ -172,10 +169,10 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(indiaBubbleInitialColor).not.toEqual(indiaBubbleNewColor);
     await expect(chinaBubbleInitialColor).not.toEqual(chinaBubbleNewColor);
 
-    const colorFinalOption = await sidebar.colorListItems.get(2);
-    await sidebar.selectInColorDropdown(colorFinalOption);
+    const colorFinalOption = await sidebar.treeMenuModal.listItems.get(2);
+    await sidebar.colorSection.selectInColorDropdown(colorFinalOption);
 
-    await expect(sidebar.colorDropDown.getText()).toContain(colorFinalOption.getText());
+    await expect(sidebar.colorSection.colorLabel.getText()).toContain(colorFinalOption.getText());
 
     const usaBubbleFinalColor = await bubbleChart.getCountryBubble('USA').getCssValue('fill');
     const indiaBubbleFinalColor = await bubbleChart.getCountryBubble('India').getCssValue('fill');
@@ -195,7 +192,7 @@ describe('Bubbles chart: Sidebar', () => {
     const optionsDialogueTopInitialPosition = await sidebar.optionsModalDialogue.getCssValue('top');
     const optionsDialogueRightInitialPosition = await sidebar.optionsModalDialogue.getCssValue('right');
 
-    await safeDragAndDrop(sidebar.optionsMenuHandIcon, {x: -260, y: -100});
+    await safeDragAndDrop(sidebar.optionsMenuHandIcon, { x: -260, y: -50 });
 
     const optionsDialogueTopNewPosition = await sidebar.optionsModalDialogue.getCssValue('top');
     const optionsDialogueRightNewPosition = await sidebar.optionsModalDialogue.getCssValue('right');
@@ -203,7 +200,7 @@ describe('Bubbles chart: Sidebar', () => {
     await expect(optionsDialogueTopInitialPosition).not.toEqual(optionsDialogueTopNewPosition);
     await expect(optionsDialogueRightInitialPosition).not.toEqual(optionsDialogueRightNewPosition);
 
-    await safeDragAndDrop(sidebar.optionsMenuHandIcon, {x: -350, y: -200});
+    await safeDragAndDrop(sidebar.optionsMenuHandIcon, { x: -340, y: 50 });
 
     const optionsDialogueTopFinalPosition = await sidebar.optionsModalDialogue.getCssValue('top');
     const optionsDialogueRightFinalPosition = await sidebar.optionsModalDialogue.getCssValue('right');
@@ -213,7 +210,7 @@ describe('Bubbles chart: Sidebar', () => {
   });
 
   it('Change opacity for non-selected bubbles', async () => {
-    await sidebar.searchAndSelectCountry('China');
+    await sidebar.findSelect.searchAndSelectCountry('China');
     const nonSelectedBubbles = await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.dimmed);
 
     await sidebar.changeOpacityForNonSelected();
@@ -234,22 +231,22 @@ describe('Bubbles chart: Sidebar', () => {
   });
 
   it('Click on minimap region - "Remove everything else"', async () => {
-    await sidebar.removeEverythingElseInMinimap('Asia');
-    
+    await sidebar.colorSection.removeEverythingElseInMinimap();
+
     await expect(bubbleChart.allBubbles.count()).toEqual(bubbleChart.countBubblesByColor('red'));
   });
 
   it('Click on minimap region - "Select all in this group"', async () => {
-    await sidebar.selectAllInThisGroup('Asia');
+    await sidebar.colorSection.selectAllInThisGroup();
     const selectedBubbles = await bubbleChart.countBubblesByColor('red');
     const selectedLabels = await bubbleChart.allLabels.count();
-    
+
     expect(selectedLabels).toEqual(selectedBubbles);
   });
 
   it('remove label boxes', async () => {
     await bubbleChart.clickOnCountryBubble('India');
-    
+
     // open menu and click on the checkbox
     await sidebar.optionsButton.safeClick();
     await sidebar.labelsMenu.safeClick();
@@ -266,18 +263,18 @@ describe('Bubbles chart: Sidebar', () => {
     // open menu and move the slider
     await sidebar.optionsButton.safeClick();
     await sidebar.labelsMenu.safeClick();
-    await safeDragAndDrop(sidebar.activeOptionsMenu._$$('.handle--e').first(), {x:100, y:0});
+    await safeDragAndDrop(sidebar.activeOptionsMenu._$$('.handle--e').first(), { x: 100, y: 0 });
+    await browser.wait(EC.urlContains('size/_label_extent@'), 3000);
     
     const labelSizeAfter = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
 
     await expect(parseInt(labelSizeBefore)).toBeLessThan(parseInt(labelSizeAfter));
-    await expect(browser.getCurrentUrl()).toContain('size/_label_extent@');    
   });
 
   it('change label size by choosing option from dropdown', async () => {
     await bubbleChart.clickOnCountryBubble('India');
     const labelSizeBefore = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
-    
+
     // open menu and move the slider
     await sidebar.optionsButton.safeClick();
     await sidebar.labelsMenu.safeClick();
@@ -289,6 +286,6 @@ describe('Bubbles chart: Sidebar', () => {
     const labelSizeAfter = await _$('.vzb-bc-label-content.stroke').safeGetAttribute('font-size');
 
     await expect(parseInt(labelSizeBefore)).not.toEqual(parseInt(labelSizeAfter));
-    await expect(browser.getCurrentUrl()).toContain('size/_label_which=');    
+    await expect(browser.getCurrentUrl()).toContain('size/_label_which=');
   });
 });

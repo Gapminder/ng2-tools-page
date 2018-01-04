@@ -1,7 +1,7 @@
 import { safeDragAndDrop, safeOpen } from './helpers/helper';
-import { BubbleChart } from './pageObjects/bubble-chart.po';
-import { Sidebar } from './pageObjects/components/sidebar.e2e-component';
-import { CommonChartPage } from './pageObjects/common-chart.po';
+import { BubbleChart } from './pageObjects/charts/bubble-chart.po';
+import { Sidebar } from './pageObjects/sidebar/sidebar.e2e-component';
+import { CommonChartPage } from './pageObjects/charts/common-chart.po';
 import { _$, _$$ } from './helpers/ExtendedElementFinder';
 import { browser } from 'protractor';
 
@@ -10,27 +10,29 @@ const sidebar: Sidebar = new Sidebar(bubbleChart);
 
 describe('Sidebar: Select', () => {
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await bubbleChart.openChart();
   });
 
-  it('Hover country in the country list highlight it', async() => {
-    await sidebar.hoverCountryFromList('Australia');
+  if (browser.params.desktop) {
+    it('Hover country in the country list highlight it', async () => {
+      await sidebar.findSelect.hoverCountryFromList('Australia');
 
-    expect(await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.highlighted)).toEqual(1);
-    expect(await bubbleChart.bubbleLabelOnMouseHover.safeGetText()).toEqual('Australia');
-  });
+      expect(await bubbleChart.countBubblesByOpacity(CommonChartPage.opacity.highlighted)).toEqual(1);
+      expect(await bubbleChart.bubbleLabelOnMouseHover.safeGetText()).toEqual('Australia');
+    });
+  }
 });
 
 describe('Sidebar: Advanced buttons', () => {
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await bubbleChart.openChart();
   });
 
-  it('Change regular opacity', async() => {
+  it('Change regular opacity', async () => {
     const allBubblesCount = await bubbleChart.allBubbles.count();
-    
+
     await changeRegularOpacity();
 
     const newOpacity = await _$$('.vzb-bc-entity').first().safeGetCssValue('opacity');
@@ -39,12 +41,12 @@ describe('Sidebar: Advanced buttons', () => {
     await expect(allBubblesCount).toEqual(newOpacityCount);
   });
 
-  it('Change opacity for non-selected', async() => {
+  it('Change opacity for non-selected', async () => {
     const allBubblesCount = await bubbleChart.allBubbles.count();
-    
+
     await changeOpacityForNonSelected();
 
-    await bubbleChart.clickOnUnitedStates(); // select bubble
+    await bubbleChart.clickOnCountryBubble('India'); // select bubble
 
     const newOpacity = await _$$('.vzb-bc-entity').first().safeGetCssValue('opacity');
     const newOpacityCount = await bubbleChart.countBubblesByOpacity(Number(newOpacity));
@@ -56,11 +58,11 @@ describe('Sidebar: Advanced buttons', () => {
 async function changeRegularOpacity() {
   await sidebar.optionsButton.safeClick();
   await _$('[data-dlg="opacity"]').safeClick();
-  await safeDragAndDrop(_$('.vzb-dialog-bubbleopacity-regular .handle--e'), {x: -100, y: 0});
+  await safeDragAndDrop(_$('.vzb-dialog-bubbleopacity-regular .handle--e'), { x: -100, y: 0 });
 }
 
 async function changeOpacityForNonSelected() {
   await sidebar.optionsButton.safeClick();
   await _$('[data-dlg="opacity"]').safeClick();
-  await safeDragAndDrop(_$('.vzb-dialog-bubbleopacity-selectdim .handle--e'), {x: -20, y: 0});
+  await safeDragAndDrop(_$('.vzb-dialog-bubbleopacity-selectdim .handle--e'), { x: -20, y: 0 });
 }

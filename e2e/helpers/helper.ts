@@ -1,7 +1,7 @@
 import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 import { WebElement } from 'selenium-webdriver';
 
-import { CommonChartPage } from '../pageObjects/common-chart.po';
+import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 import { waitUntil } from './waitHelper';
 import { WebdriverWebElement } from 'protractor/built/element';
 
@@ -10,7 +10,7 @@ const TIMEOUT = 15000;
 
 export function safeOpen(url: string) {
   return browser.get(browser.baseUrl + url)
-    .then(() => browser.refresh())
+    .then(() => browser.refresh()) // TODO remove this after fixing https://github.com/Gapminder/ng2-tools-page/issues/175
     .then(() => waitForPageLoaded());
 }
 

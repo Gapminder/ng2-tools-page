@@ -1,9 +1,9 @@
 import { browser } from 'protractor';
 
 import { safeExpectIsDispayed, waitForSliderToBeReady } from '../helpers/helper';
-import { Sidebar } from '../pageObjects/components/sidebar.e2e-component';
-import { LineChart } from '../pageObjects/line-chart.po';
-import { CommonChartPage } from '../pageObjects/common-chart.po';
+import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
+import { LineChart } from '../pageObjects/charts/line-chart.po';
+import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
 
 const lineChart: LineChart = new LineChart();
@@ -31,28 +31,6 @@ describe('Line chart: ', () => {
     expect(await lineChart.getLineOpacity('Russia')).toEqual(CommonChartPage.opacity.highlighted);
     expect(await lineChart.countHighlightedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 2);
     expect(await lineChart.countDimmedLines()).toEqual(DEFAULT_COUNTRIES_NUMBER - 2);
-  });
-
-  it('Hover the legend colors - will highlight specific lines', async () => {
-    await sidebar.searchAndSelectCountry('Bangladesh');
-    await waitForSliderToBeReady();
-    await sidebar.hoverMinimapRegion('Asia');
-
-    expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
-    expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.highlighted);
-    expect(await lineChart.countHighlightedLines()).toEqual(2);
-    expect(await lineChart.countDimmedLines()).toEqual(3);
-  });
-
-  it(`Hover the legend colors - won't dim selected lines`, async () => {
-    await lineChart.selectLine('Nigeria');
-    await waitForSliderToBeReady();
-    await sidebar.hoverMinimapRegion('Asia');
-
-    expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
-    expect(await lineChart.getLineOpacity('Nigeria')).toEqual(CommonChartPage.opacity.highlighted);
-    expect(await lineChart.countHighlightedLines()).toEqual(2);
-    expect(await lineChart.countDimmedLines()).toEqual(2);
   });
 
   it('change Y axis value', async () => {
@@ -85,7 +63,7 @@ describe('Line chart: ', () => {
   });
 
   it('Settings should be stored in URL', async () => {
-    await sidebar.searchAndSelectCountry('Bangladesh');
+    await sidebar.show.searchAndSelectCountry('Bangladesh');
     await lineChart.selectLine('China');
     await lineChart.refreshPage();
 
@@ -95,12 +73,36 @@ describe('Line chart: ', () => {
     expect(await lineChart.countDimmedLines()).toEqual(4);
   });
 
-  it(`Hover on line change Color section (legend color and dropdown label)`, async () => {
-    await lineChart.hoverLine('China');
+  if (browser.params.desktop) {
+    it('Hover the legend colors - will highlight specific lines', async () => {
+      await sidebar.show.searchAndSelectCountry('Bangladesh');
+      await waitForSliderToBeReady();
+      await sidebar.colorSection.hoverMinimapRegion('Asia');
 
-    expect(await sidebar.colorDropDown.getText()).toEqual('Asia');
-    expect(Number(await sidebar.minimapAsiaRegion.getCssValue('opacity'))).toEqual(CommonChartPage.opacity.highlighted);
-  });
+      expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
+      expect(await lineChart.getLineOpacity('Bangladesh')).toEqual(CommonChartPage.opacity.highlighted);
+      expect(await lineChart.countHighlightedLines()).toEqual(2);
+      expect(await lineChart.countDimmedLines()).toEqual(3);
+    });
+
+    it(`Hover the legend colors - won't dim selected lines`, async () => {
+      await lineChart.selectLine('Nigeria');
+      await waitForSliderToBeReady();
+      await sidebar.colorSection.hoverMinimapRegion('Asia');
+
+      expect(await lineChart.getLineOpacity('China')).toEqual(CommonChartPage.opacity.highlighted);
+      expect(await lineChart.getLineOpacity('Nigeria')).toEqual(CommonChartPage.opacity.highlighted);
+      expect(await lineChart.countHighlightedLines()).toEqual(2);
+      expect(await lineChart.countDimmedLines()).toEqual(2);
+    });
+
+    it(`Hover on line change Color section (legend color and dropdown label)`, async () => {
+      await lineChart.hoverLine('China');
+
+      expect(await sidebar.colorSection.colorLabel.safeGetText()).toEqual('Asia');
+      expect(Number(await sidebar.colorSection.minimapAsiaRegion.getCssValue('opacity'))).toEqual(CommonChartPage.opacity.highlighted);
+    });
+  }
 
   // xit(`Change Options X and Y values`, async() => {
   // TODO tough stuff, will try to sort it out later. xMin input works super weird!

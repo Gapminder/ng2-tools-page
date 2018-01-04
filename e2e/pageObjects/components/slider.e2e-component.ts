@@ -1,6 +1,6 @@
 import { $, browser, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
-import { CommonChartPage } from '../common-chart.po';
+import { CommonChartPage } from '../charts/common-chart.po';
 import { _$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 import { safeDragAndDrop } from '../../helpers/helper';
 
@@ -23,7 +23,11 @@ export class Slider {
 
   async dragToMiddle(): Promise<{}> {
     await this.waitForSliderToBeReady();
-    await safeDragAndDrop(this.sliderButton, {x: -900, y: 0});
+    
+    const windowSize = await browser.driver.manage().window().getSize();
+    let distance: number;
+    windowSize.width > 900 ? distance = -900 : distance = -300;
+    await safeDragAndDrop(this.sliderButton, {x: distance, y: 0});
 
     return await browser.wait(EC.urlContains('#_state_time_value='), 10000, 'drag slider to middle');
   }

@@ -1,12 +1,12 @@
 import { safeOpen, waitForPageLoaded } from './helpers/helper';
 import { Header } from './pageObjects/components/header.e2e-component';
-import { RankingsChart } from './pageObjects/rankings-chart.po';
-import { LineChart } from './pageObjects/line-chart.po';
-import { MountainChart } from './pageObjects/mountain-chart.po';
-import { MapChart } from './pageObjects/map-chart.po';
-import { BubbleChart } from './pageObjects/bubble-chart.po';
+import { RankingsChart } from './pageObjects/charts/rankings-chart.po';
+import { LineChart } from './pageObjects/charts/line-chart.po';
+import { MountainChart } from './pageObjects/charts/mountain-chart.po';
+import { MapChart } from './pageObjects/charts/map-chart.po';
+import { BubbleChart } from './pageObjects/charts/bubble-chart.po';
 import { $, $$, browser } from 'protractor';
-import { AgesChart } from './pageObjects/ages-chart.po';
+import { AgesChart } from './pageObjects/charts/ages-chart.po';
 
 describe('Header: ', () => {
   const header: Header = new Header();

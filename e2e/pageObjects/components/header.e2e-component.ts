@@ -1,51 +1,44 @@
-import { $, ElementFinder } from 'protractor';
-import { _$, _$$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
+import { $, ElementFinder, browser } from 'protractor';
+import { _$, _$$, ExtendedElementFinder, ExtendedArrayFinder } from '../../helpers/ExtendedElementFinder';
 import { waitForPageLoaded, waitForSpinner, waitForUrlToChange } from '../../helpers/helper';
 import { waitUntil } from '../../helpers/waitHelper';
 
 export class Header {
-  rootSelector: ElementFinder = $('.header');
+  private isDesktop: boolean = browser.params.desktop;
+  
+  rootSelector: ExtendedElementFinder = this.isDesktop ? _$('.header') : _$('[class="mobile"]');
   /**
    * Social buttons
    */
-  // desktop
-  socialDesktop: ExtendedElementFinder = _$('.social.desktop');
-  mailButtonDesktop: ExtendedElementFinder = this.socialDesktop._$$('.mail.button').first();
-  mailLinkDesktop: ExtendedElementFinder = this.socialDesktop._$$('app-social-buttons > a').first();
-  twitterSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.twitter.button').first();
-  facebookSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.facebook.button').first();
-  icoplaneSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.button.ico-plane').first();
-  icocodeSocialDesktop: ExtendedElementFinder = this.socialDesktop._$$('.button.ico-code').first();
-  shareLabel: ExtendedElementFinder = this.socialDesktop._$$('.share-text-box').first();
-  howToButtonDesktop: ExtendedElementFinder = _$('#how-to-button');
+  
+  social: ExtendedElementFinder = this.isDesktop ? this.rootSelector._$('.social.desktop') : this.rootSelector._$('.social-list.mobile');
+  mailButton: ExtendedElementFinder = this.social._$('.mail.button');
+  mailLink: ExtendedElementFinder = this.social._$('app-social-buttons > a');
+  twitterSocial: ExtendedElementFinder = this.social._$('.twitter.button');
+  facebookSocial: ExtendedElementFinder = this.social._$('.facebook.button');
+  icoplaneSocial: ExtendedElementFinder = this.social._$('.button.ico-plane');
+  icocodeSocial: ExtendedElementFinder = this.social._$('.button.ico-code');
+  shareLabel: ExtendedElementFinder = this.social._$('.share-text-box');
+  howToButton: ExtendedElementFinder = this.rootSelector._$('#how-to-button');
 
-  // mobile
-  socialMobile: ExtendedElementFinder = _$('[class="mobile"]');
-  mailButtonMobile: ExtendedElementFinder = this.socialMobile._$$('.mail.button').first();
-  twitterSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.twitter.button').first();
-  facebookSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.facebook.button').first();
-  icoplaneSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.button.ico-plane').first();
-  icocodeSocialMobile: ExtendedElementFinder = this.socialMobile._$$('.button.ico-code').first();
-  howToButtonMobile: ExtendedElementFinder = this.socialMobile._$$('#how-to-button').first();
-
-  howToModal: ExtendedElementFinder = _$('.how-to-modal');
-  chartSwitcherBtn: ExtendedElementFinder = _$('.chart-switcher');
+  howToModal: ExtendedElementFinder = this.isDesktop ? this.rootSelector._$('.how-to-modal') : this.rootSelector._$('.how-to-content');
+  chartSwitcherBtn: ExtendedElementFinder = this.rootSelector._$('.chart-switcher');
 
   /**
    * language switcher
    */
-  languageSwitcherBtn: ExtendedElementFinder = _$('.lang-wrapper');
-  currentLanguage: ExtendedElementFinder = _$('.lang-current');
-  englishLanguage: ExtendedElementFinder = _$$('app-language-switcher .selected li').first();
-  rtlLanguage: ExtendedElementFinder = _$$('app-language-switcher .selected li').get(1);
+  menuBtn: ExtendedElementFinder = _$('.menu-icon');
+  languageSwitcherBtn: ExtendedElementFinder = this.rootSelector._$('.lang-wrapper');
+  currentLanguage: ExtendedElementFinder = this.rootSelector._$('.lang-current');
+  englishLanguage: ExtendedElementFinder = this.rootSelector._$$('app-language-switcher .selected li').first();
+  rtlLanguage: ExtendedElementFinder = this.rootSelector._$$('app-language-switcher .selected li').get(1);
   vimeoIframe: ExtendedElementFinder = this.howToModal._$$('iframe').first();
 
-  async switchToChart(chartUrl: string) {
+  async switchToChart(chartUrl: string): Promise<void> {
     await this.chartSwitcherBtn.safeClick();
     await _$(`.chart-switcher-options [href='/tools/${chartUrl}']`).safeClick();
     await waitForUrlToChange();
-
-    return await waitForPageLoaded();
+    await waitForPageLoaded();
   }
 
   changeLanguageToRtl(): Promise<void> {
@@ -60,14 +53,55 @@ export class Header {
     let language: ExtendedElementFinder;
     rtl ? language = this.rtlLanguage : language = this.englishLanguage;
 
+    await this.openOnMobile();
+
     await this.languageSwitcherBtn.safeClick();
     await language.safeClick();
     await waitForUrlToChange();
     await waitForSpinner();
+    await this.closeOnMobile();
   }
 
-  async openHowToUsePopup() {
-    await this.howToButtonDesktop.safeClick();
+  async openHowToUsePopup(): Promise<void> {
+    await this.openOnMobile();
+
+    await this.howToButton.safeClick();
     await waitUntil(this.howToModal);
+  }
+
+  async refreshMailLink(): Promise<string> {
+    await this.openOnMobile();
+
+    await this.shareLabel.safeClick();
+    await waitUntil(this.mailButton);
+
+    const mailLink = decodeURIComponent(await this.mailLink.getAttribute('href'));
+    await this.closeOnMobile();
+
+    return mailLink;
+  }
+
+  async clickOnTwitterIcon() {
+    await this.openOnMobile();
+    await this.twitterSocial.safeClick();
+    await this.closeOnMobile();
+  }
+
+  async clickOnFacebookIcon() {
+    await this.openOnMobile();
+    await this.facebookSocial.safeClick();
+    await this.closeOnMobile();
+  }
+
+  async openOnMobile(): Promise<void> {
+    if(!this.isDesktop){
+      await this.menuBtn.safeClick();
+    }
+  }
+
+  async closeOnMobile(): Promise<void> {
+    if(!this.isDesktop){
+      await this.menuBtn.safeClick();
+    }
   }
 }
