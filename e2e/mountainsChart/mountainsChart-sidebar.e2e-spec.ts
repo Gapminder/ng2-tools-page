@@ -1,5 +1,5 @@
-import { MountainChart } from "../pageObjects/mountain-chart.po";
-import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { MountainChart } from "../pageObjects/charts/mountain-chart.po";
+import { Sidebar } from "../pageObjects/sidebar/sidebar.e2e-component";
 import { Slider } from "../pageObjects/components/slider.e2e-component";
 import { safeExpectIsDispayed } from "../helpers/helper";
 
@@ -18,19 +18,19 @@ describe('Mountains chart: Sidebar', () => {
      */
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
 
-    await sidebar.showButton.safeClick();
+    await sidebar.show.showButton.safeClick();
 
-    await sidebar.searchAndSelectCountryInShowMenu('Ukraine');
+    await sidebar.show.searchAndSelectCountry('Ukraine');
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(1);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(1);
 
-    await sidebar.searchAndSelectCountryInShowMenu('Austria');
+    await sidebar.show.searchAndSelectCountry('Austria');
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(2);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(2);
 
-    await sidebar.searchAndSelectCountryInShowMenu('Brazil');
+    await sidebar.show.searchAndSelectCountry('Brazil');
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(3);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(3);
@@ -41,21 +41,21 @@ describe('Mountains chart: Sidebar', () => {
      * should check that uncheck the countries from "show", when the last one is unchecked,
      * the picture should return to a default view = stacked shapes of all countries(TC22)
      */
-    await mountainChart.advancedControlsShowButtons.safeClick();
+    await sidebar.show.showButton.safeClick();
 
-    await sidebar.searchAndSelectCountryInShowMenu('Ukraine');
+    await sidebar.show.searchAndSelectCountry('Ukraine');
     await safeExpectIsDispayed(mountainChart.allCountriesOnChart.first(), 5000);
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(1);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(1);
 
-    await sidebar.searchAndSelectCountryInShowMenu('Austria');
+    await sidebar.show.searchAndSelectCountry('Austria');
     await safeExpectIsDispayed(mountainChart.allCountriesOnChart.get(1), 5000);
 
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(2);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toEqual(2);
 
-    await sidebar.deselectCountryInShowMenu('Ukraine');
-    await sidebar.deselectCountryInShowMenu('Austria');
+    await sidebar.show.deselectCountryInSearch('Ukraine');
+    await sidebar.show.deselectCountryInSearch('Austria');
     expect(await mountainChart.allCountriesOnChart.count()).toEqual(165);
     expect(await mountainChart.rightSidePanelCountriesList.count()).toBeGreaterThan(25);
   });  

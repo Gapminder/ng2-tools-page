@@ -26,6 +26,10 @@
     "start:dev": "npm run build:dev && npm run start:local-web-server",
     "start:local-web-server": "ws -d ./dist/ -p 3001 --rewrite '/assets/fonts/* -> /tools/assets/fonts/$1' '/assets/images/* -> /tools/assets/images/$1' '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'",
     "e2e:local": "./node_modules/protractor/bin/webdriver-manager update && ./node_modules/.bin/protractor protractor.conf.js",
+    "e2e:dev": "URL='https://tools-dev.gapminderdev.org/tools/' protractor protractor.conf.js",
+    "e2e:stage": "URL='https://tools-stage.gapminderdev.org/tools/' protractor protractor.conf.js",
+    "e2e:blue": "URL='http://178.62.135.203:3001/tools/' protractor protractor.conf.js",
+    "e2e:green": "URL='https://www.gapminder.org/tools/' protractor protractor.conf.js",
     "i18n:update": "ngx-translate-extract -i ./src -o ./src/assets/i18n/{en,ar-SA}.json --clean --format namespaced-json",
     "ncu-vizabi": "ncu -u vizabi vizabi-barrankchart vizabi-bubblechart vizabi-bubblemap vizabi-config-systema_globalis vizabi-linechart vizabi-mountainchart vizabi-popbyage vizabi-ws-reader && npm i && git add package.json && git commit -m 'chore(package): update vizabis'"
   },

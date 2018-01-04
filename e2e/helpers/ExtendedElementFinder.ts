@@ -72,6 +72,10 @@ export class ExtendedElementFinder extends ElementFinder {
     return new ExtendedArrayFinder(this.$$(cssSelector));
   }
 
+  _$(cssSelector: string) {
+    return new ExtendedElementFinder(this.$(cssSelector));
+  }
+
   // TODO think about this, because for now it looks weird
   dragAndDrop(to: any): promise.Promise<void> {
     return browser.wait(EC.visibilityOf($(this.locator().value)), TIMEOUT, this.errorMessage).then(() => {
@@ -99,7 +103,7 @@ export class ExtendedArrayFinder extends ElementArrayFinder {
   }
 
   findElementByText(searchText: string): ExtendedElementFinder {
-    return new ExtendedElementFinder(element(by.cssContainingText(this.first().locator().value, searchText)));
+    return new ExtendedElementFinder(element.all(by.cssContainingText(this.first().locator().value, searchText)).first());
   }
 
   safeGetAttribute(attr: string): promise.Promise<string> {

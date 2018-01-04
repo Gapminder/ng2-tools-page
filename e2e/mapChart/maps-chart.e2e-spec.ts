@@ -1,10 +1,10 @@
 import { browser, protractor } from 'protractor';
 
 import { safeDragAndDrop, waitForPageLoaded } from '../helpers/helper';
-import { Sidebar } from '../pageObjects/components/sidebar.e2e-component';
-import { MapChart } from '../pageObjects/map-chart.po';
+import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
+import { MapChart } from '../pageObjects/charts/map-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
-import { CommonChartPage } from '../pageObjects/common-chart.po';
+import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 
 const mapChart: MapChart = new MapChart();
 const sidebar: Sidebar = new Sidebar(mapChart);
@@ -62,12 +62,12 @@ describe('Maps chart', () => {
     await mapChart.clickOnBubble('green');
     const initialLabelPosition = await mapChart.selectedCountryLabel.getAttribute('transform');
 
-    await safeDragAndDrop(mapChart.selectedCountryLabel, {x: 200, y: 300});
+    await safeDragAndDrop(mapChart.selectedCountryLabel, { x: 200, y: 300 });
 
     const newLabelPosition = await mapChart.selectedCountryLabel.getAttribute('transform');
     await expect(initialLabelPosition).not.toEqual(newLabelPosition);
 
-    await safeDragAndDrop(mapChart.selectedCountryLabel, {x: 250, y: 100});
+    await safeDragAndDrop(mapChart.selectedCountryLabel, { x: 250, y: 100 });
 
     const finalLabelPosition = await mapChart.selectedCountryLabel.getAttribute('transform');
     await expect(newLabelPosition).not.toEqual(finalLabelPosition);
@@ -88,21 +88,23 @@ describe('Maps chart', () => {
     expect(await browser.isElementPresent(mapChart.selectedCountryLabel)).toBeFalsy();
   });
 
-  it('Chart title show the exact values on hover(TC32)', async () => {
-    waitForPageLoaded();
-    const axisYInitialText = await mapChart.yAxisTitle.getText();
-    await expect(axisYInitialText).toEqual('Size: Population, total');
+  if (browser.params.desktop) {
+    it('Chart title show the exact values on hover(TC32)', async () => {
+      waitForPageLoaded();
+      const axisYInitialText = await mapChart.yAxisTitle.getText();
+      await expect(axisYInitialText).toEqual('Size: Population, total');
 
-    await mapChart.hoverMouseOverBubble('blue');
-    await mapChart.hoverMouseOverBubble('green');
-    await mapChart.hoverMouseOverBubble('blue');
+      await mapChart.hoverMouseOverBubble('blue');
+      await mapChart.hoverMouseOverBubble('green');
+      await mapChart.hoverMouseOverBubble('blue');
 
-    const axisYTextOnBlueBubbleMouseHover = await mapChart.yAxisTitle.getText();
-    const colorDropDownTextOnBlueBubbleMouseHover = await sidebar.colorDropDown.getText();
-    const sizeDropDownTextOnBlueBubbleMouseHover = await sidebar.sizeDropDown.getText();
+      const axisYTextOnBlueBubbleMouseHover = await mapChart.yAxisTitle.getText();
+      const colorDropDownTextOnBlueBubbleMouseHover = await sidebar.colorSection.colorLabel.getText();
+      const sizeDropDownTextOnBlueBubbleMouseHover = await sidebar.size.sizeDropDown.getText();
 
-    expect(axisYTextOnBlueBubbleMouseHover).toEqual('Size: 181M');
-    expect(colorDropDownTextOnBlueBubbleMouseHover).toEqual('Africa');
-    expect(sizeDropDownTextOnBlueBubbleMouseHover).toEqual('181M');
-  });
+      expect(axisYTextOnBlueBubbleMouseHover).toEqual('Size: 181M');
+      expect(colorDropDownTextOnBlueBubbleMouseHover).toEqual('Africa');
+      expect(sizeDropDownTextOnBlueBubbleMouseHover).toEqual('181M');
+    });
+  }
 });

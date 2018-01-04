@@ -1,7 +1,7 @@
-import { CommonChartPage } from "../pageObjects/common-chart.po";
-import { AgesChart } from "../pageObjects/ages-chart.po";
+import { CommonChartPage } from "../pageObjects/charts/common-chart.po";
+import { AgesChart } from "../pageObjects/charts/ages-chart.po";
 import { Slider } from "../pageObjects/components/slider.e2e-component";
-import { Sidebar } from "../pageObjects/components/sidebar.e2e-component";
+import { Sidebar } from "../pageObjects/sidebar/sidebar.e2e-component";
 import { safeOpen, waitForSpinner, waitForSliderToBeReady } from "../helpers/helper";
 import { browser } from "protractor";
 
@@ -18,7 +18,7 @@ describe('Ages chart: Sidebar', () => {
   });
 
   it(`add region to chart from sidebar by click`, async() => {
-    await sidebar.clickOnCountryFromList('Africa');
+    await sidebar.show.clickOnCountryFromList('Africa');
 
     expect(await agesChart.graphTitles.safeGetText()).toMatch('Africa');
     expect(await agesChart.graphsOnChart.count()).toEqual(2);
@@ -26,7 +26,7 @@ describe('Ages chart: Sidebar', () => {
 
   it(`"Group" slider on sidebar increases group range`, async() => {
     const allBarsBefore = await agesChart.bars.count();
-    await agesChart.moveGroupSlider();
+    await sidebar.moveGroupSlider();
     await waitForSpinner();
     await waitForSliderToBeReady();
     const allBarsAfter = await agesChart.bars.count();

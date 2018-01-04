@@ -1,6 +1,6 @@
 import { safeDragAndDrop, safeExpectIsDispayed, waitForSpinner, disableAnimations } from '../helpers/helper';
-import { CommonChartPage } from '../pageObjects/common-chart.po';
-import { BubbleChart } from '../pageObjects/bubble-chart.po';
+import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
+import { BubbleChart } from '../pageObjects/charts/bubble-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
 import { browser } from 'protractor';
 
