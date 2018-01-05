@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { cloneDeep, difference, get, includes, isEmpty, map, omitBy } from 'lodash-es';
+import { cloneDeep, difference, get, includes, isEmpty, map, omitBy, isArray } from 'lodash-es';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/filter';
@@ -367,11 +367,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const homepoint = get(responseData, 'metadata.homepoint', null);
     const timestamp = Date.now();
     const userId = this.userId;
+    const __insp = (window as any).__insp;
 
     switch (type) {
       case GA_EVENT_ACTION_RESPONSE:
         return `userId: ${userId}; timestamp: ${timestamp}; rows: ${data}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_ERROR:
+        if (isArray(__insp)) {
+          __insp.push(['tagSession', {error: timestamp}]);
+        }
         return `userId: ${userId}; timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_MESSAGE:
         return `userId: ${userId}; timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
