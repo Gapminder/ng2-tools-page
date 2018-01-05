@@ -33,7 +33,12 @@
     <div class="nav-expanded how-to-content mobile" [hidden]="!isHowToVisible">
       <div class="nav-expanded-columns nav-expanded-columns-2 nav-expanded-columns-icons">
         <div class="nav-expanded-columns-inner expanded-column-item" style="text-align: center; width: 100%">
-            <div #howToMobileContent></div>
+            <iframe #howToMobileVideo
+                    src="https://player.vimeo.com/video/231885967"
+                    class="how-to-frame"
+                    webkitallowfullscreen
+                    mozallowfullscreen
+                    allowfullscreen></iframe>
             <p class="nav-faq-help-links">
               <a target="_blank" href="//www.gapminder.org/GapminderMedia/wp-uploads/Gapminder-Tools-Guide.pdf" translate>pdf_guide</a>
               <a target="_blank" href="//www.gapminder.org/tools-offline/" translate>can_i_download_Gapminder_Tools</a>
@@ -56,7 +61,12 @@
 <div id="how-to-modal" class="how-to-modal desktop" [hidden]="!isHowToVisible" *ngIf="menuItems">
   <div class="how-to-modal-content">
     <span (click)="switchHowTo()" class="how-to-modal-close">&times;</span>
-    <div #howToContent></div>
+    <iframe #howToVideo
+            src="https://player.vimeo.com/video/231885967"
+            class="how-to-frame"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen></iframe>
     <p class="nav-faq-help-links">
       <a target="_blank" href="//www.gapminder.org/GapminderMedia/wp-uploads/Gapminder-Tools-Guide.pdf" translate>pdf_guide</a>
       <a target="_blank" href="//www.gapminder.org/tools-offline/" translate>can_i_download_Gapminder_Tools</a>

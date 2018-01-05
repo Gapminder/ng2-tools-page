@@ -1,10 +1,18 @@
 import {
-  ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, ViewChild,
+  AfterViewInit,
+  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnDestroy, Output,
+  ViewChild,
   ViewEncapsulation
 } from '@angular/core';
 import { Store } from '@ngrx/store';
+import 'rxjs/add/operator/throttleTime';
+import 'rxjs/add/operator/distinctUntilChanged';
 import { State } from '../../core/store';
 import { PromptForEmbeddedUrl, PromptForSharingLink } from '../../core/store/user-interaction/user-interaction.actions';
+import * as VimeoPlayer from '@vimeo/player';
+import { VizabiToolsService } from '../../core/vizabi-tools-service';
+
+const VIMEO_VIDEO_ID = 231885967;
 
 @Component({
   encapsulation: ViewEncapsulation.None,
@@ -13,17 +21,67 @@ import { PromptForEmbeddedUrl, PromptForSharingLink } from '../../core/store/use
   styleUrls: ['./menu.component.styl'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MenuComponent {
-  @ViewChild('howToContent') howToContent;
-  @ViewChild('howToMobileContent') howToMobileContent;
+export class MenuComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('playerMobileContainer') playerMobileContainer;
+  @ViewChild('playerContainer') playerContainer;
+  @ViewChild('howToVideo') howToVideo;
+  @ViewChild('howToMobileVideo') howToMobileVideo;
+
+  @Input() mobile;
   @Input() menuItems: any[];
   @Input() selectedMenuItem: any;
 
   @Output() selectMenuItem: EventEmitter<any> = new EventEmitter();
 
+  menuMutationObserver: MutationObserver;
+  mobileMenuMutationObserver: MutationObserver;
+
   isHowToVisible = false;
 
-  constructor(private store: Store<State>) {
+  constructor(private store: Store<State>, private vtService: VizabiToolsService) {
+  }
+
+  ngAfterViewInit() {
+    const howToContainer = document.getElementById('how-to-modal');
+    const howToMobileContainer = document.getElementById('mobile-menu-cont');
+    const observerOptions = {attributes: true, childList: false};
+
+    this.menuMutationObserver = new MutationObserver(mutationRecords => {
+      if (this.mobile || mutationRecords.length <= 0) {
+        return;
+      }
+
+      const menuContainer: any = mutationRecords[0].target;
+
+      if (!menuContainer.hidden) {
+        this.initPlayer(this.howToVideo.nativeElement);
+      } else {
+        this.disposePlayer();
+      }
+    });
+
+    this.menuMutationObserver.observe(howToContainer, observerOptions);
+
+    this.mobileMenuMutationObserver = new MutationObserver(mutationRecords => {
+      if (!this.mobile || mutationRecords.length <= 0) {
+        return;
+      }
+
+      const menuMobileContainer: any = mutationRecords[0].target;
+
+      if (!menuMobileContainer.hidden) {
+        this.initPlayer(this.howToMobileVideo.nativeElement);
+      } else {
+        this.disposePlayer();
+      }
+    });
+
+    this.mobileMenuMutationObserver.observe(howToMobileContainer, observerOptions);
+  }
+
+  ngOnDestroy() {
+    this.menuMutationObserver.disconnect();
+    this.mobileMenuMutationObserver.disconnect();
   }
 
   getIconUrl(item): string {
@@ -36,30 +94,6 @@ export class MenuComponent {
 
   switchHowTo() {
     this.isHowToVisible = !this.isHowToVisible;
-
-    const howToContentEmpty = this.howToContent.nativeElement.children.length <= 0;
-    const howToMobileContentEmpty = this.howToMobileContent.nativeElement.children.length <= 0;
-
-    if (this.isHowToVisible) {
-      const content = document.createElement('div');
-      const contentMobile = document.createElement('div');
-      const vimeoContent = `<iframe src="https://player.vimeo.com/video/231885967"
-                                   class="how-to-frame"
-                                   webkitallowfullscreen
-                                   mozallowfullscreen
-                                   allowfullscreen></iframe>`;
-
-      content.innerHTML = vimeoContent;
-      contentMobile.innerHTML = vimeoContent;
-
-      if (howToContentEmpty) {
-        this.howToContent.nativeElement.appendChild(content);
-      }
-
-      if (howToMobileContentEmpty) {
-        this.howToMobileContent.nativeElement.appendChild(contentMobile);
-      }
-    }
   }
 
   getEmbeddedUrl(): void {
@@ -80,5 +114,29 @@ export class MenuComponent {
     if (event.target.id && (event.target.id !== 'how-to-button' || event.target.id === 'how-to-modal')) {
       this.isHowToVisible = false;
     }
+  }
+
+  initPlayer(placeholder) {
+    const options = {id: VIMEO_VIDEO_ID, loop: false};
+
+    this.vtService.currentVideoContainer = new VimeoPlayer(placeholder, options);
+
+    if (this.vtService.currentVideoTime) {
+      this.vtService.currentVideoContainer.setCurrentTime(this.vtService.currentVideoTime).then(() => {
+        this.vtService.currentVideoContainer.pause();
+      });
+    }
+  }
+
+  private disposePlayer(): void {
+    if (!this.vtService.currentVideoContainer) {
+      return;
+    }
+
+    this.vtService.currentVideoContainer.pause().then(() => {
+      this.vtService.currentVideoContainer.getCurrentTime().then(seconds => {
+        this.vtService.currentVideoTime = seconds;
+      });
+    });
   }
 }

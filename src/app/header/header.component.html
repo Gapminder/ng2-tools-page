@@ -4,9 +4,10 @@
 
   <div class="how-to-use desktop">
     <div class="flow-container">
-      
+
       <ul class="nav navbar-nav navbar-nav-left desktop">
         <app-menu
+          [mobile]="false"
           [selectedMenuItem]="selectedMenuItem$ | async"
           [menuItems]="menuItems$ | async"
           (selectMenuItem)="selectMenuItem($event)">
@@ -14,7 +15,7 @@
       </ul>
     </div>
   </div>
-  
+
   <div class="social desktop">
     <div class="flow-container" style="justify-content: flex-end">
 
@@ -38,7 +39,7 @@
       </div>
     </div>
   </div>
-  
+
   <div (click)="switchMobileMenuVisibility()" class="menu-mobile" [ngClass]="{'open': !(isMobileMenuHidden$ | async)}">
     <div class="flow-container" style="justify-content: flex-end">
       <div class="social-share-icon">
@@ -49,11 +50,11 @@
       </div>
     </div>
   </div>
-  
+
 </div>
 
 <div class="mobile">
-  <ul class="navbar-nav navbar-nav-left mobile" *ngIf="!(isMobileMenuHidden$ | async)">
+  <ul id="mobile-menu-cont" class="navbar-nav navbar-nav-left mobile" [hidden]="(isMobileMenuHidden$ | async)">
 
     <li class="nav-expandable" [ngClass]="{'hidden': (isMobileMenuHidden$ | async)}">
       <div class="lang-wrapper mobile">
@@ -69,6 +70,7 @@
     </li>
 
     <app-menu
+            [mobile]="true"
             [selectedMenuItem]="selectedMenuItem$ | async"
             [menuItems]="menuItems$ | async"
             (selectMenuItem)="selectMenuItem($event)">
