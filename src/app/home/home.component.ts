@@ -104,6 +104,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private initialVizabiInstances = {};
   private lang;
 
+  private userId = '';
+  private userIdLength = 15;
+  private timestamp = Date.now();
+
   private urlFragmentChangesSubscription: Subscription;
 
   constructor(public langService: LanguageService,
@@ -112,6 +116,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
               private cd: ChangeDetectorRef,
               private vizabiToolsService: VizabiToolsService,
               private store: Store<State>) {
+    this._generateUserId();
     this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
       this.tools = initial.tools;
       this.slugs = initial.slugs;
@@ -331,7 +336,23 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       eventAction: type
     };
     const eventLabel = this._getEventLabel(type, responseData);
-    this.sendEventToGA(eventLabel ? {eventLabel, ...analyticsTypeOptions} : analyticsTypeOptions);
+    this.sendEventToGA(eventLabel ? { eventLabel, ...analyticsTypeOptions } : analyticsTypeOptions);
+  }
+
+  _getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  _generateUserId() {
+    const ts = this.timestamp.toString();
+    const parts = ts.split('').reverse();
+
+    for (let i = 0; i < this.userIdLength; ++i) {
+      const index = this._getRandomInt(0, parts.length - 1);
+      this.userId += parts[index];
+    }
+
+    return this.userId;
   }
 
   _getGAEventCategory(from: string, { value, key }) {
@@ -345,14 +366,15 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const endpoint = get(responseData, 'metadata.endpoint', null);
     const homepoint = get(responseData, 'metadata.homepoint', null);
     const timestamp = Date.now();
+    const userId = this.userId;
 
     switch (type) {
       case GA_EVENT_ACTION_RESPONSE:
-        return `timestamp: ${timestamp}; rows: ${data}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
+        return `userId: ${userId}; timestamp: ${timestamp}; rows: ${data}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_ERROR:
-        return `timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
+        return `userId: ${userId}; timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_MESSAGE:
-        return `timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
+        return `userId: ${userId}; timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       default:
 
         return null;
