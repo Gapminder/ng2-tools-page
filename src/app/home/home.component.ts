@@ -34,7 +34,7 @@ const GA_EVENT_ACTION_MESSAGE = 'message';
 const INITIAL_VIZABI_MODEL_INDICATORS = Object.freeze({ axis_x: {}, axis_y: {}, size: {} });
 const EXCEPTIONAL_VIZABI_CHARTS = ['LineChart', 'PopByAge'];
 
-declare const ga: any;
+declare const gtag: any;
 
 export interface GAReaderHookResponseData {
   data?: number;
@@ -358,11 +358,14 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   }
 
   sendEventToGA(analyticsData) {
-    if (!ga) {
+    if (!gtag) {
       return;
     }
 
-    ga(GA_TRACKER_NAME_AND_METHOD, GA_TYPE, analyticsData);
+    gtag(GA_TYPE, analyticsData.eventAction, {
+      event_category: analyticsData.eventCategory,
+      event_label: analyticsData.eventLabel
+    });
   }
 
   ngOnDestroy(): void {
