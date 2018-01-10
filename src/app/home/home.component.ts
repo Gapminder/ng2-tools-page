@@ -22,37 +22,12 @@ import { TrackGaPageEvent, TrackGaVizabiModelChangeEvent } from '../core/store/g
 import { VizabiLocale } from '../core/store/language/language';
 import { SelectTool, VizabiInstanceCreated, VizabiModelChanged } from '../core/store/tools/tools.actions';
 import { VizabiToolsService } from '../core/vizabi-tools-service';
+import { GoogleAnalyticsService } from '../core/google-analytics.service';
 
 const MODEL_CHANGED_DEBOUNCE = 200;
 
-const GA_TRACKER_NAME_AND_METHOD = 'toolsPageTracker.send';
-const GA_TYPE = 'event';
-const GA_EVENT_ACTION_REQUEST = 'request';
-const GA_EVENT_ACTION_RESPONSE = 'response';
-const GA_EVENT_ACTION_ERROR = 'error';
-const GA_EVENT_ACTION_MESSAGE = 'message';
 const INITIAL_VIZABI_MODEL_INDICATORS = Object.freeze({ axis_x: {}, axis_y: {}, size: {} });
 const EXCEPTIONAL_VIZABI_CHARTS = ['LineChart', 'PopByAge'];
-
-declare const gtag: any;
-
-export interface GAReaderHookResponseData {
-  data?: number;
-  code: number | null;
-  message: string;
-  metadata: {
-    endpoint: string;
-  };
-}
-
-export interface GAReaderHook {
-  from: string;
-  select: {
-    value: string[];
-    key: string[];
-  };
-  responseData: GAReaderHookResponseData
-}
 
 export interface HashModel {
   currentHashModel: {
@@ -65,8 +40,11 @@ export interface HashModel {
   isInnerChange: boolean;
 }
 
-export interface ReaderPlugin {
-  onReadHook: Function;
+export interface GAReaderPlugin {
+  onTrackResponse?: Function;
+  onTrackRequest?: Function;
+  onTrackException?: Function;
+  onTrackMessage?: Function;
 }
 
 @Component({
@@ -82,7 +60,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   currentHashModel;
 
   readerModuleObject = WsReader;
-  readerPlugins: ReaderPlugin[] = [];
+  readerPlugins: GAReaderPlugin[] = [];
   extResources = {
     host: `${environment.wsUrl}/`,
     dataPath: '/api/ddf/',
@@ -111,6 +89,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
               private location: Location,
               private cd: ChangeDetectorRef,
               private vizabiToolsService: VizabiToolsService,
+              private googleAnalyticsService: GoogleAnalyticsService,
               private store: Store<State>) {
     this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
       this.tools = initial.tools;
@@ -121,7 +100,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       this.vizabiInstances = { ...initial.initialVizabiInstances };
     });
 
-    this.readerPlugins.push({ onReadHook: this.sendQueriesStatsToGA.bind(this) });
+    this.readerPlugins.push({
+      onTrackResponse : this.googleAnalyticsService.trackResponseEvent.bind(this.googleAnalyticsService),
+      onTrackRequest : this.googleAnalyticsService.trackRequestEvent.bind(this.googleAnalyticsService),
+      onTrackException : this.googleAnalyticsService.trackExceptionEvent.bind(this.googleAnalyticsService),
+      onTrackMessage : this.googleAnalyticsService.trackMessageEvent.bind(this.googleAnalyticsService)
+    });
 
     this.vizabiModelChangesSubscription = this.store.select(getCurrentVizabiModelHash)
       .filter((hashModelDesc: HashModel) => this.isModelChanged(hashModelDesc))
@@ -278,11 +262,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.vizabiModelIndicators = { ...this.vizabiModelIndicators, ...newConceptsIndicators };
 
     newConceptsIndicatorsKeys.forEach(indicator => {
-      this.sendEventToGA({
-        eventCategory: 'concept',
-        eventAction: `set which: ${chartName} marker ${indicator}`,
-        eventLabel: newConceptsIndicators[indicator].which
-      });
+      const event = { chartName, indicator, newConceptIndicator: newConceptsIndicators[indicator] };
+      this.googleAnalyticsService.trackConceptChanges(event);
     });
 
     return;
@@ -302,11 +283,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.vizabiModelGeoEntities = this.vizabiModelGeoEntities.concat(newUniqueGeoEntities);
 
     newUniqueGeoEntities.forEach(geo => {
-      this.sendEventToGA({
-        eventCategory: 'entity',
-        eventAction: `select entity: ${chartName} marker`,
-        eventLabel: geo
-      });
+      const event = { chartName, geo };
+      this.googleAnalyticsService.trackEntitiesChanges(event);
     });
   }
 
@@ -322,50 +300,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     const parsedEntities = property ? map(entities, property) : entities;
 
     return difference(parsedEntities, this.vizabiModelGeoEntities);
-  }
-
-  sendQueriesStatsToGA(data, type) {
-    const { from, select, responseData } = data;
-    const analyticsTypeOptions = {
-      eventCategory: this._getGAEventCategory(from, select),
-      eventAction: type
-    };
-    const eventLabel = this._getEventLabel(type, responseData);
-    this.sendEventToGA(eventLabel ? {eventLabel, ...analyticsTypeOptions} : analyticsTypeOptions);
-  }
-
-  _getGAEventCategory(from: string, { value, key }) {
-    return `${from}: ${value.join(',') || '(empty)'};${key.join(',') || '(empty)'}`;
-  }
-
-  _getEventLabel(type: string, responseData: GAReaderHookResponseData | number | null) {
-    const data = get(responseData, 'data', 0);
-    const code = get(responseData, 'code', null);
-    const message = get(responseData, 'message', null);
-    const endpoint = get(responseData, 'metadata.endpoint', null);
-
-    switch (type) {
-      case GA_EVENT_ACTION_RESPONSE:
-        return `rows: ${data};endpoint: ${endpoint}`;
-      case GA_EVENT_ACTION_ERROR:
-        return `code: ${code};message: ${message};endpoint: ${endpoint}`;
-      case GA_EVENT_ACTION_MESSAGE:
-        return `message: ${message};endpoint: ${endpoint}`;
-      default:
-
-        return null;
-    }
-  }
-
-  sendEventToGA(analyticsData) {
-    if (!gtag) {
-      return;
-    }
-
-    gtag(GA_TYPE, analyticsData.eventAction, {
-      event_category: analyticsData.eventCategory,
-      event_label: analyticsData.eventLabel
-    });
   }
 
   ngOnDestroy(): void {

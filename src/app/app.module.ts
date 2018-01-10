@@ -19,13 +19,13 @@ import { LanguageSwitcherComponent } from './header/language-switcher/language-s
 import { PageComponent } from './page/page.component';
 
 import { DeprecatedUrlGuard } from './core/deprecated-url.service';
-import { Angulartics2Module } from 'angulartics2';
-import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
+// import { Angulartics2Module } from 'angulartics2';
+// import { Angulartics2GoogleAnalytics } from 'angulartics2/ga';
 import { StoreModule } from '@ngrx/store';
 import { reducers } from './core/store';
 import { EffectsModule } from '@ngrx/effects';
 import { CoreModule } from './core/core.module';
-import { GoogleEffects } from './core/store/google/google.effects';
+// import { GoogleEffects } from './core/store/google/google.effects';
 import { InitEffects } from './core/store/init.effects';
 import { LanguageEffects } from './core/store/language/language.effects';
 import { ToolsEffects } from './core/store/tools/tools.effects';
@@ -41,12 +41,12 @@ const modules = [
   StoreModule.forRoot(reducers()),
   EffectsModule.forRoot([
     InitEffects,
-    GoogleEffects,
+    // GoogleEffects,
     LanguageEffects,
     ToolsEffects,
     UserInteractionEffects
   ]),
-  Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
+  // Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
   RouterModule.forRoot([
     {path: '', component: PageComponent, canActivate: [DeprecatedUrlGuard]},
     {path: 'for/:client', component: PageComponent, canActivate: [ClientGuard]},
@@ -83,7 +83,7 @@ const modules = [
 })
 export class AppModule {
   /* tslint:disable */
-  constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+  constructor() {
   }
 
   /* tslint:enable */

@@ -44,18 +44,17 @@
   }
 </script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-67908993-1"></script>
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  var gaEnabled = ['stage', 'localhost', 'dev'].every(function (env) {
-    return location.hostname.indexOf(env) === -1;
-  });
-
-  if (gaEnabled) {
-    gtag('config', 'UA-67908993-1');
+  if (location.hostname.indexOf('localhost') > -1) {
+    (function () {
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = '//www.googletagmanager.com/gtag/js?id=UA-111865431-1';
+      var x = document.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    })();
   }
 
 </script>
