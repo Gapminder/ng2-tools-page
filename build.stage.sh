@@ -14,4 +14,5 @@ rm -rf node_modules
 
 npm i
 npm rebuild
+npm test
 npm run build:stage
