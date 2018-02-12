@@ -8,7 +8,7 @@ export class Find {
   private isDesktop: boolean = browser.params.desktop; // TODO replace isDesktop with isOpen
   private treeMenuModal: TreeMenuModal = new TreeMenuModal();
 
-  findButton: ExtendedElementFinder = _$$('[data-btn="find"]').last();
+  findButton: ExtendedElementFinder = this.isDesktop ? _$('.vzb-switch-on') : _$$('[data-btn="find"]').last();
   countriesInFindModal: ExtendedArrayFinder = _$$('.vzb-find-item.vzb-dialog-checkbox');
   searchInputField: ExtendedElementFinder = _$('.vzb-find-search');
   searchResult: ExtendedArrayFinder = _$$('.vzb-find-item.vzb-dialog-checkbox label');

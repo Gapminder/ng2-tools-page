@@ -36,7 +36,6 @@ export class LineChart extends CommonChartPage {
    * change it carefully
    */
   public sidebar = {
-    searchSection: $('.vzb-show-filter'),
     countriesList: $('.vzb-show-list'),
     resetFilterButton: $('.vzb-show-deselect')
   };
