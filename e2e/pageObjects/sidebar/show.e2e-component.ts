@@ -7,10 +7,12 @@ import { TreeMenuModal } from './treeMenuModal.e2e-component';
 export class Show {
   private isDesktop: boolean = browser.params.desktop;
 
-  showSearchInputField: ExtendedElementFinder = _$('input[class="vzb-show-search"]');
+  showSearchInputField: ExtendedElementFinder = _$('.vzb-find-search');
   showSearchResult: ExtendedArrayFinder = _$$('div[class*="vzb-show-item vzb-dialog-checkbox"] label'); // TODO
-  showButton: ExtendedElementFinder = _$$('[data-btn="show"]').last();
+  showButton: ExtendedElementFinder = _$('.vzb-switch-off');
   deselectButton: ExtendedElementFinder = _$('.vzb-find-deselect');
+  showApplyBtn: ExtendedElementFinder = _$('.vzb-show-apply');
+  showListAccordionBtn: ExtendedElementFinder = _$('.vzb-show-list.vzb-accordion');
 
   countryList: ExtendedElementFinder = _$$('[class="vzb-show-item vzb-dialog-checkbox"]').first();
   resetBtn: ExtendedElementFinder = _$('.vzb-show-deselect');
@@ -24,6 +26,7 @@ export class Show {
     await browser.wait(EC.presenceOf(this.showSearchResult.first()), 5000, 'search results not present');
     const counrtyInSearchResults = await this.showSearchResult.findElementByText(country);
     await counrtyInSearchResults.safeClick();
+    await this.showApplyBtn.safeClick();
 
     await browser.wait(isCountryAddedInUrl(country, select), 10000, 'coutry in URL');
 
@@ -40,7 +43,9 @@ export class Show {
       await this.showButton.safeClick();
     }
 
+    await this.showListAccordionBtn.safeClick();
     await this.showSearchResult.findElementByText(country).safeClick();
+    await this.showApplyBtn.safeClick();
 
     await browser.wait(isCountryAddedInUrl(country));
     await waitForSpinner();

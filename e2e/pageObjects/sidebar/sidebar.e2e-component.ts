@@ -44,7 +44,8 @@ export class Sidebar {
     miniMap: $('.vzb-cl-minimap'),
     searchSection: $('.vzb-find-filter'),
     countriesList: $('.vzb-find-list'),
-    advancedButtons: $('.vzb-tool-buttonlist')
+    advancedButtons: $('.vzb-tool-buttonlist'),
+    switcherSHOW_SELECT: $('.vzb-dialog-title-switch')
   };
   yearAtTop: ExtendedElementFinder = this.isDesktop ? _$('.vzb-timedisplay') : _$('.vzb-br-total');
 

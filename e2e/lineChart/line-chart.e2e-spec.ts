@@ -62,7 +62,7 @@ describe('Line chart: ', () => {
     expect(await lineChart.countHighlightedLines()).toEqual(1);
   });
 
-  it('Settings should be stored in URL', async () => {
+  it('Selected countries should be stored in URL', async () => {
     await sidebar.show.searchAndSelectCountry('Bangladesh');
     await lineChart.selectLine('China');
     await lineChart.refreshPage();
