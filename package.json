@@ -4,6 +4,7 @@
   "license": "MIT",
   "angular-cli": {},
   "scripts": {
+    "postinstall": "./node_modules/protractor/bin/webdriver-manager update",
     "test": "npm run lint && echo 'ng test --watch=false'",
     "test:w": "npm run lint && ng test",
     "cover": "ng test --watch=false --code-coverage",
@@ -25,7 +26,8 @@
     "start:blue": "npm run build:prod && mkdir -p logs && forever start -l forever.log -o logs/out.log -e logs/error.log -a -p logs --minUptime 1000 --spinSleepTime 1000 ./node_modules/.bin/ws -d dist -p 3001 --rewrite '/assets/fonts/* -> /tools/assets/fonts/$1' '/assets/images/* -> /tools/assets/images/$1' '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'",
     "start:dev": "npm run build:dev && npm run start:local-web-server",
     "start:local-web-server": "ws -d ./dist/ -p 3001 --rewrite '/assets/fonts/* -> /tools/assets/fonts/$1' '/assets/images/* -> /tools/assets/images/$1' '/tools/bubbles -> /tools/' '/tools/map -> /tools/' '/tools/mountain -> /tools/'",
-    "e2e:local": "./node_modules/protractor/bin/webdriver-manager update && ./node_modules/.bin/protractor protractor.conf.js",
+    "e2e:CI": "ng e2e --aot --prod --deploy-url /tools/ --environment=dev",
+    "e2e:local": "./node_modules/.bin/protractor protractor.conf.js",
     "e2e:dev": "URL='https://tools-dev.gapminderdev.org/tools/' protractor protractor.conf.js",
     "e2e:stage": "URL='https://tools-stage.gapminderdev.org/tools/' protractor protractor.conf.js",
     "e2e:blue": "URL='http://178.62.135.203:3001/tools/' protractor protractor.conf.js",
