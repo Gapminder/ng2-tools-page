@@ -55,7 +55,7 @@
   "related-5600ae2b188967b26265a73c-subtitle": "תשובה קצרה – אנשים עשירים חיים זמן רב יותר",
   "related-5600ae2b188967b26265a73c-title": " כיצד הכנסה קשורה לתוחלת חיים?",
   "related-5600ae64188967b26265a73d-subtitle": "תשובה קצרה – זה ירד",
-  "related-5600ae64188967b26265a73d-title": "How Did Babies per Woman Change in the World?",
+  "related-5600ae64188967b26265a73d-title": "כיצד מספר הלידות לכל אישה השתנה בעולם?",
   "related-5600aedc188967b26265a73e-subtitle": "תרשים זה משווה בין תוחלת החיים לתמ\"ג לנפש ב-182 מדינות בשנת 2015.",
   "related-5600aedc188967b26265a73e-title": "פוסטר Gapminder עולמי 2015",
   "related-5600782dabde580e33c79e24-subtitle": "בהתחלה לאט, ואז מהר.",
@@ -67,9 +67,9 @@
   "bubble_map_desc": "גרף זה מראה את האוכלוסייה על המפה",
   "trends": "מגמות",
   "line_chart_desc": "גרף זה מראה כיצד מגמה משתנה לאורך השנים",
-  "ages": "Ages",
-  "pop_by_age_desc": "This graph shows the population by age",
-  "dollar_street": "Dollar Street",
-  "dollar_street_project": "Dollar Street project",
-  "share": "Share"
+  "ages": "גילים",
+  "pop_by_age_desc": "גרף זה מראה את האוכלוסייה לפי גיל",
+  "dollar_street": "רחוב דולר",
+  "dollar_street_project": "פרויקט רחוב דולר",
+  "share": "שתף"
 }
