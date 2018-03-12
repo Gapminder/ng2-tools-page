@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  wsUrl: 'https://waffle-server-dev.gapminderdev.org',
-  wsUrlAssets: 'https://import-waffle-server-dev.gapminderdev.org',
+  wsUrl: 'http://130.211.56.123',
+  wsUrlAssets: 'http://35.205.215.30',
   datasetBranch: '#develop'
 };
