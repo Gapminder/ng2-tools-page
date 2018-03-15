@@ -83,11 +83,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   readerModuleObject = WsReader;
   readerPlugins: ReaderPlugin[] = [];
-  extResources = {
-    host: `${environment.wsUrl}/`,
-    dataPath: '/api/ddf/',
-    preloadPath: 'api/vizabi/'
-  };
 
   private defaultTool: string;
   private tools;
@@ -269,6 +264,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     this.store.dispatch(new VizabiModelChanged(model, true));
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
+  }
+
+  onError(error): void {
+    console.log('Vizabi error', error);
   }
 
   sendConceptsStateToGA(chartName, state) {
