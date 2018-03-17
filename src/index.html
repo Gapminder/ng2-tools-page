@@ -33,15 +33,15 @@
 <body>
 <app-root>Loading...</app-root>
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(function () {
-        console.log('SW has been registered');
-      })
-      .catch(function (error) {
-        console.log('SW registration has failed', error)
-      });
-  }
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(function () {
+      console.log('SW has been registered');
+    })
+    .catch(function (error) {
+      console.log('SW registration has failed', error)
+    });
+}
 </script>
 <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67908993-1"></script>
@@ -50,7 +50,7 @@
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  var gaEnabled = ['stage', 'localhost', 'dev'].every(function (env) {
+  var gaEnabled = ['dev', 'localhost'].every(function (env) {
     return location.hostname.indexOf(env) === -1;
   });
 
@@ -59,5 +59,20 @@
   }
 
 </script>
+
+<!-- Begin Inspectlet Embed Code -->
+<script type="text/javascript" id="inspectletjs">
+  (function() {
+    if (!gaEnabled) {
+      return;
+    }
+    window.__insp = window.__insp || [];
+    __insp.push(['wid', 2022934490]);
+    var ldinsp = function(){ if(typeof window.__inspld != "undefined") return; window.__inspld = 1; var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js?wid=2022934490&r=' + Math.floor(new Date().getTime()/3600000); var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); };
+    setTimeout(ldinsp, 0);
+  })();
+</script>
+<!-- End Inspectlet Embed Code -->
+
 </body>
 </html>

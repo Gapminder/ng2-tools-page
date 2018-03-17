@@ -32,4 +32,5 @@ npm i --unsafe-perm
 npm i --unsafe-perm ../vizabi
 npm rebuild
 
+npm test
 npm run build:dev

@@ -83,11 +83,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   readerModuleObject = WsReader;
   readerPlugins: ReaderPlugin[] = [];
-  extResources = {
-    host: `${environment.wsUrl}/`,
-    dataPath: '/api/ddf/',
-    preloadPath: 'api/vizabi/'
-  };
 
   private defaultTool: string;
   private tools;
@@ -104,6 +99,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
   private initialVizabiInstances = {};
   private lang;
 
+  private userId = '';
+  private userIdLength = 15;
+  private timestamp = Date.now();
+
   private urlFragmentChangesSubscription: Subscription;
 
   constructor(public langService: LanguageService,
@@ -112,6 +111,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
               private cd: ChangeDetectorRef,
               private vizabiToolsService: VizabiToolsService,
               private store: Store<State>) {
+    this._generateUserId();
     this.initialToolsSetupSubscription = this.store.select(getInitialToolsSetup).subscribe(initial => {
       this.tools = initial.tools;
       this.slugs = initial.slugs;
@@ -266,6 +266,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     this.store.dispatch(new SelectTool(this.toolToSlug[changes.type]));
   }
 
+  onError(error): void {
+    console.log('Vizabi error', error);
+  }
+
   sendConceptsStateToGA(chartName, state) {
     const { marker } = state;
     const newConceptsIndicators = this.getUniqueConceptsIndicators(marker);
@@ -331,7 +335,23 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
       eventAction: type
     };
     const eventLabel = this._getEventLabel(type, responseData);
-    this.sendEventToGA(eventLabel ? {eventLabel, ...analyticsTypeOptions} : analyticsTypeOptions);
+    this.sendEventToGA(eventLabel ? { eventLabel, ...analyticsTypeOptions } : analyticsTypeOptions);
+  }
+
+  _getRandomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  _generateUserId() {
+    const ts = this.timestamp.toString();
+    const parts = ts.split('').reverse();
+
+    for (let i = 0; i < this.userIdLength; ++i) {
+      const index = this._getRandomInt(0, parts.length - 1);
+      this.userId += parts[index];
+    }
+
+    return this.userId;
   }
 
   _getGAEventCategory(from: string, { value, key }) {
@@ -340,17 +360,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
   _getEventLabel(type: string, responseData: GAReaderHookResponseData | number | null) {
     const data = get(responseData, 'data', 0);
-    const code = get(responseData, 'code', null);
+    // const code = get(responseData, 'code', null);
     const message = get(responseData, 'message', null);
     const endpoint = get(responseData, 'metadata.endpoint', null);
+    const homepoint = get(responseData, 'metadata.homepoint', null);
+    const timestamp = Date.now();
+    const userId = this.userId;
 
     switch (type) {
       case GA_EVENT_ACTION_RESPONSE:
-        return `rows: ${data};endpoint: ${endpoint}`;
+        return `userId: ${userId}; timestamp: ${timestamp}; rows: ${data}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_ERROR:
-        return `code: ${code};message: ${message};endpoint: ${endpoint}`;
+        return `userId: ${userId}; timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       case GA_EVENT_ACTION_MESSAGE:
-        return `message: ${message};endpoint: ${endpoint}`;
+        return `userId: ${userId}; timestamp: ${timestamp}; message: ${message}; endpoint: ${endpoint}; homepoint: ${homepoint}`;
       default:
 
         return null;
