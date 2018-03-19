@@ -39,10 +39,6 @@ exports.config = {
   multiCapabilities: [
     {
       browserName: 'chrome',
-      loggingPrefs: {
-        'driver': 'INFO',
-        'browser': 'INFO'
-      },
       // shardTestFiles: true,
       // maxInstances: 2,
       chromeOptions: {
@@ -77,11 +73,9 @@ exports.config = {
     screenHeight: screenSize.height
   },
   baseUrl: url,
-  useAllAngular2AppRoots: true,
   allScriptsTimeout: 60000,
   getPageTimeout: 60000,
   SELENIUM_PROMISE_MANAGER: false,
-  untrackOutstandingTimeouts: true,
   framework: 'jasmine',
   jasmineNodeOpts: {
     showTiming: true,

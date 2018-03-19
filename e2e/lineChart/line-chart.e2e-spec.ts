@@ -5,6 +5,7 @@ import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
 import { LineChart } from '../pageObjects/charts/line-chart.po';
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
 import { Slider } from '../pageObjects/components/slider.e2e-component';
+import { waitUntil } from '../helpers/waitHelper';
 
 const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);
@@ -35,6 +36,7 @@ describe('Line chart: ', () => {
 
   it('change Y axis value', async () => {
     const yAxisValue = await lineChart.changeYaxisValue();
+    await waitUntil(lineChart.linesLabels.first());
 
     expect(await lineChart.yAxisBtn.getText()).toContain(yAxisValue, 'Y axis button text');
   });

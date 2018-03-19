@@ -2,6 +2,7 @@ import { LineChart } from "../pageObjects/charts/line-chart.po";
 import { Sidebar } from "../pageObjects/sidebar/sidebar.e2e-component";
 import { Slider } from "../pageObjects/components/slider.e2e-component";
 import { waitUntil } from "../helpers/waitHelper";
+import { browser } from "protractor";
 
 const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);
@@ -14,14 +15,14 @@ describe('Line chart: Sidebar', () => {
   });
   it('Add country from country list in sidebar', async () => {
     await sidebar.show.clickOnCountryFromList('Argentina');
-    await expect(lineChart.getSelectedCountriesNames()).toMatch('Argentina');
+    expect(await lineChart.getSelectedCountriesNames()).toMatch('Argentina');
 
     expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER + 1);
   });
 
   it('Add country from search in sidebar', async () => {
     await sidebar.show.searchAndSelectCountry('Argentina');
-    await expect(lineChart.getSelectedCountriesNames()).toMatch('Argentina');
+    expect(await lineChart.getSelectedCountriesNames()).toMatch('Argentina');
 
     expect(await lineChart.countriesLines.count()).toEqual(DEFAULT_COUNTRIES_NUMBER + 1);
   });
@@ -53,7 +54,7 @@ describe('Line chart: Sidebar', () => {
 
     const filteredModelCountries = modalCountriesText.toString();
 
-    await filteredChartCountries.forEach(item => {
+    filteredChartCountries.forEach(item => {
       expect(filteredModelCountries.includes(item)).toBe(true, `${item} not match ${filteredModelCountries}`);
     });
   });
