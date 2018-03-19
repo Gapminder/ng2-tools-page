@@ -13,6 +13,7 @@ export class Show {
   deselectButton: ExtendedElementFinder = _$('.vzb-find-deselect');
   showApplyBtn: ExtendedElementFinder = _$('.vzb-show-apply');
   showListAccordionBtn: ExtendedElementFinder = _$('.vzb-show-list.vzb-accordion');
+  categoryAccordeonBtn: ExtendedElementFinder = _$$('.vzb-show-category').first();
 
   countryList: ExtendedElementFinder = _$$('[class="vzb-show-item vzb-dialog-checkbox"]').first();
   resetBtn: ExtendedElementFinder = _$('.vzb-show-deselect');
@@ -43,7 +44,7 @@ export class Show {
       await this.showButton.safeClick();
     }
 
-    await this.showListAccordionBtn.safeClick();
+    await this.categoryAccordeonBtn.safeClick();
     await this.showSearchResult.findElementByText(country).safeClick();
     await this.showApplyBtn.safeClick();
 
