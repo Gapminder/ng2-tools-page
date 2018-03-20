@@ -81,7 +81,7 @@ export class CommonChartPage {
     if (!currentUrl.match(this.url)) {
       await this.chartLink.safeClick();
 
-      return await waitForUrlToChange();
+      return await waitForUrlToChange(currentUrl);
     }
   }
 

@@ -29,6 +29,7 @@ typings
 
 # e2e
 e2e/*.map
+results
 
 #System Files
 .DS_Store

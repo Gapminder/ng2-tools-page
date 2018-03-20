@@ -1,18 +1,18 @@
-import { browser } from "protractor";
-import { MapChart } from "../pageObjects/charts/map-chart.po";
-import { Sidebar } from "../pageObjects/sidebar/sidebar.e2e-component";
-import { Slider } from "../pageObjects/components/slider.e2e-component";
+import { browser } from 'protractor';
+import { MapChart } from '../pageObjects/charts/map-chart.po';
+import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
 
 const mapChart: MapChart = new MapChart();
 const sidebar: Sidebar = new Sidebar(mapChart);
 const slider: Slider = new Slider();
 
 describe('Maps chart: Sidebar', () => {
-  beforeEach(async() => {
+  beforeEach(async () => {
     await mapChart.openChart();
   });
 
-  it('Countries could be selected/deselected using the search in sidebar', async() => {
+  it('Countries could be selected/deselected using the search in sidebar', async () => {
     await sidebar.findSelect.searchAndSelectCountry('China');
     expect(await mapChart.selectedCountries.count()).toEqual(1);
 

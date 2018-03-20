@@ -36,8 +36,9 @@ export class Header {
 
   async switchToChart(chartUrl: string): Promise<void> {
     await this.chartSwitcherBtn.safeClick();
+    const currentUrl = await browser.getCurrentUrl();
     await _$(`.chart-switcher-options [href='/tools/${chartUrl}']`).safeClick();
-    await waitForUrlToChange();
+    await waitForUrlToChange(currentUrl);
     await waitForPageLoaded();
   }
 
@@ -56,8 +57,9 @@ export class Header {
     await this.openOnMobile();
 
     await this.languageSwitcherBtn.safeClick();
+    const currentUrl = await browser.getCurrentUrl();
     await language.safeClick();
-    await waitForUrlToChange();
+    await waitForUrlToChange(currentUrl);
     await waitForSpinner();
     await this.closeOnMobile();
   }

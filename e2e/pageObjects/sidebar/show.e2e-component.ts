@@ -13,7 +13,9 @@ export class Show {
   deselectButton: ExtendedElementFinder = _$('.vzb-find-deselect');
   showApplyBtn: ExtendedElementFinder = _$('.vzb-show-apply');
   showListAccordionBtn: ExtendedElementFinder = _$('.vzb-show-list.vzb-accordion');
-  categoryAccordeonBtn: ExtendedElementFinder = _$$('.vzb-show-category').first();
+  // categoryAccordeonBtn: ExtendedElementFinder = _$$('.vzb-show-category').first();
+  geographicLocation: ExtendedElementFinder = _$$('.vzb-show-category').findElementByText('Geographic location');
+  geographicRegions: ExtendedElementFinder = _$$('.vzb-show-category').findElementByText('Geographic regions');
 
   countryList: ExtendedElementFinder = _$$('[class="vzb-show-item vzb-dialog-checkbox"]').first();
   resetBtn: ExtendedElementFinder = _$('.vzb-show-deselect');
@@ -44,7 +46,7 @@ export class Show {
       await this.showButton.safeClick();
     }
 
-    await this.categoryAccordeonBtn.safeClick();
+    await this.geographicLocation.safeClick();
     await this.showSearchResult.findElementByText(country).safeClick();
     await this.showApplyBtn.safeClick();
 
