@@ -75,7 +75,9 @@ exports.config = {
   baseUrl: url,
   allScriptsTimeout: 60000,
   getPageTimeout: 60000,
-  SELENIUM_PROMISE_MANAGER: false,
+  // temporary disabled, because it causes NoSuchSessionError
+  // typescript compiles 'async await' into generators, so it won't affect protractor controlFlow
+  // SELENIUM_PROMISE_MANAGER: false,
   framework: 'jasmine',
   jasmineNodeOpts: {
     showTiming: true,
