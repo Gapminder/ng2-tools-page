@@ -1,8 +1,8 @@
-import { LineChart } from "../pageObjects/charts/line-chart.po";
-import { Sidebar } from "../pageObjects/sidebar/sidebar.e2e-component";
-import { Slider } from "../pageObjects/components/slider.e2e-component";
-import { waitUntil } from "../helpers/waitHelper";
-import { browser } from "protractor";
+import { LineChart } from '../pageObjects/charts/line-chart.po';
+import { Sidebar } from '../pageObjects/sidebar/sidebar.e2e-component';
+import { Slider } from '../pageObjects/components/slider.e2e-component';
+import { waitUntil } from '../helpers/waitHelper';
+import { browser } from 'protractor';
 
 const lineChart: LineChart = new LineChart();
 const sidebar: Sidebar = new Sidebar(lineChart);
@@ -48,7 +48,8 @@ describe('Line chart: Sidebar', () => {
      */
     const chartCountriesText = await chartCountries.getText();
     const modalCountriesText = await modalCountries.getText();
-    const filteredChartCountries = chartCountriesText.toString()
+    const filteredChartCountries = chartCountriesText
+      .toString()
       .replace(/\./g, '')
       .split(',');
 
@@ -66,6 +67,4 @@ describe('Line chart: Sidebar', () => {
     const colorFromColorSection = await sidebar.colorSection.getColorFromColorSection();
     expect(await lineChart.getLineColor('China')).toEqual(colorFromColorSection, 'line color');
   });
-
-  
 });
