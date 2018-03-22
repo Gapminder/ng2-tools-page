@@ -10,7 +10,7 @@ module.exports = {
   runtimeCaching: [
     {
       urlPattern: /waffle-server(.*)\.gapminder(.*)\.org\/api\/ddf\/ql(.*)/,
-      handler: 'cacheFirst',
+      handler: 'networkFirst',
       options: {
         cache: {
           name: 'ddfql-queries',
@@ -21,7 +21,7 @@ module.exports = {
     },
     {
       urlPattern: /waffle-server(.*)\.gapminder(.*)\.org\/api\/ddf\/assets(.*)/,
-      handler: 'cacheFirst',
+      handler: 'networkFirst',
       options: {
         cache: {
           name: 'ddfql-assets',
@@ -32,7 +32,7 @@ module.exports = {
     },
     {
       urlPattern: /waffle-server(.*)\.gapminder(.*)\.org\/api\/vizabi\/(.*)/,
-      handler: 'cacheFirst',
+      handler: 'networkFirst',
       options: {
         name: 'vizabi statics'
       }
