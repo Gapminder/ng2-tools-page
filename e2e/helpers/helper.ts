@@ -1,9 +1,6 @@
-import { browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
-import { WebElement } from 'selenium-webdriver';
+import { browser, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
 import { CommonChartPage } from '../pageObjects/charts/common-chart.po';
-import { waitUntil } from './waitHelper';
-import { WebdriverWebElement } from 'protractor/built/element';
 
 const MAX_TIMEOUT = 30000;
 const TIMEOUT = 15000;
