@@ -1,6 +1,6 @@
 import { $, browser, ElementFinder, ExpectedConditions as EC } from 'protractor';
 
-import { CommonChartPage } from '../charts/common-chart.po';
+import { CommonChartPage } from '../charts';
 import { _$, ExtendedElementFinder } from '../../helpers/ExtendedElementFinder';
 import { safeDragAndDrop } from '../../helpers/helper';
 

@@ -1,17 +1,5 @@
-import {
-  $,
-  $$,
-  browser,
-  by,
-  By,
-  element,
-  ElementArrayFinder,
-  ElementFinder,
-  ExpectedConditions as EC
-} from 'protractor';
+import { $, $$, browser, by, element, ElementArrayFinder, ElementFinder, ExpectedConditions as EC } from 'protractor';
 import { promise } from 'selenium-webdriver';
-import { waitUntil } from './waitHelper';
-import { WebdriverWebElement } from 'protractor/built/element';
 
 const TIMEOUT = 15000;
 
