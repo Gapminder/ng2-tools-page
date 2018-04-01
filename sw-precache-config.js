@@ -1,6 +1,6 @@
 module.exports = {
   staticFileGlobs: [
-    'dist/tools/**.html',
+//    'dist/tools/**.html',
     'dist/tools/**.js',
     'dist/tools/assets/**/**.*',
     'dist/tools/**.ico',
@@ -37,12 +37,12 @@ module.exports = {
         name: 'vizabi statics'
       }
     },
-    {
-      urlPattern: /^(http(s)?)\:\/\/(.*)/,
-      handler: 'networkFirst',
-      options: {
-        name: 'other'
-      }
-    }
+//    {
+//      urlPattern: /^(http(s)?)\:\/\/(.*)/,
+//      handler: 'networkFirst',
+//      options: {
+//        name: 'other'
+//      }
+//    }
   ]
 };
